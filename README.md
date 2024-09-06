@@ -50,7 +50,7 @@ The final sprint focuses on the administrative side of the system, allowing admi
 
 ## Technologies Used
 - **Database**: MySQL DBMS
-- **Programming Language**: Language of your choice for the GUI (e.g., Java, Python)
+- **Programming Language**: C#
 - **Platform**: Local desktop application (not web-based)
 
 ---
@@ -58,14 +58,11 @@ The final sprint focuses on the administrative side of the system, allowing admi
 ## Getting Started
 
 ### Prerequisites
-- Install the required dependencies for the chosen language (Java, Python, etc.).
+- C#
 - MySQL DBMS for the database.
 
 ### Setup Instructions
 1. Clone the repository to your local machine:
-    ```bash
-    git clone https://github.com/yourusername/healthcare-system.git
-    ```
 2. Set up the database schema and tables (instructions are provided in the `schema.sql` file).
 3. Run the application using your preferred IDE or command line.
 

@@ -1,5 +1,3 @@
-Here’s a suggested **README** that summarizes your project, including the product backlog and sprint structure:
-
 ---
 
 # Healthcare System Project

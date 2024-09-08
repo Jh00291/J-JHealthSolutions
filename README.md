@@ -65,24 +65,3 @@ The final sprint focuses on the administrative side of the system, allowing admi
 1. Clone the repository to your local machine:
 2. Set up the database schema and tables (instructions are provided in the `schema.sql` file).
 3. Run the application using your preferred IDE or command line.
-
----
-
-## Contributing
-Contributions to the project are welcome! Please follow these steps:
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/your-feature`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Open a pull request.
-
----
-
-## License
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
----
-
-This **README** provides a project summary, an overview of the sprints and product backlog, and instructions for getting started. You can update the repository URL and any specific language or setup instructions as per your project’s needs.
-
-Let me know if you'd like any changes!

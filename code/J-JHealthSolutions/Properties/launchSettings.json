@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "J-JHealthSolutions (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "J-JHealthSolutions (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -31,8 +31,14 @@ namespace J_JHealthSolutions.Views
         // Add Patient
         private void AddPatient_Click(object sender, RoutedEventArgs e)
         {
-            var addPatientWindow = new AddEditPatientWindow();  // Instantiate AddPatientWindow
-            addPatientWindow.ShowDialog();  // Show the window as a modal dialog
+            var addPatientWindow = new AddEditPatientWindow();  // Instantiate AddEditPatientWindow
+            bool? dialogResult = addPatientWindow.ShowDialog();  // Show the window as a modal dialog
+
+            if (dialogResult == true)  // Check if DialogResult is true
+            {
+                // Refresh the data grid after adding a patient
+                LoadPatients();
+            }
         }
 
         // Edit Patient
@@ -41,7 +47,13 @@ namespace J_JHealthSolutions.Views
             if (SelectedPatient != null)
             {
                 var editPatientWindow = new AddEditPatientWindow(SelectedPatient);  // Pass the selected patient to the window
-                editPatientWindow.ShowDialog();  // Show the window as a modal dialog
+                bool? dialogResult = editPatientWindow.ShowDialog();  // Show the window as a modal dialog
+
+                if (dialogResult == true)  // Check if DialogResult is true
+                {
+                    // Refresh the data grid after editing a patient
+                    LoadPatients();
+                }
             }
             else
             {
@@ -55,12 +67,13 @@ namespace J_JHealthSolutions.Views
             if (SelectedPatient != null)
             {
                 var result = MessageBox.Show($"Are you sure you want to delete {SelectedPatient.FName} {SelectedPatient.LName}?",
-                                              "Confirm Delete", MessageBoxButton.YesNo);
+                    "Confirm Delete", MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     _patientDal.DeletePatient(SelectedPatient.PatientId.Value);  // Use the DAL to delete the patient
                     MessageBox.Show("Patient deleted successfully.");
+                    LoadPatients();  // Refresh the DataGrid after deletion
                 }
             }
             else
@@ -73,9 +86,7 @@ namespace J_JHealthSolutions.Views
         {
             get
             {
-                // Return the currently selected patient from your UI component (ListBox, DataGrid, etc.)
-                // For example: return (Patient)patientListBox.SelectedItem;
-                return null;  // Placeholder, replace with your actual selection logic
+                return (Patient)PatientsDataGrid.SelectedItem;  // Return the currently selected patient
             }
         }
     }

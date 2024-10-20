@@ -14,6 +14,7 @@ namespace J_JHealthSolutions.Views
         public AddEditPatientWindow()
         {
             InitializeComponent();
+            _patient = new Patient();
         }
 
         public AddEditPatientWindow(Patient patient)
@@ -42,7 +43,7 @@ namespace J_JHealthSolutions.Views
         {
             try
             {
-                if (_patient.PatientId == null)
+                if (_patient == null || _patient.PatientId == null)
                 {
                     // If no patient exists, create a new one
                     var newPatient = new Patient
@@ -57,7 +58,7 @@ namespace J_JHealthSolutions.Views
                         State = stateComboBox.Text,
                         Zipcode = zipcodeTextBox.Text,
                         Phone = phoneTextBox.Text,
-                        Active = activeCheckBox.IsChecked.Value
+                        Active = activeCheckBox.IsChecked ?? false
                     };
 
                     _patientDal.AddPatient(newPatient);  // Add the new patient
@@ -69,7 +70,7 @@ namespace J_JHealthSolutions.Views
                     _patient.FName = firstNameTextBox.Text;
                     _patient.LName = lastNameTextBox.Text;
                     _patient.DOB = dobDatePicker.SelectedDate.Value;
-                    _patient.Gender = genderComboBox.Text[0];
+                    _patient.Gender = !string.IsNullOrEmpty(genderComboBox.Text) ? genderComboBox.Text[0] : 'U';
                     _patient.Address1 = address1TextBox.Text;
                     _patient.Address2 = address2TextBox.Text;
                     _patient.City = cityTextBox.Text;
@@ -81,6 +82,9 @@ namespace J_JHealthSolutions.Views
                     _patientDal.UpdatePatient(_patient);  // Update the patient
                     ShowSuccessDialog("Patient updated successfully.");
                 }
+
+                // Close the dialog and return true as the result
+                this.DialogResult = true;
                 this.Close();  // Close the window after successful save
             }
             catch (ArgumentException ex)

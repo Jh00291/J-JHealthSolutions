@@ -14,12 +14,16 @@ namespace J_JHealthSolutions.Views
         public AddEditPatientWindow()
         {
             InitializeComponent();
+            this.Title = "Add Patient";
+            this.titleLabel.Content = "Add Patient";
             _patient = new Patient();
         }
 
         public AddEditPatientWindow(Patient patient)
         {
             InitializeComponent();
+            this.Title = "Edit Patient: " + patient.FName + " " + patient.LName;
+            this.titleLabel.Content = "Edit Patient: " + patient.FName + " " + patient.LName;
             _patient = patient;
             PopulatePatientData(patient);
         }

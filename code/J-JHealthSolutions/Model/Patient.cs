@@ -120,7 +120,6 @@ namespace J_JHealthSolutions.Model
             }
         }
 
-        // Add gender property
         public char Gender { get; set; }
 
         public bool Active { get; set; }        

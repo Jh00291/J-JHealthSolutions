@@ -20,7 +20,7 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = @"INSERT INTO Patients (f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active)
+            var query = @"INSERT INTO Patient (f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active)
                           VALUES (@fName, @lName, @dob, @gender, @address1, @address2, @city, @state, @zipcode, @phone, @active);
                           SELECT LAST_INSERT_ID();";
 
@@ -56,7 +56,7 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = @"UPDATE Patients
+            var query = @"UPDATE Patient
                           SET f_name = @fName,
                               l_name = @lName,
                               dob = @dob,
@@ -98,7 +98,7 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = @"DELETE FROM Patients WHERE patient_id = @patientId;";
+            var query = @"DELETE FROM Patient WHERE patient_id = @patientId;";
 
             using var command = new MySqlCommand(query, connection);
             command.Parameters.Add("@patientId", MySqlDbType.Int32).Value = patientId;
@@ -119,7 +119,7 @@ namespace J_JHealthSolutions.DAL
             connection.Open();
 
             var query = @"SELECT patient_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active
-                          FROM Patients;";
+                          FROM Patient;";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();

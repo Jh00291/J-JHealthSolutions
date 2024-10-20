@@ -4,7 +4,7 @@ namespace J_JHealthSolutions.Model
 {
     public class User
     {
-        private string _userId;
+        private int _userId;
         private string _username;
         private UserRole _role;
         private string _fname;
@@ -13,14 +13,14 @@ namespace J_JHealthSolutions.Model
         /// <summary>
         /// Unique identifier for the user
         /// </summary>
-        public string UserId
+        public int UserId
         {
             get => _userId;
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (value < 0)
                 {
-                    throw new ArgumentException("UserId cannot be empty or null.");
+                    throw new ArgumentException("UserId cannot be less than 0");
                 }
                 _userId = value;
             }
@@ -99,7 +99,7 @@ namespace J_JHealthSolutions.Model
         /// <param name="role">Role of the user</param>
         /// <param name ="fname">First name of the user</param>
         /// <param name ="lname">Last name of the user</param>
-        public User(string userId, string username, UserRole role, string fname, string lname)
+        public User(int userId, string username, UserRole role, string fname, string lname)
         {
             UserId = userId;
             Username = username;

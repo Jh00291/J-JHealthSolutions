@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="J_JHealthSolutions.Views.MainMenuControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:J_JHealthSolutions.Views"
+             mc:Ignorable="d" 
+             Height="Auto" Width="Auto">
+    <StackPanel Orientation="Vertical">
+        <Button Content="Manage Visits" Command="{Binding ManageVisitsCommand}" />
+        <Button Content="Manage Appointments" Command="{Binding ManageAppointmentsCommand}" />
+        <Button Content="Manage Tests" Command="{Binding ManageTestsCommand}" />
+        <Button Content="Manage Patients" Command="{Binding ManagePatientsCommand}" />
+        <Button x:Name="ManageEmployeesButton"
+                Content="Manage Employees"
+                Command="{Binding ManageEmployeesCommand}" />
+    </StackPanel>
+</UserControl>

@@ -5,7 +5,7 @@ namespace J_JHealthSolutions.Model
 {
     public class Employee
     {
-        private int _employeeId;
+        private int? _employeeId;
         private string _fName;
         private string _lName;
         private DateTime _dob;
@@ -15,7 +15,7 @@ namespace J_JHealthSolutions.Model
         private string _zipcode;
         private string _personalPhone;
 
-        public int EmployeeId
+        public int? EmployeeId
         {
             get => _employeeId;
             set
@@ -122,10 +122,9 @@ namespace J_JHealthSolutions.Model
         {
         }
 
-        public Employee(int employeeId, int? userId, string fName, string lName, DateTime dob,
+        public Employee(int? userId, string fName, string lName, DateTime dob,
             string address1, string address2, string city, string state, string zipcode, string personalPhone)
         {
-            EmployeeId = employeeId;
             UserId = userId;
             FName = fName;
             LName = lName;

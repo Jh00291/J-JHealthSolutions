@@ -10,7 +10,7 @@
         <Button Content="Manage Visits" Command="{Binding ManageVisitsCommand}"  IsEnabled="False"/>
         <Button Content="Manage Appointments" Command="{Binding ManageAppointmentsCommand}" IsEnabled="False"/>
         <Button Content="Manage Tests" Command="{Binding ManageTestsCommand}" IsEnabled="False"/>
-        <Button Content="Manage Patients" Command="{Binding ManagePatientsCommand}" />
+        <Button Content="Manage Patients" Command="{Binding ManagePatientsCommand}"/>
         <Button x:Name="ManageEmployeesButton"
                 Content="Manage Employees"
                 Command="{Binding ManageEmployeesCommand}" />

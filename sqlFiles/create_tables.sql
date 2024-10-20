@@ -1,10 +1,9 @@
-
 USE cs3230f24a;
 
 SET foreign_key_checks = 0;
 
 -- Drop tables if they already exist (for clean re-runs)
-DROP TABLE IF EXISTS DoctorSpecialty, TestOrder, Test, Visit, Appointment, Patient, Doctor, Nurse, Administrator, `User`, Specialty, Employee;
+DROP TABLE IF EXISTS TestOrder, Test, Visit, Appointment, Patient, Doctor, Nurse, Administrator, `User`, Specialty, Employee;
 
 -- Table for Employee
 CREATE TABLE Employee (
@@ -20,28 +19,32 @@ CREATE TABLE Employee (
     state VARCHAR(50) NOT NULL,
     zipcode VARCHAR(20) NOT NULL,
     personal_phone VARCHAR(20) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+    FOREIGN KEY (user_id) REFERENCES `User`(user_id) 
+    ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Table for Administrator
 CREATE TABLE Administrator (
     admin_id INT AUTO_INCREMENT PRIMARY KEY,
     emp_id INT NOT NULL,
-    FOREIGN KEY (emp_id) REFERENCES Employee(employee_id)
+    FOREIGN KEY (emp_id) REFERENCES Employee(employee_id) 
+    ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Table for Doctor
 CREATE TABLE Doctor (
     doctor_id INT AUTO_INCREMENT PRIMARY KEY,
     emp_id INT NOT NULL,
-    FOREIGN KEY (emp_id) REFERENCES Employee(employee_id)
+    FOREIGN KEY (emp_id) REFERENCES Employee(employee_id) 
+    ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Table for Nurse
 CREATE TABLE Nurse (
     nurse_id INT AUTO_INCREMENT PRIMARY KEY,
     emp_id INT NOT NULL,
-    FOREIGN KEY (emp_id) REFERENCES Employee(employee_id)
+    FOREIGN KEY (emp_id) REFERENCES Employee(employee_id) 
+    ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Table for User
@@ -77,8 +80,10 @@ CREATE TABLE Appointment (
     reason VARCHAR(255) NOT NULL,
     `status` VARCHAR(50) NOT NULL,
     UNIQUE (patient_id, datetime),
-    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id)
+    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id) 
+    ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Table for Visit
@@ -99,10 +104,14 @@ CREATE TABLE Visit (
     initial_diagnosis VARCHAR(255) NOT NULL,
     final_diagnosis VARCHAR(255),
     visit_status VARCHAR(50) NOT NULL,
-    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id),
-    FOREIGN KEY (nurse_id) REFERENCES Nurse(nurse_id)
+    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id) 
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (nurse_id) REFERENCES Nurse(nurse_id) 
+    ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Table for Specialty
@@ -116,8 +125,10 @@ CREATE TABLE DoctorSpecialty (
     doctor_id INT NOT NULL,
     specialty_id INT NOT NULL,
     PRIMARY KEY (doctor_id, specialty_id),
-    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id),
-    FOREIGN KEY (specialty_id) REFERENCES Specialty(specialty_id)
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (specialty_id) REFERENCES Specialty(specialty_id) 
+    ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Table for Test
@@ -139,8 +150,10 @@ CREATE TABLE TestOrder (
     result DECIMAL(10, 2) NOT NULL,
     abnormal BOOLEAN NOT NULL,
     UNIQUE (visit_id, test_code, ordered_datetime),
-    FOREIGN KEY (visit_id) REFERENCES Visit(visit_id),
-    FOREIGN KEY (test_code) REFERENCES Test(test_code)
+    FOREIGN KEY (visit_id) REFERENCES Visit(visit_id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (test_code) REFERENCES Test(test_code) 
+    ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 SET foreign_key_checks = 1;

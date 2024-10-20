@@ -56,5 +56,10 @@ namespace J_JHealthSolutions.Views
             get { return (ICommand)GetValue(LogOutCommandProperty); }
             set { SetValue(LogOutCommandProperty, value); }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

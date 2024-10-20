@@ -15,7 +15,7 @@ namespace J_JHealthSolutions.DAL
         /// </summary>
         /// <param name="patient">The Patient object to add.</param>
         /// <returns>The Patient object with the generated PatientId.</returns>
-        public Patient AddPatient(Patient patient)
+        public int AddPatient(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
@@ -39,7 +39,7 @@ namespace J_JHealthSolutions.DAL
             var generatedId = Convert.ToInt32(command.ExecuteScalar());
             patient.PatientId = generatedId;
 
-            return patient;
+            return generatedId;
         }
 
         /// <summary>

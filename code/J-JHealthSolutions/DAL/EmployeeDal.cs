@@ -165,6 +165,7 @@ namespace J_JHealthSolutions.DAL
             command.Parameters.Add("@personalPhone", MySqlDbType.VarChar).Value = employee.PersonalPhone;
 
             var employeeId = Convert.ToInt32(command.ExecuteScalar());
+            employee.EmployeeId = employeeId;
             return employeeId;
         }
 

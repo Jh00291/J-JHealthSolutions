@@ -15,7 +15,7 @@ namespace J_JHealthSolutions.Model
         private string _zipcode;
         private string _personalPhone;
 
-        public int? EmployeeId
+        internal int? EmployeeId
         {
             get => _employeeId;
             set

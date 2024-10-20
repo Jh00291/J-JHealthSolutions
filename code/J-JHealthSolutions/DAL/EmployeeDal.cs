@@ -225,6 +225,23 @@ namespace J_JHealthSolutions.DAL
             return affectedRows > 0;
         }
 
+        /// <summary>
+        /// Create an Employee object from a data reader
+        /// </summary>
+        /// <param name="reader">The MySqlDataReader containing employee data</param>
+        /// <param name="employeeIdOrdinal">Ordinal position of employee ID</param>
+        /// <param name="userIdOrdinal">Ordinal position of user ID</param>
+        /// <param name="fNameOrdinal">Ordinal position of first name</param>
+        /// <param name="lNameOrdinal">Ordinal position of last name</param>
+        /// <param name="dobOrdinal">Ordinal position of date of birth</param>
+        /// <param name="genderOrdinal">Ordinal position of gender</param>
+        /// <param name="address1Ordinal">Ordinal position of address line 1</param>
+        /// <param name="address2Ordinal">Ordinal position of address line 2</param>
+        /// <param name="cityOrdinal">Ordinal position of city</param>
+        /// <param name="stateOrdinal">Ordinal position of state</param>
+        /// <param name="zipcodeOrdinal">Ordinal position of zipcode</param>
+        /// <param name="personalPhoneOrdinal">Ordinal position of personal phone</param>
+        /// <returns>A new Employee object populated with the data from the reader</returns>
         private static Employee CreateEmployee(MySqlDataReader reader, int employeeIdOrdinal, int userIdOrdinal,
             int fNameOrdinal, int lNameOrdinal, int dobOrdinal, int genderOrdinal, int address1Ordinal, int address2Ordinal,
             int cityOrdinal, int stateOrdinal, int zipcodeOrdinal, int personalPhoneOrdinal)

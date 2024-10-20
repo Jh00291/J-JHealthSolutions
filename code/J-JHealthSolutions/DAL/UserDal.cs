@@ -48,6 +48,16 @@ public class UserDal
         return user;
     }
 
+    /// <summary>
+    /// Create a User object from a data reader
+    /// </summary>
+    /// <param name="reader">The MySqlDataReader containing user data</param>
+    /// <param name="userIdOrdinal">Ordinal position of user ID</param>
+    /// <param name="usernameOrdinal">Ordinal position of username</param>
+    /// <param name="roleOrdinal">Ordinal position of role</param>
+    /// <param name="firstNameOrdinal">Ordinal position of first name</param>
+    /// <param name="lastNameOrdinal">Ordinal position of last name</param>
+    /// <returns>A new User object populated with the data from the reader</returns>
     private User CreateUser(MySqlDataReader reader, int userIdOrdinal, int usernameOrdinal, int roleOrdinal, int firstNameOrdinal, int lastNameOrdinal)
     {
         return new User

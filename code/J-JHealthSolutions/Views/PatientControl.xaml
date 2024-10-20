@@ -23,7 +23,9 @@
                   IsReadOnly="True"
                   Grid.Row="0"
                   ColumnWidth="*"
-                  Margin="0,0,0,10">
+                  Margin="0,0,0,10"
+                  SelectionChanged="PatientsDataGrid_SelectionChanged">
+
             <!-- Add bottom margin for spacing -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
@@ -41,8 +43,8 @@
         <!-- Buttons in the second row -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" >
             <Button Content="Add" Width="97" Height="28" Margin="0,0,10,0" Click="AddPatient_Click"/>
-            <Button Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditPatient_Click"/>
-            <Button Content="Delete" Width="97" Height="28" Click="DeletePatient_Click"/>
+            <Button x:Name="EditButton" Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditPatient_Click" IsEnabled="False"/>
+            <Button x:Name="DeleteButton" Content="Delete" Width="97" Height="28" Click="DeletePatient_Click" IsEnabled="False"/>
         </StackPanel>
     </Grid>
 </UserControl>

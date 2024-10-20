@@ -1,6 +1,4 @@
 ﻿using J_JHealthSolutions.DAL;
-using J_JHealthSolutions.Model;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,6 +12,13 @@ namespace J_JHealthSolutions.Views
         {
             InitializeComponent();
             LoadPatients();
+        }
+
+        private void PatientsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Enable the Edit button only if a row is selected
+            EditButton.IsEnabled = PatientsDataGrid.SelectedItem != null;
+            DeleteButton.IsEnabled = PatientsDataGrid.SelectedItem != null;
         }
 
         private void LoadPatients()

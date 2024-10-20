@@ -15,17 +15,17 @@
         <!-- StackPanel in Row 0 for User Info and Menu -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
             <!-- User Info Control -->
-            <views:UserInfoControl x:Name="userInfoControl" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
+            <!-- Company Name -->
             <!-- Company Name -->
             <TextBlock Text="J&amp;J Solutions"
                        FontSize="26"
                        FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       Margin="0,20,0,20"/>
-
+                       />
             <!-- MainMenuControl -->
-            <views:MainMenuControl x:Name="mainMenuControl" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+            <views:MainMenuControl x:Name="mainMenuControl"/>
+
+            <views:UserInfoControl x:Name="userInfoControl"/>
         </StackPanel>
 
         <!-- Content Area in Row 1 -->

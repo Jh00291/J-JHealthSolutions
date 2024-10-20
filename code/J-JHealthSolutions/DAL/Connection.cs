@@ -13,6 +13,7 @@ namespace J_JHealthSolutions.DAL
         {
             var builder = new MySqlConnectionStringBuilder
             {
+                //Todo verify connection string
                 Server = "cs-dblab01.uwg.westga.edu",
                 Database = "cs3230f24a",
                 UserID = "cs3230f24a",

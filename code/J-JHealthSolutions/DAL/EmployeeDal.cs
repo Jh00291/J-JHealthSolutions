@@ -148,7 +148,7 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = @"INSERT INTO Employee (user_id, f_name, l_name, dob, address_1, address_2, city, state, zipcode, personal_phone)
+            var query = @"INSERT INTO Employee (f_name, l_name, dob, address_1, address_2, city, state, zipcode, personal_phone)
                           VALUES (@userId, @fName, @lName, @dob, @address1, @address2, @city, @state, @zipcode, @personalPhone);
                           SELECT LAST_INSERT_ID();";
 

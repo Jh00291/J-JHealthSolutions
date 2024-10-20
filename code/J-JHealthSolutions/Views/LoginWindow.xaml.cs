@@ -22,11 +22,19 @@ namespace J_JHealthSolutions.Views
     /// </summary>
     public partial class LoginWindow : Window
     {
+        /// <summary>
+        /// Initializes a new instance of the LoginWindow class.
+        /// </summary>
         public LoginWindow()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Handles the Login button click event. Attempts to authenticate the user using the provided credentials.
+        /// </summary>
+        /// <param name="sender">The button that was clicked</param>
+        /// <param name="e">Event arguments</param>
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             var username = UsernameTextBox.Text;

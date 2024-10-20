@@ -13,10 +13,19 @@ namespace J_JHealthSolutions.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// The currently logged-in user.
+        /// </summary>
         public User CurrentUser { get; set; }
 
+        /// <summary>
+        /// The command that handles the logout process.
+        /// </summary>
         public ICommand LogOutCommand { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the MainWindow for testing or default purposes, setting up a default user.
+        /// </summary>
         public MainWindow()
         {
 
@@ -36,11 +45,18 @@ namespace J_JHealthSolutions.Views
             mainMenuControl.LogOutCommand = LogOutCommand;
         }
 
+        /// <summary>
+        /// Initializes the commands used in the MainWindow.
+        /// </summary>
         private void InitializeCommands()
         {
             LogOutCommand = new RelayCommand(ExecuteLogOut);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the MainWindow, passing in the current user after a successful login.
+        /// </summary>
+        /// <param name="currentUser">The user who has logged in</param>
         public MainWindow(User currentUser)
         {
             InitializeComponent();
@@ -61,10 +77,13 @@ namespace J_JHealthSolutions.Views
 
         }
 
+        /// <summary>
+        /// Executes the logout process, closing the current window and showing the LoginWindow.
+        /// </summary>
+        /// <param name="parameter">The parameter passed to the command (can be null)</param>
         private void ExecuteLogOut(object parameter)
         {
 
-            // Show the LoginWindow
             var loginWindow = new LoginWindow();
             loginWindow.Show();
 

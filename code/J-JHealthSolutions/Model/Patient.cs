@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace J_JHealthSolutions.Model
 {
+    /// <summary>
+    /// Represents a patient in the healthcare system with personal, contact, and status details.
+    /// </summary>
     public class Patient
     {
         private int? _patientId;
@@ -19,6 +22,9 @@ namespace J_JHealthSolutions.Model
         private string _zipcode;
         private string _phone;
 
+        /// <summary>
+        /// Patient ID, must be a positive integer.
+        /// </summary>
         public int? PatientId
         {
             get => _patientId;
@@ -30,6 +36,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// First name of the patient, cannot be null or empty.
+        /// </summary>
         public string FName
         {
             get => _fName;
@@ -41,6 +50,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Last name of the patient, cannot be null or empty.
+        /// </summary>
         public string LName
         {
             get => _lName;
@@ -52,6 +64,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Date of birth of the patient, must be in the past.
+        /// </summary>
         public DateTime DOB
         {
             get => _dob;
@@ -63,6 +78,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Address line 1 of the patient, cannot be null or empty.
+        /// </summary>
         public string Address1
         {
             get => _address1;
@@ -74,8 +92,14 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Address line 2 of the patient, optional.
+        /// </summary>
         public string Address2 { get; set; }
 
+        /// <summary>
+        /// City of the patient, cannot be null or empty.
+        /// </summary>
         public string City
         {
             get => _city;
@@ -87,6 +111,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// State code of the patient, must be a valid US state code.
+        /// </summary>
         public string State
         {
             get => _state;
@@ -98,6 +125,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Zipcode of the patient, must be in the format 12345 or 12345-6789.
+        /// </summary>
         public string Zipcode
         {
             get => _zipcode;
@@ -109,6 +139,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Phone number of the patient, must be a valid 10-digit US number.
+        /// </summary>
         public string Phone
         {
             get => _phone;
@@ -120,14 +153,37 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Gender of the patient, represented as a single character.
+        /// </summary>
         public char Gender { get; set; }
 
-        public bool Active { get; set; }        
+        /// <summary>
+        /// Indicates whether the patient is active in the system.
+        /// </summary>
+        public bool Active { get; set; }
 
+        /// <summary>
+        /// Default constructor for the Patient class.
+        /// </summary>
         public Patient()
         {
         }
 
+        /// <summary>
+        /// Constructor to initialize a patient with detailed information.
+        /// </summary>
+        /// <param name="fName">First name of the patient</param>
+        /// <param name="lName">Last name of the patient</param>
+        /// <param name="dob">Date of birth of the patient</param>
+        /// <param name="gender">Gender of the patient</param>
+        /// <param name="address1">Address line 1</param>
+        /// <param name="address2">Address line 2 (optional)</param>
+        /// <param name="city">City of the patient</param>
+        /// <param name="state">State code</param>
+        /// <param name="zipcode">Zipcode</param>
+        /// <param name="phone">Phone number of the patient</param>
+        /// <param name="active">Indicates if the patient is active</param>
         public Patient(string fName, string lName, DateTime dob, string address1, char gender,
             string address2, string city, string state, string zipcode, string phone, bool active)
         {
@@ -144,6 +200,11 @@ namespace J_JHealthSolutions.Model
             Active = active;
         }
 
+        /// <summary>
+        /// Validates whether the provided state code is a valid US state.
+        /// </summary>
+        /// <param name="state">State code to validate</param>
+        /// <returns>True if the state code is valid, otherwise false</returns>
         private bool IsValidState(string state)
         {
             if (string.IsNullOrWhiteSpace(state))

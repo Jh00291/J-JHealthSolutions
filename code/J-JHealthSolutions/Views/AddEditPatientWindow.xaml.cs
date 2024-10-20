@@ -6,11 +6,17 @@ using System.Windows.Controls;
 
 namespace J_JHealthSolutions.Views
 {
+    /// <summary>
+    /// A window for adding or editing a patient's information.
+    /// </summary>
     public partial class AddEditPatientWindow : Window
     {
         private PatientDal _patientDal = new PatientDal();
         private Patient _patient;
 
+        /// <summary>
+        /// Initializes a new instance of the AddEditPatientWindow for adding a new patient.
+        /// </summary>
         public AddEditPatientWindow()
         {
             InitializeComponent();
@@ -19,6 +25,10 @@ namespace J_JHealthSolutions.Views
             _patient = new Patient();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the AddEditPatientWindow for editing an existing patient.
+        /// </summary>
+        /// <param name="patient">The patient to be edited</param>
         public AddEditPatientWindow(Patient patient)
         {
             InitializeComponent();
@@ -28,6 +38,10 @@ namespace J_JHealthSolutions.Views
             PopulatePatientData(patient);
         }
 
+        /// <summary>
+        /// Populates the window fields with the existing patient's data.
+        /// </summary>
+        /// <param name="patient">The patient whose data is used to populate the fields</param>
         private void PopulatePatientData(Patient patient)
         {
             firstNameTextBox.Text = patient.FName;
@@ -45,6 +59,9 @@ namespace J_JHealthSolutions.Views
             activeCheckBox.IsChecked = patient.Active;
         }
 
+        /// <summary>
+        /// Saves the patient data, either adding a new patient or updating an existing one.
+        /// </summary>
         private void SavePatient_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -67,7 +84,7 @@ namespace J_JHealthSolutions.Views
                         Active = activeCheckBox.IsChecked ?? false
                     };
 
-                    _patientDal.AddPatient(newPatient);  // Add the new patient
+                    _patientDal.AddPatient(newPatient);
                     ShowSuccessDialog("Patient added successfully.");
                 }
                 else
@@ -85,27 +102,27 @@ namespace J_JHealthSolutions.Views
                     _patient.Phone = phoneTextBox.Text;
                     _patient.Active = activeCheckBox.IsChecked.Value;
 
-                    _patientDal.UpdatePatient(_patient);  // Update the patient
+                    _patientDal.UpdatePatient(_patient); 
                     ShowSuccessDialog("Patient updated successfully.");
                 }
 
-                // Close the dialog and return true as the result
                 this.DialogResult = true;
-                this.Close();  // Close the window after successful save
+                this.Close();
             }
             catch (ArgumentException ex)
             {
-                // Catch validation exceptions from the Patient class
                 ShowErrorDialog("Validation Error", ex.Message);
             }
             catch (Exception ex)
             {
-                // Catch any other unexpected errors
                 ShowErrorDialog("Error", ex.Message);
             }
         }
 
-        // Custom success dialog
+        /// <summary>
+        // /// Shows a custom success dialog with a message.
+        // /// </summary>
+        // /// <param name="message">The message to display</param>
         private void ShowSuccessDialog(string message)
         {
             var successDialog = new Window
@@ -119,7 +136,11 @@ namespace J_JHealthSolutions.Views
             successDialog.ShowDialog();
         }
 
-        // Custom error dialog for validation or other errors
+        /// <summary>
+        // /// Shows a custom error dialog with a title and message.
+        // /// </summary>
+        // /// <param name="title">The title of the error dialog</param>
+        // /// <param name="message">The error message to display</param>
         private void ShowErrorDialog(string title, string message)
         {
             var errorDialog = new Window
@@ -133,6 +154,9 @@ namespace J_JHealthSolutions.Views
             errorDialog.ShowDialog();
         }
 
+        /// <summary>
+        /// Closes the window when the cancel button is clicked.
+        /// </summary>
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

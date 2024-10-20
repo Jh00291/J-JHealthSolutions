@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace J_JHealthSolutions.Model
 {
+    /// <summary>
+    /// Represents an employee in the system, with personal and contact details.
+    /// </summary>
     public class Employee
     {
         private int? _employeeId;
@@ -16,6 +19,9 @@ namespace J_JHealthSolutions.Model
         private string _zipcode;
         private string _personalPhone;
 
+        /// <summary>
+        /// Employee ID, must be a positive integer.
+        /// </summary>
         internal int? EmployeeId
         {
             get => _employeeId;
@@ -27,8 +33,14 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// The User ID associated with the employee.
+        /// </summary>
         public int? UserId { get; set; }
 
+        /// <summary>
+        /// First name of the employee, cannot be null or empty.
+        /// </summary>
         public string FName
         {
             get => _fName;
@@ -40,6 +52,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Last name of the employee, cannot be null or empty.
+        /// </summary>
         public string LName
         {
             get => _lName;
@@ -51,6 +66,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Date of birth of the employee, must be in the past.
+        /// </summary>
         public DateTime Dob
         {
             get => _dob;
@@ -62,6 +80,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Address line 1 of the employee, cannot be null or empty.
+        /// </summary>
         public string Address1
         {
             get => _address1;
@@ -73,8 +94,14 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Address line 2 of the employee, optional.
+        /// </summary>
         public string Address2 { get; set; }
 
+        /// <summary>
+        /// City of the employee, cannot be null or empty.
+        /// </summary>
         public string City
         {
             get => _city;
@@ -86,6 +113,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// State code of the employee, must be a valid US state code.
+        /// </summary>
         public string State
         {
             get => _state;
@@ -97,6 +127,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Zipcode of the employee, must be in the format 12345 or 12345-6789.
+        /// </summary>
         public string Zipcode
         {
             get => _zipcode;
@@ -108,6 +141,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Personal phone number of the employee, must be a valid 10-digit US number.
+        /// </summary>
         public string PersonalPhone
         {
             get => _personalPhone;
@@ -119,13 +155,32 @@ namespace J_JHealthSolutions.Model
             }
         }
 
-        // Add gender property
+        /// <summary>
+        /// Gender of the employee, represented as a single character.
+        /// </summary>
         public char Gender { get; set; }
 
+        /// <summary>
+        /// Default constructor for the Employee class.
+        /// </summary>
         public Employee()
         {
         }
 
+        /// <summary>
+        /// Constructor to initialize an employee with detailed information.
+        /// </summary>
+        /// <param name="userId">User ID associated with the employee</param>
+        /// <param name="fName">First name</param>
+        /// <param name="lName">Last name</param>
+        /// <param name="dob">Date of birth</param>
+        /// <param name="gender">Gender</param>
+        /// <param name="address1">Address line 1</param>
+        /// <param name="address2">Address line 2</param>
+        /// <param name="city">City</param>
+        /// <param name="state">State code</param>
+        /// <param name="zipcode">Zipcode</param>
+        /// <param name="personalPhone">Personal phone number</param>
         public Employee(int? userId, string fName, string lName, DateTime dob, char gender,
             string address1, string address2, string city, string state, string zipcode, string personalPhone)
         {
@@ -142,6 +197,11 @@ namespace J_JHealthSolutions.Model
             PersonalPhone = personalPhone;
         }
 
+        /// <summary>
+        /// Validates whether the provided state code is a valid US state.
+        /// </summary>
+        /// <param name="state">State code to validate</param>
+        /// <returns>True if the state code is valid, otherwise false</returns>
         private bool IsValidState(string state)
         {
             if (string.IsNullOrWhiteSpace(state))

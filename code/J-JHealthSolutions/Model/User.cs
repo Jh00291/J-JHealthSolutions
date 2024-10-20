@@ -2,6 +2,9 @@
 
 namespace J_JHealthSolutions.Model
 {
+    /// <summary>
+    /// Represents a user in the system, including their personal information and role.
+    /// </summary>
     public class User
     {
         private int _userId;
@@ -64,6 +67,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// First name of the user, cannot be null or empty.
+        /// </summary>
         public string Fname
         {
             get => _fname;
@@ -77,6 +83,9 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        /// <summary>
+        /// Last name of the user, cannot be null or empty.
+        /// </summary>
         public string Lname
         {
             get => _lname;

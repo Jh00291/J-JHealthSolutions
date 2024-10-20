@@ -8,6 +8,6 @@ namespace J_JHealthSolutions.DAL
 {
     public class PatientDal
     {
-        public bool CreatePatient(PatientDal)
+
     }
 }

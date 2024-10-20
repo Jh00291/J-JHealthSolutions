@@ -9,7 +9,7 @@ namespace J_JHealthSolutions.Model
 {
     public class Patient
     {
-        private int _patientId;
+        private int? _patientId;
         private string _fName;
         private string _lName;
         private DateTime _dob;
@@ -19,13 +19,13 @@ namespace J_JHealthSolutions.Model
         private string _zipcode;
         private string _phone;
 
-        public int PatientId
+        public int? PatientId
         {
             get => _patientId;
-            set
+            internal set
             {
                 if (value <= 0)
-                    throw new ArgumentException("EmployeeId must be a positive integer.");
+                    throw new ArgumentException("PatientId must be a positive integer.");
                 _patientId = value;
             }
         }
@@ -125,10 +125,9 @@ namespace J_JHealthSolutions.Model
         {
         }
 
-        public Patient(int patientId, string fName, string lName, DateTime dob, string address1,
+        public Patient(string fName, string lName, DateTime dob, string address1,
             string address2, string city, string state, string zipcode, string phone, bool active)
         {
-            PatientId = patientId;
             FName = fName;
             LName = lName;
             Dob = dob;

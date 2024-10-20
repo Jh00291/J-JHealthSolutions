@@ -1,33 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using J_JHealthSolutions.DAL;
+using J_JHealthSolutions.Model;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace J_JHealthSolutions.Views
 {
-    /// <summary>
-    /// Interaction logic for PatientControl.xaml
-    /// </summary>
     public partial class PatientControl : UserControl
     {
+        private PatientDal _patientDal = new PatientDal();
+
         public PatientControl()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        // Add Patient
+        private void AddPatient_Click(object sender, RoutedEventArgs e)
         {
+            
+        }
 
+        // Edit Patient
+        private void EditPatient_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        // Delete Patient
+        private void DeletePatient_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

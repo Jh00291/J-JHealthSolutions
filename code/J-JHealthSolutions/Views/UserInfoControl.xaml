@@ -8,8 +8,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Horizontal">
         <TextBlock Text="User ID: " FontWeight="Bold"/>
-        <TextBlock Text="{Binding User.Id}" Margin="5,0"/>
+        <TextBlock Text="{Binding UserId, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="5,0"/>
         <TextBlock Text="Name: " FontWeight="Bold" Margin="15,0,0,0"/>
-        <TextBlock Text="{Binding User.FullName}" Margin="5,0"/>
+        <TextBlock Text="{Binding FullName, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="5,0"/>
     </StackPanel>
 </UserControl>

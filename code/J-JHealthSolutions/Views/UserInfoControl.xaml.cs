@@ -23,7 +23,6 @@ namespace J_JHealthSolutions.Views
         public UserInfoControl()
         {
             InitializeComponent();
-            this.DataContext = this;
         }
 
         public static readonly DependencyProperty UserIdProperty =
@@ -43,5 +42,6 @@ namespace J_JHealthSolutions.Views
             get { return (string)GetValue(FullNameProperty); }
             set { SetValue(FullNameProperty, value); }
         }
+
     }
 }

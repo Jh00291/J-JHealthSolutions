@@ -16,6 +16,7 @@ namespace J_JHealthSolutions.Views
 
         public MainWindow()
         {
+
             InitializeComponent();
 
             CurrentUser = new User("123", "hello", UserRole.Administrator);

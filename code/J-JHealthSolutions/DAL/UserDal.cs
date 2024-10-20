@@ -20,7 +20,12 @@ public class UserDal
         using var connection = new MySqlConnection(Connection.ConnectionString());
 
         connection.Open();
-        var query = "SELECT user_id, username, password, role FROM User WHERE username = @username AND password = @password;";
+        var query = @"
+            SELECT u.user_id, u.username, u.password, u.role,
+                   e.first_name, e.last_name
+            FROM User u
+            INNER JOIN Employee e ON u.user_id = e.user_id
+            WHERE u.username = @username AND u.password = @password;";
 
         using var command = new MySqlCommand(query, connection);
         command.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
@@ -33,22 +38,27 @@ public class UserDal
             var userIdOrdinal = reader.GetOrdinal("user_id");
             var usernameOrdinal = reader.GetOrdinal("username");
             var roleOrdinal = reader.GetOrdinal("role");
+            var firstNameOrdinal = reader.GetOrdinal("first_name");
+            var lastNameOrdinal = reader.GetOrdinal("last_name");
 
-            user = CreateUser(reader, userIdOrdinal, usernameOrdinal, roleOrdinal);
+            user = CreateUser(reader, userIdOrdinal, usernameOrdinal, roleOrdinal, firstNameOrdinal, lastNameOrdinal);
         }
+
 
         return user;
     }
 
-    private static User CreateUser(MySqlDataReader reader, int userIdOrdinal, int usernameOrdinal, int roleOrdinal)
+    private User CreateUser(MySqlDataReader reader, int userIdOrdinal, int usernameOrdinal, int roleOrdinal, int firstNameOrdinal, int lastNameOrdinal)
     {
         return new User
         {
-            UserId = reader.GetInt32(userIdOrdinal),
+            UserId = reader.GetString(userIdOrdinal),
             Username = reader.GetString(usernameOrdinal),
             Role = Enum.TryParse<UserRole>(reader.GetString(roleOrdinal), true, out var userRole)
                 ? userRole
-                : UserRole.Other
+                : UserRole.Other,
+            Fname = reader.GetString(firstNameOrdinal),
+            Lname = reader.GetString(lastNameOrdinal)
         };
     }
 

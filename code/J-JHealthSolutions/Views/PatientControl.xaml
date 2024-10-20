@@ -36,6 +36,7 @@
                 <DataGridTextColumn Header="State" Binding="{Binding State}" />
                 <DataGridTextColumn Header="Zipcode" Binding="{Binding Zipcode}" />
                 <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" />
+                <DataGridTextColumn Header="Active" Binding="{Binding Active}" />
             </DataGrid.Columns>
         </DataGrid>
 

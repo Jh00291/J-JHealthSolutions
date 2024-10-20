@@ -1,8 +1,8 @@
 ﻿using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
 using System;
-using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace J_JHealthSolutions.Views
 {
@@ -40,11 +40,11 @@ namespace J_JHealthSolutions.Views
 
         private void SavePatient_Click(object sender, RoutedEventArgs e)
         {
-            if (ValidateInputs())
+            try
             {
-                if (_patient == null)
+                if (_patient.PatientId == null)
                 {
-                    // If no patient was passed, it's a new patient (Add)
+                    // If no patient exists, create a new one
                     var newPatient = new Patient
                     {
                         FName = firstNameTextBox.Text,
@@ -61,11 +61,11 @@ namespace J_JHealthSolutions.Views
                     };
 
                     _patientDal.AddPatient(newPatient);  // Add the new patient
-                    MessageBox.Show("Patient added successfully.");
+                    ShowSuccessDialog("Patient added successfully.");
                 }
                 else
                 {
-                    // If a patient was passed, it's an existing patient (Edit)
+                    // Update existing patient
                     _patient.FName = firstNameTextBox.Text;
                     _patient.LName = lastNameTextBox.Text;
                     _patient.DOB = dobDatePicker.SelectedDate.Value;
@@ -78,88 +78,56 @@ namespace J_JHealthSolutions.Views
                     _patient.Phone = phoneTextBox.Text;
                     _patient.Active = activeCheckBox.IsChecked.Value;
 
-                    _patientDal.UpdatePatient(_patient);  // Update the existing patient
-                    MessageBox.Show("Patient updated successfully.");
+                    _patientDal.UpdatePatient(_patient);  // Update the patient
+                    ShowSuccessDialog("Patient updated successfully.");
                 }
-
-                this.Close();  // Close the window after saving
+                this.Close();  // Close the window after successful save
+            }
+            catch (ArgumentException ex)
+            {
+                // Catch validation exceptions from the Patient class
+                ShowErrorDialog("Validation Error", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Catch any other unexpected errors
+                ShowErrorDialog("Error", ex.Message);
             }
         }
 
-
-        private bool ValidateInputs()
+        // Custom success dialog
+        private void ShowSuccessDialog(string message)
         {
-            // Check if first name is provided
-            if (string.IsNullOrWhiteSpace(firstNameTextBox.Text))
+            var successDialog = new Window
             {
-                MessageBox.Show("First Name is required.");
-                return false;
-            }
-
-            // Check if last name is provided
-            if (string.IsNullOrWhiteSpace(lastNameTextBox.Text))
-            {
-                MessageBox.Show("Last Name is required.");
-                return false;
-            }
-
-            // Check if date of birth is provided and valid
-            if (dobDatePicker.SelectedDate == null || dobDatePicker.SelectedDate >= DateTime.Today)
-            {
-                MessageBox.Show("Please select a valid Date of Birth.");
-                return false;
-            }
-
-            // Check if gender is selected
-            if (genderComboBox.SelectedItem == null)
-            {
-                MessageBox.Show("Gender is required.");
-                return false;
-            }
-
-            // Check if address line 1 is provided
-            if (string.IsNullOrWhiteSpace(address1TextBox.Text))
-            {
-                MessageBox.Show("Address 1 is required.");
-                return false;
-            }
-
-            // Check if city is provided
-            if (string.IsNullOrWhiteSpace(cityTextBox.Text))
-            {
-                MessageBox.Show("City is required.");
-                return false;
-            }
-
-            // Check if state is selected
-            if (stateComboBox.SelectedItem == null)
-            {
-                MessageBox.Show("State is required.");
-                return false;
-            }
-
-            // Check if zip code is valid (US format)
-            if (!Regex.IsMatch(zipcodeTextBox.Text, @"^\d{5}(?:[-\s]\d{4})?$"))
-            {
-                MessageBox.Show("Invalid Zip Code format.");
-                return false;
-            }
-
-            // Check if phone number is valid (10 digits, optional +1 for country code)
-            if (!Regex.IsMatch(phoneTextBox.Text, @"^\+?1?\d{10}$"))
-            {
-                MessageBox.Show("Invalid Phone Number format.");
-                return false;
-            }
-
-            // All checks passed
-            return true;
+                Title = "Success",
+                Content = new TextBlock { Text = message, Margin = new Thickness(10) },
+                Width = 300,
+                Height = 150,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            successDialog.ShowDialog();
         }
 
+        // Custom error dialog for validation or other errors
+        private void ShowErrorDialog(string title, string message)
+        {
+            var errorDialog = new Window
+            {
+                Title = title,
+                Content = new TextBlock { Text = message, Margin = new Thickness(10) },
+                Width = 300,
+                Height = 150,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            errorDialog.ShowDialog();
+        }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
+
     }
 }

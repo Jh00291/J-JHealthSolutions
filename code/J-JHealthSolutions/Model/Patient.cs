@@ -52,7 +52,7 @@ namespace J_JHealthSolutions.Model
             }
         }
 
-        public DateTime Dob
+        public DateTime DOB
         {
             get => _dob;
             set
@@ -133,7 +133,7 @@ namespace J_JHealthSolutions.Model
         {
             FName = fName;
             LName = lName;
-            Dob = dob;
+            DOB = dob;
             Gender = gender;
             Address1 = address1;
             Address2 = address2;

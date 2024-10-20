@@ -27,7 +27,7 @@ namespace J_JHealthSolutions.DAL
             using var command = new MySqlCommand(query, connection);
             command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = patient.FName;
             command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = patient.LName;
-            command.Parameters.Add("@dob", MySqlDbType.Date).Value = patient.Dob;
+            command.Parameters.Add("@dob", MySqlDbType.Date).Value = patient.DOB;
             command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = patient.Gender;
             command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = patient.Address1;
             command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = (object)patient.Address2 ?? DBNull.Value;
@@ -73,7 +73,7 @@ namespace J_JHealthSolutions.DAL
             using var command = new MySqlCommand(query, connection);
             command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = patient.FName;
             command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = patient.LName;
-            command.Parameters.Add("@dob", MySqlDbType.Date).Value = patient.Dob;
+            command.Parameters.Add("@dob", MySqlDbType.Date).Value = patient.DOB;
             command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = patient.Gender;
             command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = patient.Address1;
             command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = (object)patient.Address2 ?? DBNull.Value;
@@ -131,7 +131,7 @@ namespace J_JHealthSolutions.DAL
                     PatientId = reader.GetInt32("patient_id"),
                     FName = reader.GetString("f_name"),
                     LName = reader.GetString("l_name"),
-                    Dob = reader.GetDateTime("dob"),
+                    DOB = reader.GetDateTime("dob"),
                     Gender = reader.GetChar("gender"),
                     Address1 = reader.GetString("address_1"),
                     Address2 = reader.IsDBNull(reader.GetOrdinal("address_2")) ? null : reader.GetString("address_2"),

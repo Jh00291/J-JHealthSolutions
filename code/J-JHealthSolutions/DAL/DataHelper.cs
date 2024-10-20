@@ -1,23 +1,23 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace J_JHealthSolutions.DAL
 {
+    /// <summary>
+    /// Provides helper methods for handling data access operations,
+    /// including checking for null values in database columns before retrieving data.
+    /// </summary>
     public static class DataHelper
     {
         /// <summary>
-        /// Extension method that checks if a column is null before return its value.
-        /// 
+        /// Extension method that checks if a column in a <see cref="MySqlDataReader"/> is null before returning its value.
         /// </summary>
-        /// <typeparam name="T"> column type</typeparam>
-        /// <param name="reader">DataReader object</param>
-        /// <param name="columnOrdinal">column ordinal</param>
-        /// <returns></returns>
+        /// <typeparam name="T">The expected type of the column value.</typeparam>
+        /// <param name="reader">The <see cref="MySqlDataReader"/> object that contains the data.</param>
+        /// <param name="columnOrdinal">The zero-based column ordinal (index) in the result set.</param>
+        /// <returns>
+        /// The value of the column if it's not null, otherwise the default value for the type <typeparamref name="T"/>.
+        /// </returns>
         public static T GetFieldValueCheckNull<T>(this MySqlDataReader reader, int columnOrdinal)
         {
             T returnValue = default;
@@ -30,17 +30,17 @@ namespace J_JHealthSolutions.DAL
         }
 
         /// <summary>
-        /// Extension method that checks if a column in a data row is null before return its value.
-        /// 
+        /// Extension method that checks if a column in a <see cref="DataRow"/> is null before returning its value.
         /// </summary>
-        /// <typeparam name="T">column type</typeparam>
-        /// <param name="row">data row that contains the data</param>
-        /// <param name="columnName">column name in DB</param>
-        /// <returns></returns>
+        /// <typeparam name="T">The expected type of the column value.</typeparam>
+        /// <param name="row">The <see cref="DataRow"/> that contains the data.</param>
+        /// <param name="columnName">The name of the column in the database.</param>
+        /// <returns>
+        /// The value of the column if it's not null, otherwise the default value for the type <typeparamref name="T"/>.
+        /// </returns>
         public static T FieldOrDefault<T>(this DataRow row, string columnName)
         {
             return row.IsNull(columnName) ? default : row.Field<T>(columnName);
         }
-
     }
 }

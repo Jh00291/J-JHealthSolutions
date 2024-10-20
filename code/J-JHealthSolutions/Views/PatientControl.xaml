@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:J_JHealthSolutions.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" Width="775">
-    <Grid Margin="10">
+             d:DesignHeight="450" d:DesignWidth="775"
+             HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid>
         <!-- Define Grid Rows -->
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -22,27 +23,24 @@
                   SelectionUnit="FullRow"
                   IsReadOnly="True"
                   Grid.Row="0"
+                  Margin="10"
                   ColumnWidth="*"
-                  Margin="0,0,0,10"
                   SelectionChanged="PatientsDataGrid_SelectionChanged">
-
-            <!-- Add bottom margin for spacing -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
                 <DataGridTextColumn Header="First Name" Binding="{Binding FName}" />
                 <DataGridTextColumn Header="Last Name" Binding="{Binding LName}" />
-                <DataGridTextColumn Header="Date of Birth" Binding="{Binding DOB, StringFormat=\{0:MM/dd/yyyy\}}" />
+                <DataGridTextColumn Header="Date of Birth" Binding="{Binding DOB, StringFormat={}{0:MM/dd/yyyy}}" />
                 <DataGridTextColumn Header="Address" Binding="{Binding Address1}" />
                 <DataGridTextColumn Header="City" Binding="{Binding City}" />
                 <DataGridTextColumn Header="State" Binding="{Binding State}" />
                 <DataGridTextColumn Header="Zipcode" Binding="{Binding Zipcode}" />
                 <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" />
-                <DataGridCheckBoxColumn Header="Active" Binding="{Binding Active}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <!-- Buttons in the second row -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" >
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button Content="Add" Width="97" Height="28" Margin="0,0,10,0" Click="AddPatient_Click"/>
             <Button x:Name="EditButton" Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditPatient_Click" IsEnabled="False"/>
             <Button x:Name="DeleteButton" Content="Delete" Width="97" Height="28" Click="DeletePatient_Click" IsEnabled="False"/>

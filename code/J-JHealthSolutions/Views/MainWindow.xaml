@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:J_JHealthSolutions.Views"
-        Title="Main - J&amp;J Solutions" Height="600" Width="800">
-    <Grid Background="#F0F0F0" Margin="10">
+        Title="Main - J&amp;J Solutions" WindowState="Maximized">
+    <Grid Background="#F0F0F0">
         <!-- Define Grid RowDefinitions -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -33,7 +33,8 @@
                        FontSize="26"
                        FontWeight="Bold"
                        HorizontalAlignment="Left"
-                       Margin="0,20,0,20"/>
+                       VerticalAlignment="Center"
+                       Margin="10,0"/>
             <!-- User Info Control -->
             <views:UserInfoControl Grid.Column="1" x:Name="userInfoControl" HorizontalAlignment="Right"/>
         </Grid>
@@ -42,9 +43,10 @@
         <views:MainMenuControl Grid.Row="1" Grid.Column="0" x:Name="mainMenuControl"/>
 
         <!-- Right Column: ContentControl -->
-        <ContentControl Grid.Row="1" Grid.Column="1" x:Name="MainContentControl">
-            <!-- You can set an initial content here or leave it empty -->
-            <views:PatientControl x:Name="patientControl" HorizontalAlignment="Center" VerticalAlignment="Top" Width="655"/>
+        <ContentControl Grid.Row="1" Grid.Column="1" x:Name="MainContentControl"
+                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <!-- Initial content -->
+            <views:PatientControl x:Name="patientControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </ContentControl>
     </Grid>
 </Window>

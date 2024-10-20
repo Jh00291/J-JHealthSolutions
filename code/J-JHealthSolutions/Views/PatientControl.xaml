@@ -6,13 +6,25 @@
              xmlns:local="clr-namespace:J_JHealthSolutions.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" Width="775">
-    <Grid>
+    <Grid Margin="10">
+        <!-- Define Grid Rows -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- DataGrid takes up remaining space -->
+            <RowDefinition Height="Auto" />
+            <!-- Buttons take up space as needed -->
+        </Grid.RowDefinitions>
+
+        <!-- DataGrid in the first row -->
         <DataGrid x:Name="PatientsDataGrid"
                   AutoGenerateColumns="False"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
                   IsReadOnly="True"
-                  Margin="10">
+                  Grid.Row="0"
+                  ColumnWidth="*"
+                  Margin="0,0,0,10">
+            <!-- Add bottom margin for spacing -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
                 <DataGridTextColumn Header="First Name" Binding="{Binding FName}" />
@@ -25,9 +37,12 @@
                 <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Add" HorizontalAlignment="Left" Margin="668,48,0,0" VerticalAlignment="Top" Width="97" Height="28" RenderTransformOrigin="-0.003,0.339" Click="AddPatient_Click"/>
-        <Button Content="Edit" HorizontalAlignment="Left" Margin="668,104,0,0" VerticalAlignment="Top" Width="97" Height="28" RenderTransformOrigin="-0.003,0.339" Click="EditPatient_Click"/>
-        <Button Content="Delete" HorizontalAlignment="Left" Margin="668,165,0,0" VerticalAlignment="Top" Width="97" Height="28" RenderTransformOrigin="-0.003,0.339" Click="DeletePatient_Click"/>
 
+        <!-- Buttons in the second row -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Button Content="Add" Width="97" Height="28" Margin="0,0,10,0" Click="AddPatient_Click"/>
+            <Button Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditPatient_Click"/>
+            <Button Content="Delete" Width="97" Height="28" Click="DeletePatient_Click"/>
+        </StackPanel>
     </Grid>
 </UserControl>

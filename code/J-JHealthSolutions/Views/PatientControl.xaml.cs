@@ -13,6 +13,13 @@ namespace J_JHealthSolutions.Views
         public PatientControl()
         {
             InitializeComponent();
+            LoadPatients();
+        }
+
+        private void LoadPatients()
+        {
+                var patients = _patientDal.GetPatients();
+                PatientsDataGrid.ItemsSource = patients;
         }
 
         // Add Patient

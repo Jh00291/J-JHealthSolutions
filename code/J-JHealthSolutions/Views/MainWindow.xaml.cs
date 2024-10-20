@@ -22,10 +22,10 @@ namespace J_JHealthSolutions.Views
 
             InitializeComponent();
 
-            CurrentUser = new User("123", "hello", UserRole.Administrator, "Jason", "Nunez");
+            CurrentUser = new User(123, "hello", UserRole.Administrator, "Jason", "Nunez");
 
             // Set user information in UserInfoControl
-            userInfoControl.UserId = CurrentUser.UserId;
+            userInfoControl.UserId = CurrentUser.UserId.ToString();
             userInfoControl.FullName = $"{CurrentUser.Fname} {CurrentUser.Lname}";
 
             // Pass the UserRole to MainMenuControl
@@ -49,7 +49,7 @@ namespace J_JHealthSolutions.Views
             CurrentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
 
             // Set user information in UserInfoControl
-            userInfoControl.UserId = CurrentUser.UserId;
+            userInfoControl.UserId = CurrentUser.UserId.ToString();
             userInfoControl.FullName = $"{CurrentUser.Fname} {CurrentUser.Lname}";
 
             // Pass the UserRole to MainMenuControl

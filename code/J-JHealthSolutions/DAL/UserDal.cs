@@ -22,7 +22,7 @@ public class UserDal
         connection.Open();
         var query = @"
             SELECT u.user_id, u.username, u.password, u.role,
-                   e.first_name, e.last_name
+                   e.f_name, e.l_name
             FROM User u
             INNER JOIN Employee e ON u.user_id = e.user_id
             WHERE u.username = @username AND u.password = @password;";
@@ -38,8 +38,8 @@ public class UserDal
             var userIdOrdinal = reader.GetOrdinal("user_id");
             var usernameOrdinal = reader.GetOrdinal("username");
             var roleOrdinal = reader.GetOrdinal("role");
-            var firstNameOrdinal = reader.GetOrdinal("first_name");
-            var lastNameOrdinal = reader.GetOrdinal("last_name");
+            var firstNameOrdinal = reader.GetOrdinal("f_name");
+            var lastNameOrdinal = reader.GetOrdinal("l_name");
 
             user = CreateUser(reader, userIdOrdinal, usernameOrdinal, roleOrdinal, firstNameOrdinal, lastNameOrdinal);
         }
@@ -52,7 +52,7 @@ public class UserDal
     {
         return new User
         {
-            UserId = reader.GetString(userIdOrdinal),
+            UserId = reader.GetInt32(userIdOrdinal),
             Username = reader.GetString(usernameOrdinal),
             Role = Enum.TryParse<UserRole>(reader.GetString(roleOrdinal), true, out var userRole)
                 ? userRole

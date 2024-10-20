@@ -1,9 +1,13 @@
-﻿using MySql.Data.MySqlClient;
+﻿using J_JHealthSolutions.Model;
+using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Crypto.Generators;
 
 namespace J_JHealthSolutions.DAL;
 
 public class UserDal
 {
+
+
     /// <summary>
     /// Attempt to log in a user by verifying their username and password.
     /// </summary>
@@ -28,12 +32,24 @@ public class UserDal
         {
             var userIdOrdinal = reader.GetOrdinal("user_id");
             var usernameOrdinal = reader.GetOrdinal("username");
-            var passwordOrdinal = reader.GetOrdinal("password");
             var roleOrdinal = reader.GetOrdinal("role");
 
-            user = CreateUser(reader, userIdOrdinal, usernameOrdinal, passwordOrdinal, roleOrdinal);
+            user = CreateUser(reader, userIdOrdinal, usernameOrdinal, roleOrdinal);
         }
 
         return user;
     }
+
+    private static User CreateUser(MySqlDataReader reader, int userIdOrdinal, int usernameOrdinal, int roleOrdinal)
+    {
+        return new User
+        {
+            UserId = reader.GetInt32(userIdOrdinal),
+            Username = reader.GetString(usernameOrdinal),
+            Role = Enum.TryParse<UserRole>(reader.GetString(roleOrdinal), true, out var userRole)
+                ? userRole
+                : UserRole.Other
+        };
+    }
+
 }

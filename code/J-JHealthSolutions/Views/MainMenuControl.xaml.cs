@@ -45,7 +45,8 @@ namespace J_JHealthSolutions.Views
 
         private void UpdateManageEmployeesVisibility()
         {
-            ManageEmployeesButton.Visibility = UserRole == Model.UserRole.Administrator.ToString() ? Visibility.Visible : Visibility.Collapsed;
+            //Todo add the admin role
+            ManageEmployeesButton.Visibility = UserRole == "ToDo" ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public static readonly DependencyProperty LogOutCommandProperty =

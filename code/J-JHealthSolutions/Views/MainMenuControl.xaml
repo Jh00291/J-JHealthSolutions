@@ -1,19 +1,31 @@
 ﻿<UserControl x:Class="J_JHealthSolutions.Views.MainMenuControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:J_JHealthSolutions.Views"
-             mc:Ignorable="d" 
              Height="Auto" Width="Auto">
-    <StackPanel Orientation="Vertical">
-        <Button Content="Manage Visits" Command="{Binding ManageVisitsCommand}"  IsEnabled="False"/>
-        <Button Content="Manage Appointments" Command="{Binding ManageAppointmentsCommand}" IsEnabled="False"/>
-        <Button Content="Manage Tests" Command="{Binding ManageTestsCommand}" IsEnabled="False"/>
-        <Button Content="Manage Patients" Command="{Binding ManagePatientsCommand}"/>
-        <Button x:Name="ManageEmployeesButton"
-                Content="Manage Employees"
-                Command="{Binding ManageEmployeesCommand}" />
-        <Button Content="Log Out" Command="{Binding LogOutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-    </StackPanel>
+    <Grid>
+        <!-- Define RowDefinitions to distribute space equally -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Buttons occupying each row -->
+        <Button Grid.Row="0" Content="Manage Visits" Command="{Binding ManageVisitsCommand}" IsEnabled="False"
+                Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Button Grid.Row="1" Content="Manage Appointments" Command="{Binding ManageAppointmentsCommand}" IsEnabled="False"
+                Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Button Grid.Row="2" Content="Manage Tests" Command="{Binding ManageTestsCommand}" IsEnabled="False"
+                Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Button Grid.Row="3" Content="Manage Patients" Command="{Binding ManagePatientsCommand}"
+                Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Button Grid.Row="4" x:Name="ManageEmployeesButton" Content="Manage Employees" Command="{Binding ManageEmployeesCommand}"
+                Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Button Grid.Row="5" Content="Log Out" Command="{Binding LogOutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    </Grid>
 </UserControl>

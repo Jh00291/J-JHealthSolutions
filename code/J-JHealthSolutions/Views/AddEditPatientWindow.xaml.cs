@@ -120,7 +120,7 @@ namespace J_JHealthSolutions.Views
             {
                 Title = title,
                 Content = new TextBlock { Text = message, Margin = new Thickness(10) },
-                Width = 300,
+                Width = 350,
                 Height = 150,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen
             };

@@ -4,21 +4,23 @@ namespace J_JHealthSolutions.Model
 {
     public class User
     {
-        private int _userId;
+        private string _userId;
         private string _username;
         private UserRole _role;
+        private string _fname;
+        private string _lname;
 
         /// <summary>
         /// Unique identifier for the user
         /// </summary>
-        public int UserId
+        public string UserId
         {
             get => _userId;
             set
             {
-                if (value <= 0)
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentException("UserId must be greater than zero.");
+                    throw new ArgumentException("UserId cannot be empty or null.");
                 }
                 _userId = value;
             }
@@ -62,6 +64,32 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        public string Fname
+        {
+            get => _fname;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("First name cannot be empty or null.");
+                }
+                _fname = value;
+            }
+        }
+
+        public string Lname
+        {
+            get => _lname;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Last name cannot be empty or null.");
+                }
+                _lname = value;
+            }
+        }
+
         /// <summary>
         /// Constructor to create a User object with required fields.
         /// </summary>
@@ -69,11 +97,15 @@ namespace J_JHealthSolutions.Model
         /// <param name="username">Unique username</param>
         /// <param name="password">Password of the user</param>
         /// <param name="role">Role of the user</param>
-        public User(int userId, string username, UserRole role)
+        /// <param name ="fname">First name of the user</param>
+        /// <param name ="lname">Last name of the user</param>
+        public User(string userId, string username, UserRole role, string fname, string lname)
         {
             UserId = userId;
             Username = username;
             Role = role;
+            Fname = fname;
+            Lname = lname;
         }
 
         public User()

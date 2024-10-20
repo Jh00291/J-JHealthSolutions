@@ -5,53 +5,73 @@ using J_JHealthSolutions.Model;
 
 namespace J_JHealthSolutions.Views
 {
+    /// <summary>
+    /// Interaction logic for managing patients, including adding, editing, and deleting patients.
+    /// </summary>
     public partial class PatientControl : UserControl
     {
         private PatientDal _patientDal = new PatientDal();
 
+        /// <summary>
+        /// Initializes a new instance of the PatientControl and loads the list of patients.
+        /// </summary>
         public PatientControl()
         {
             InitializeComponent();
             LoadPatients();
         }
 
+        /// <summary>
+        /// Handles the selection change event for the DataGrid, enabling or disabling the Edit and Delete buttons based on the selection.
+        /// </summary>
+        /// <param name="sender">The DataGrid where the selection occurred</param>
+        /// <param name="e">Event arguments for the selection change</param>
         private void PatientsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Enable the Edit button only if a row is selected
             EditButton.IsEnabled = PatientsDataGrid.SelectedItem != null;
             DeleteButton.IsEnabled = PatientsDataGrid.SelectedItem != null;
         }
 
+        /// <summary>
+        /// Loads the list of patients from the database and binds them to the DataGrid.
+        /// </summary>
         private void LoadPatients()
         {
                 var patients = _patientDal.GetPatients();
                 PatientsDataGrid.ItemsSource = patients;
         }
 
-        // Add Patient
+        /// <summary>
+        // /// Handles the click event to add a new patient by opening the AddEditPatientWindow in "Add" mode.
+        // /// </summary>
+        // /// <param name="sender">The button that was clicked</param>
+        // /// <param name="e">Event arguments for the button click</param>
         private void AddPatient_Click(object sender, RoutedEventArgs e)
         {
-            var addPatientWindow = new AddEditPatientWindow();  // Instantiate AddEditPatientWindow
-            bool? dialogResult = addPatientWindow.ShowDialog();  // Show the window as a modal dialog
+            var addPatientWindow = new AddEditPatientWindow();
+            bool? dialogResult = addPatientWindow.ShowDialog();
 
-            if (dialogResult == true)  // Check if DialogResult is true
+            if (dialogResult == true)
             {
-                // Refresh the data grid after adding a patient
+                
                 LoadPatients();
             }
         }
 
-        // Edit Patient
+        /// <summary>
+        // /// Handles the click event to edit a selected patient by opening the AddEditPatientWindow in "Edit" mode.
+        // /// </summary>
+        // /// <param name="sender">The button that was clicked</param>
+        // /// <param name="e">Event arguments for the button click</param>
         private void EditPatient_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedPatient != null)
             {
-                var editPatientWindow = new AddEditPatientWindow(SelectedPatient);  // Pass the selected patient to the window
-                bool? dialogResult = editPatientWindow.ShowDialog();  // Show the window as a modal dialog
+                var editPatientWindow = new AddEditPatientWindow(SelectedPatient);
+                bool? dialogResult = editPatientWindow.ShowDialog();
 
-                if (dialogResult == true)  // Check if DialogResult is true
+                if (dialogResult == true) 
                 {
-                    // Refresh the data grid after editing a patient
                     LoadPatients();
                 }
             }
@@ -61,7 +81,11 @@ namespace J_JHealthSolutions.Views
             }
         }
 
-        // Delete Patient
+        /// <summary>
+        // /// Handles the click event to delete the selected patient, after confirming the action.
+        // /// </summary>
+        // /// <param name="sender">The button that was clicked</param>
+        // /// <param name="e">Event arguments for the button click</param>
         private void DeletePatient_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedPatient != null)
@@ -71,9 +95,9 @@ namespace J_JHealthSolutions.Views
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    _patientDal.DeletePatient(SelectedPatient.PatientId.Value);  // Use the DAL to delete the patient
+                    _patientDal.DeletePatient(SelectedPatient.PatientId.Value);
                     MessageBox.Show("Patient deleted successfully.");
-                    LoadPatients();  // Refresh the DataGrid after deletion
+                    LoadPatients();
                 }
             }
             else
@@ -82,11 +106,14 @@ namespace J_JHealthSolutions.Views
             }
         }
 
-        private Patient SelectedPatient  // Add a property to track the selected patient from the UI (e.g., a ListBox or DataGrid)
+        /// <summary>
+        /// Gets the currently selected patient from the DataGrid.
+        /// </summary>
+        private Patient SelectedPatient
         {
             get
             {
-                return (Patient)PatientsDataGrid.SelectedItem;  // Return the currently selected patient
+                return (Patient)PatientsDataGrid.SelectedItem;
             }
         }
     }

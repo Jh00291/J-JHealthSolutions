@@ -1,6 +1,7 @@
 ﻿using J_JHealthSolutions.DAL;
 using System.Windows;
 using System.Windows.Controls;
+using J_JHealthSolutions.Model;
 
 namespace J_JHealthSolutions.Views
 {
@@ -30,7 +31,7 @@ namespace J_JHealthSolutions.Views
         // Add Patient
         private void AddPatient_Click(object sender, RoutedEventArgs e)
         {
-            var addPatientWindow = new AddPatientWindow();  // Instantiate AddPatientWindow
+            var addPatientWindow = new AddEditPatientWindow();  // Instantiate AddPatientWindow
             addPatientWindow.ShowDialog();  // Show the window as a modal dialog
         }
 
@@ -39,7 +40,7 @@ namespace J_JHealthSolutions.Views
         {
             if (SelectedPatient != null)
             {
-                var editPatientWindow = new EditPatientWindow(SelectedPatient);  // Pass the selected patient to the window
+                var editPatientWindow = new AddEditPatientWindow(SelectedPatient);  // Pass the selected patient to the window
                 editPatientWindow.ShowDialog();  // Show the window as a modal dialog
             }
             else

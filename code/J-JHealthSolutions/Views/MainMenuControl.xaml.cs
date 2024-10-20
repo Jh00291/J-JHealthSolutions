@@ -57,9 +57,5 @@ namespace J_JHealthSolutions.Views
             set { SetValue(LogOutCommandProperty, value); }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

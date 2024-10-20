@@ -7,31 +7,44 @@
         <!-- Define Grid RowDefinitions -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- For User Info and Menu -->
+            <!-- For Company Name and User Info -->
             <RowDefinition Height="*"/>
-            <!-- For Content Area -->
+            <!-- For Main Content Area -->
         </Grid.RowDefinitions>
 
-        <!-- StackPanel in Row 0 for User Info and Menu -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <!-- User Info Control -->
+        <!-- Define Grid ColumnDefinitions -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <!-- For MenuControl -->
+            <ColumnDefinition Width="*"/>
+            <!-- For ContentControl -->
+        </Grid.ColumnDefinitions>
 
+        <!-- Top Row: Company Name on the left, User Info on the right -->
+        <Grid Grid.Row="0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <!-- For Company Name -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- For User Info -->
+            </Grid.ColumnDefinitions>
             <!-- Company Name -->
-            <!-- Company Name -->
-            <TextBlock Text="J&amp;J Solutions"
+            <TextBlock Grid.Column="0" Text="J&amp;J Solutions"
                        FontSize="26"
                        FontWeight="Bold"
-                       />
-            <!-- MainMenuControl -->
-            <views:MainMenuControl x:Name="mainMenuControl"/>
+                       HorizontalAlignment="Left"
+                       Margin="0,20,0,20"/>
+            <!-- User Info Control -->
+            <views:UserInfoControl Grid.Column="1" x:Name="userInfoControl" HorizontalAlignment="Right"/>
+        </Grid>
 
-            <views:UserInfoControl x:Name="userInfoControl"/>
-        </StackPanel>
+        <!-- Left Column: MenuControl -->
+        <views:MainMenuControl Grid.Row="1" Grid.Column="0" x:Name="mainMenuControl"/>
 
-        <!-- Content Area in Row 1 -->
-        <ContentControl Grid.Row="1" x:Name="MainContentControl">
+        <!-- Right Column: ContentControl -->
+        <ContentControl Grid.Row="1" Grid.Column="1" x:Name="MainContentControl">
             <!-- You can set an initial content here or leave it empty -->
-            <views:PatientControl x:Name="patientControl" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <views:PatientControl x:Name="patientControl" HorizontalAlignment="Center" VerticalAlignment="Top" Width="655"/>
         </ContentControl>
     </Grid>
 </Window>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:J_JHealthSolutions.Views"
         mc:Ignorable="d"
-        Title="AddEditPatientWindow" Height="542" Width="548">
+        Title="AddEditPatientWindow" Height="600" Width="548">
     <Grid>
         <Label x:Name="titleLabel" Content="Register or Edit Patient" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24"/>
         <TextBox x:Name="firstNameTextBox" HorizontalAlignment="Left" Margin="258,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>

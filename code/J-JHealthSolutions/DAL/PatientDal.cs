@@ -106,5 +106,47 @@ namespace J_JHealthSolutions.DAL
             var affectedRows = command.ExecuteNonQuery();
             return affectedRows > 0;
         }
+
+        /// <summary>
+        /// Retrieves all patients from the database.
+        /// </summary>
+        /// <returns>A list of Patient objects.</returns>
+        public List<Patient> GetPatients()
+        {
+            var patients = new List<Patient>();
+
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"SELECT patient_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active
+                          FROM Patients;";
+
+            using var command = new MySqlCommand(query, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var patient = new Patient
+                {
+                    PatientId = reader.GetInt32("patient_id"),
+                    FName = reader.GetString("f_name"),
+                    LName = reader.GetString("l_name"),
+                    Dob = reader.GetDateTime("dob"),
+                    Gender = reader.GetChar("gender"),
+                    Address1 = reader.GetString("address_1"),
+                    Address2 = reader.IsDBNull(reader.GetOrdinal("address_2")) ? null : reader.GetString("address_2"),
+                    City = reader.GetString("city"),
+                    State = reader.GetString("state"),
+                    Zipcode = reader.GetString("zipcode"),
+                    Phone = reader.GetString("phone"),
+                    Active = reader.GetBoolean("active")
+                };
+
+                patients.Add(patient);
+            }
+
+            return patients;
+        }
+
     }
 }

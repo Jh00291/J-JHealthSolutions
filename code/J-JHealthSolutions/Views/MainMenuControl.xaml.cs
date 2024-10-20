@@ -35,6 +35,8 @@ namespace J_JHealthSolutions.Views
             set { SetValue(UserRoleProperty, value); }
         }
 
+
+
         private static void OnUserRoleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as MainMenuControl;
@@ -44,6 +46,15 @@ namespace J_JHealthSolutions.Views
         private void UpdateManageEmployeesVisibility()
         {
             ManageEmployeesButton.Visibility = UserRole == Model.UserRole.Administrator.ToString() ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public static readonly DependencyProperty LogOutCommandProperty =
+            DependencyProperty.Register("LogOutCommand", typeof(ICommand), typeof(MainMenuControl));
+
+        public ICommand LogOutCommand
+        {
+            get { return (ICommand)GetValue(LogOutCommandProperty); }
+            set { SetValue(LogOutCommandProperty, value); }
         }
     }
 }

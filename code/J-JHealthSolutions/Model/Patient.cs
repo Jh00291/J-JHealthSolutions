@@ -119,18 +119,23 @@ namespace J_JHealthSolutions.Model
                 _phone = value;
             }
         }
+
+        // Add gender property
+        public char Gender { get; set; }
+
         public bool Active { get; set; }        
 
         public Patient()
         {
         }
 
-        public Patient(string fName, string lName, DateTime dob, string address1,
+        public Patient(string fName, string lName, DateTime dob, string address1, char gender,
             string address2, string city, string state, string zipcode, string phone, bool active)
         {
             FName = fName;
             LName = lName;
             Dob = dob;
+            Gender = gender;
             Address1 = address1;
             Address2 = address2;
             City = city;

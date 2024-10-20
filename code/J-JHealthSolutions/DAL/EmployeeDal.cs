@@ -17,7 +17,7 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = "SELECT employee_id, user_id, f_name, l_name, dob, address_1, address_2, city, state, zipcode, personal_phone FROM Employee;";
+            var query = "SELECT employee_id, user_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone FROM Employee;";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
@@ -27,6 +27,7 @@ namespace J_JHealthSolutions.DAL
             var fNameOrdinal = reader.GetOrdinal("f_name");
             var lNameOrdinal = reader.GetOrdinal("l_name");
             var dobOrdinal = reader.GetOrdinal("dob");
+            var genderOrdinal = reader.GetOrdinal("gender");
             var address1Ordinal = reader.GetOrdinal("address_1");
             var address2Ordinal = reader.GetOrdinal("address_2");
             var cityOrdinal = reader.GetOrdinal("city");
@@ -36,7 +37,7 @@ namespace J_JHealthSolutions.DAL
 
             while (reader.Read())
             {
-                employeeList.Add(CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal,
+                employeeList.Add(CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal, genderOrdinal,
                     address1Ordinal, address2Ordinal, cityOrdinal, stateOrdinal, zipcodeOrdinal, personalPhoneOrdinal));
             }
 
@@ -54,7 +55,7 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = "SELECT employee_id, user_id, f_name, l_name, dob, address_1, address_2, city, state, zipcode, personal_phone FROM Employee WHERE employee_id = @employeeId;";
+            var query = "SELECT employee_id, user_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone FROM Employee WHERE employee_id = @employeeId;";
 
             using var command = new MySqlCommand(query, connection);
             command.Parameters.Add("@employeeId", MySqlDbType.Int32).Value = employeeId;
@@ -68,6 +69,7 @@ namespace J_JHealthSolutions.DAL
                 var fNameOrdinal = reader.GetOrdinal("f_name");
                 var lNameOrdinal = reader.GetOrdinal("l_name");
                 var dobOrdinal = reader.GetOrdinal("dob");
+                var genderOrdinal = reader.GetOrdinal("gender");
                 var address1Ordinal = reader.GetOrdinal("address_1");
                 var address2Ordinal = reader.GetOrdinal("address_2");
                 var cityOrdinal = reader.GetOrdinal("city");
@@ -75,7 +77,7 @@ namespace J_JHealthSolutions.DAL
                 var zipcodeOrdinal = reader.GetOrdinal("zipcode");
                 var personalPhoneOrdinal = reader.GetOrdinal("personal_phone");
 
-                employee = CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal,
+                employee = CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal, genderOrdinal,
                     address1Ordinal, address2Ordinal, cityOrdinal, stateOrdinal, zipcodeOrdinal, personalPhoneOrdinal);
             }
 
@@ -93,7 +95,7 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = "SELECT employee_id, user_id, f_name, l_name, dob, address_1, address_2, city, state, zipcode, personal_phone FROM Employee WHERE city = @city;";
+            var query = "SELECT employee_id, user_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone FROM Employee WHERE city = @city;";
 
             using var command = new MySqlCommand(query, connection);
             command.Parameters.Add("@city", MySqlDbType.VarChar).Value = city;
@@ -105,6 +107,7 @@ namespace J_JHealthSolutions.DAL
             var fNameOrdinal = reader.GetOrdinal("f_name");
             var lNameOrdinal = reader.GetOrdinal("l_name");
             var dobOrdinal = reader.GetOrdinal("dob");
+            var genderOrdinal = reader.GetOrdinal("gender");
             var address1Ordinal = reader.GetOrdinal("address_1");
             var address2Ordinal = reader.GetOrdinal("address_2");
             var cityOrdinal = reader.GetOrdinal("city");
@@ -114,7 +117,7 @@ namespace J_JHealthSolutions.DAL
 
             while (reader.Read())
             {
-                employeeList.Add(CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal,
+                employeeList.Add(CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal, genderOrdinal,
                     address1Ordinal, address2Ordinal, cityOrdinal, stateOrdinal, zipcodeOrdinal, personalPhoneOrdinal));
             }
 
@@ -148,8 +151,8 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = @"INSERT INTO Employee (f_name, l_name, dob, address_1, address_2, city, state, zipcode, personal_phone)
-                          VALUES (@userId, @fName, @lName, @dob, @address1, @address2, @city, @state, @zipcode, @personalPhone);
+            var query = @"INSERT INTO Employee (f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone)
+                          VALUES (@userId, @fName, @lName, @dob, @gender, @address1, @address2, @city, @state, @zipcode, @personalPhone);
                           SELECT LAST_INSERT_ID();";
 
             using var command = new MySqlCommand(query, connection);
@@ -157,6 +160,7 @@ namespace J_JHealthSolutions.DAL
             command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = employee.FName;
             command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = employee.LName;
             command.Parameters.Add("@dob", MySqlDbType.Date).Value = employee.Dob;
+            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = employee.Gender;
             command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = employee.Address1;
             command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = employee.Address2 ?? (object)DBNull.Value;
             command.Parameters.Add("@city", MySqlDbType.VarChar).Value = employee.City;
@@ -180,7 +184,7 @@ namespace J_JHealthSolutions.DAL
 
             connection.Open();
             var query = @"UPDATE Employee
-                          SET user_id = @userId, f_name = @fName, l_name = @lName, dob = @dob, address_1 = @address1, address_2 = @address2,
+                          SET user_id = @userId, f_name = @fName, l_name = @lName, dob = @dob, gender = @gender, address_1 = @address1, address_2 = @address2,
                               city = @city, state = @state, zipcode = @zipcode, personal_phone = @personalPhone
                           WHERE employee_id = @employeeId;";
 
@@ -189,6 +193,7 @@ namespace J_JHealthSolutions.DAL
             command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = employee.FName;
             command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = employee.LName;
             command.Parameters.Add("@dob", MySqlDbType.Date).Value = employee.Dob;
+            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = employee.Gender;
             command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = employee.Address1;
             command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = employee.Address2 ?? (object)DBNull.Value;
             command.Parameters.Add("@city", MySqlDbType.VarChar).Value = employee.City;
@@ -221,7 +226,7 @@ namespace J_JHealthSolutions.DAL
         }
 
         private static Employee CreateEmployee(MySqlDataReader reader, int employeeIdOrdinal, int userIdOrdinal,
-            int fNameOrdinal, int lNameOrdinal, int dobOrdinal, int address1Ordinal, int address2Ordinal,
+            int fNameOrdinal, int lNameOrdinal, int dobOrdinal, int genderOrdinal, int address1Ordinal, int address2Ordinal,
             int cityOrdinal, int stateOrdinal, int zipcodeOrdinal, int personalPhoneOrdinal)
         {
             return new Employee
@@ -231,6 +236,7 @@ namespace J_JHealthSolutions.DAL
                 FName = reader.GetString(fNameOrdinal),
                 LName = reader.GetString(lNameOrdinal),
                 Dob = reader.GetDateTime(dobOrdinal),
+                Gender = reader.GetChar(genderOrdinal),
                 Address1 = reader.GetString(address1Ordinal),
                 Address2 = reader.IsDBNull(address2Ordinal) ? null : reader.GetString(address2Ordinal),
                 City = reader.GetString(cityOrdinal),

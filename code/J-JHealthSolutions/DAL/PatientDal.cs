@@ -20,14 +20,15 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = @"INSERT INTO Patients (f_name, l_name, dob, address_1, address_2, city, state, zipcode, phone, active)
-                          VALUES (@fName, @lName, @dob, @address1, @address2, @city, @state, @zipcode, @phone, @active);
+            var query = @"INSERT INTO Patients (f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active)
+                          VALUES (@fName, @lName, @dob, @gender, @address1, @address2, @city, @state, @zipcode, @phone, @active);
                           SELECT LAST_INSERT_ID();";
 
             using var command = new MySqlCommand(query, connection);
             command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = patient.FName;
             command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = patient.LName;
             command.Parameters.Add("@dob", MySqlDbType.Date).Value = patient.Dob;
+            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = patient.Gender;
             command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = patient.Address1;
             command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = (object)patient.Address2 ?? DBNull.Value;
             command.Parameters.Add("@city", MySqlDbType.VarChar).Value = patient.City;
@@ -59,6 +60,7 @@ namespace J_JHealthSolutions.DAL
                           SET f_name = @fName,
                               l_name = @lName,
                               dob = @dob,
+                              gender = @gender,
                               address_1 = @address1,
                               address_2 = @address2,
                               city = @city,
@@ -72,6 +74,7 @@ namespace J_JHealthSolutions.DAL
             command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = patient.FName;
             command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = patient.LName;
             command.Parameters.Add("@dob", MySqlDbType.Date).Value = patient.Dob;
+            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = patient.Gender;
             command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = patient.Address1;
             command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = (object)patient.Address2 ?? DBNull.Value;
             command.Parameters.Add("@city", MySqlDbType.VarChar).Value = patient.City;

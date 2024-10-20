@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace J_JHealthSolutions.Model
@@ -118,17 +119,21 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        // Add gender property
+        public char Gender { get; set; }
+
         public Employee()
         {
         }
 
-        public Employee(int? userId, string fName, string lName, DateTime dob,
+        public Employee(int? userId, string fName, string lName, DateTime dob, char gender,
             string address1, string address2, string city, string state, string zipcode, string personalPhone)
         {
             UserId = userId;
             FName = fName;
             LName = lName;
             Dob = dob;
+            Gender = gender;
             Address1 = address1;
             Address2 = address2;
             City = city;

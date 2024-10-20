@@ -11,14 +11,14 @@
         <TextBox x:Name="firstNameTextBox" HorizontalAlignment="Left" Margin="258,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="lastNameTextBox" HorizontalAlignment="Left" Margin="258,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <DatePicker x:Name="dobDatePicker" HorizontalAlignment="Left" Margin="258,132,0,0" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="genderComboBox" HorizontalAlignment="Left" Margin="258,173,0,0" VerticalAlignment="Top" Width="120">
+        <ComboBox x:Name="genderComboBox" HorizontalAlignment="Left" Margin="258,173,0,0" VerticalAlignment="Top" Width="120" SelectedValuePath="Content">
             <ComboBoxItem Content="M"/>
             <ComboBoxItem Content="F"/>
         </ComboBox>
         <TextBox x:Name="address1TextBox" HorizontalAlignment="Left" Margin="258,213,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
         <TextBox x:Name="address2TextBox" HorizontalAlignment="Left" Margin="258,246,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
         <TextBox x:Name="cityTextBox" HorizontalAlignment="Left" Margin="258,281,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="stateComboBox" HorizontalAlignment="Left" Margin="258,313,0,0" VerticalAlignment="Top" Width="120">
+        <ComboBox x:Name="stateComboBox" HorizontalAlignment="Left" Margin="258,313,0,0" VerticalAlignment="Top" Width="120" SelectedValuePath="Content">
             <ComboBoxItem Content="AL"/>
             <ComboBoxItem Content="AK"/>
             <ComboBoxItem Content="AZ"/>

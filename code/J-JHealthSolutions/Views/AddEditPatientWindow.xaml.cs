@@ -29,11 +29,13 @@ namespace J_JHealthSolutions.Views
             firstNameTextBox.Text = patient.FName;
             lastNameTextBox.Text = patient.LName;
             dobDatePicker.SelectedDate = patient.DOB;
-            genderComboBox.SelectedValue = patient.Gender.ToString();
+            genderComboBox.SelectedItem = genderComboBox.Items.Cast<ComboBoxItem>()
+                .FirstOrDefault(item => item.Content.ToString() == patient.Gender.ToString());
             address1TextBox.Text = patient.Address1;
             address2TextBox.Text = patient.Address2;
             cityTextBox.Text = patient.City;
-            stateComboBox.SelectedValue = patient.State;
+            stateComboBox.SelectedItem = stateComboBox.Items.Cast<ComboBoxItem>()
+                .FirstOrDefault(item => item.Content.ToString() == patient.State);
             zipcodeTextBox.Text = patient.Zipcode;
             phoneTextBox.Text = patient.Phone;
             activeCheckBox.IsChecked = patient.Active;

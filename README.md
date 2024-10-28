@@ -114,14 +114,72 @@ This sprint focuses on implementing the essential features for nurses and admini
 
 - **Administrator**:
   - Login
-
+    
 ### Sprint 2: Appointment Scheduling and Patient Status Management
 The second sprint introduces patient appointment scheduling and status management, which are essential for clinic operations.
 
-- **Nurse**:
-  - Flag a patient as inactive
-  - Add a new appointment for a patient
-  - Perform routine health checks (blood pressure, temperature, etc.)
+#### **Tasks:**
+
+**Update Add/Edit Validation to be more informative**
+- **Expected Time**: 1 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Improve the validation messages for adding/editing patient information to be more descriptive.
+
+**Alter Patient DAL to allow for search by criteria**
+- **Expected Time**: 2.5 hours
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Modify the Patient Data Access Layer (DAL) to enable patient searches based on specific criteria.
+
+**Alter Patient Control to have a search bar**
+- **Expected Time**: 1.5 hours
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Add a search bar in the Patient Control UI to facilitate quick patient lookups.
+
+**Create Appointment DAL to allow for creation**
+- **Expected Time**: 2 hours
+- **Actual Time**: (not completed)
+- **Assigned to**: Jason
+- Develop the Appointment Data Access Layer to support appointment creation.
+
+**Create Add/Edit Appointment Control**
+- **Expected Time**: 1.5 hours
+- **Actual Time**: (not completed)
+- **Assigned to**: Jason
+- Design a user interface for adding and editing patient appointments.
+
+**Update Menu Control to allow switching between Patient and Appointment controls**
+- **Expected Time**: 2 hours
+- **Actual Time**: (not completed)
+- **Assigned to**: Jason
+- Update the Menu Control so users can navigate between Patient and Appointment sections.
+
+**Alter MainWindow to allow for switching between different controls**
+- **Expected Time**: 1.5 hours
+- **Actual Time**: (not completed)
+- **Assigned to**: Jason
+- Modify the MainWindow to support switching between various controls in the application.
+
+**Alter EmployeeDAL to Dapper**
+- **Expected Time**: 0.5 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Convert the Employee Data Access Layer to use Dapper ORM for database interactions.
+
+**Alter PatientDAL to Dapper**
+- **Expected Time**: 0.5 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Convert the Patient Data Access Layer to use Dapper ORM for improved performance.
+
+**Alter UserDAL to Dapper**
+- **Expected Time**: 0.5 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Migrate the User Data Access Layer to Dapper ORM for enhanced database performance.
+
 
 ### Sprint 3: Lab Test Management
 In this sprint, lab tests and diagnosis management are introduced, rounding out the core clinical functionality.

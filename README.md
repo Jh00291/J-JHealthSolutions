@@ -186,6 +186,12 @@ The second sprint introduces patient appointment scheduling and status managemen
 - **Assigned to**: Jacob
 - Migrate the User Data Access Layer to Dapper ORM for enhanced database performance.
 
+**Alter AppointmentDAL to Dapper**
+- **Expected Time**: 0.5 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Migrate the Appointment Data Access Layer to Dapper ORM for enhanced database performance.
+
 **Create Visit Control**
 - **Expected Time**: 1.5 hour
 - **Actual Time**: (not completed)

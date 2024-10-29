@@ -143,6 +143,12 @@ The second sprint introduces patient appointment scheduling and status managemen
 - **Actual Time**: (not completed)
 - **Assigned to**: Jason
 - Develop the Appointment Data Access Layer to support appointment creation.
+  
+**Create Appointment View Control**
+- **Expected Time**: 2 hours
+- **Actual Time**: (not completed)
+- **Assigned to**: Jason
+- Design a user interface for viewing the appointments.
 
 **Create Add/Edit Appointment Control**
 - **Expected Time**: 1.5 hours

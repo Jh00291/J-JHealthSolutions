@@ -121,5 +121,58 @@ namespace J_JHealthSolutions.DAL
                 throw;
             }
         }
+
+        /// <summary>
+        /// Retrieves all appointments from the database, including patient and doctor names.
+        /// </summary>
+        /// <returns>A list of Appointment objects.</returns>
+        public List<Appointment> GetAppointments()
+        {
+            var appointments = new List<Appointment>();
+
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+                SELECT 
+                    a.appointment_id,
+                    a.patient_id,
+                    p.f_name AS patient_first_name,
+                    p.l_name AS patient_last_name,
+                    a.doctor_id,
+                    e.f_name AS doctor_first_name,
+                    e.l_name AS doctor_last_name,
+                    a.`datetime`,
+                    a.reason,
+                    a.`status`
+                FROM Appointment a
+                INNER JOIN Patient p ON a.patient_id = p.patient_id
+                INNER JOIN Doctor d ON a.doctor_id = d.doctor_id
+                INNER JOIN Employee e ON d.emp_id = e.employee_id;";
+
+            using var command = new MySqlCommand(query, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var appointment = new Appointment
+                {
+                    AppointmentId = reader.GetInt32("appointment_id"),
+                    PatientId = reader.GetInt32("patient_id"),
+                    PatientFirstName = reader.GetString("patient_first_name"),
+                    PatientLastName = reader.GetString("patient_last_name"),
+                    DoctorId = reader.GetInt32("doctor_id"),
+                    DoctorFirstName = reader.GetString("doctor_first_name"),
+                    DoctorLastName = reader.GetString("doctor_last_name"),
+                    DateTime = reader.GetDateTime("datetime"),
+                    Reason = reader.GetString("reason"),
+                    Status = Enum.TryParse<Status>(reader.GetString("status"), out var status) ? status : Status.Scheduled
+                };
+
+                appointments.Add(appointment);
+            }
+
+            return appointments;
+        }
     }
 }

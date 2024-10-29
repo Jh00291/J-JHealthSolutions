@@ -1,6 +1,5 @@
 ﻿using J_JHealthSolutions.Model;
 using MySql.Data.MySqlClient;
-using System;
 
 namespace J_JHealthSolutions.DAL
 {

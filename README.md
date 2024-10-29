@@ -174,11 +174,35 @@ The second sprint introduces patient appointment scheduling and status managemen
 - **Assigned to**: Jacob
 - Convert the Patient Data Access Layer to use Dapper ORM for improved performance.
 
+**Alter VisitDAL to Dapper**
+- **Expected Time**: 0.5 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Convert the Visit Data Access Layer to use Dapper ORM for improved performance.
+
 **Alter UserDAL to Dapper**
 - **Expected Time**: 0.5 hour
 - **Actual Time**: (not completed)
 - **Assigned to**: Jacob
 - Migrate the User Data Access Layer to Dapper ORM for enhanced database performance.
+
+**Create Visit Control**
+- **Expected Time**: 1.5 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Create the view to allow for visits
+
+**Create Visit DAL**
+- **Expected Time**: 2 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jason
+- Create the DAL to interact with the database
+
+**Create Checkup Window**
+- **Expected Time**: 1.5 hour
+- **Actual Time**: (not completed)
+- **Assigned to**: Jacob
+- Create the Checkup Window to allow for the nurse to gather the initial information about the patient
 
 
 ### Sprint 3: Lab Test Management

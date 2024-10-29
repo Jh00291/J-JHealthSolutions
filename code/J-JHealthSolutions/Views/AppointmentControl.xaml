@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="J_JHealthSolutions.Views.AppointmentControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:J_JHealthSolutions.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="775"
+             HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid>
+        <!-- Define Grid Rows -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- DataGrid takes up remaining space -->
+            <RowDefinition Height="Auto" />
+            <!-- Buttons take up space as needed -->
+        </Grid.RowDefinitions>
+
+        <!-- DataGrid in the first row -->
+        <DataGrid x:Name="AppointmentsDataGrid"
+                  AutoGenerateColumns="False"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  IsReadOnly="True"
+                  Grid.Row="0"
+                  Margin="10"
+                  ColumnWidth="*"
+                  SelectionChanged="AppointmentsDataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <!-- Appointment ID -->
+                <DataGridTextColumn Header="Appointment ID" Binding="{Binding AppointmentId}" />
+
+                <!-- Patient ID -->
+                <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
+
+                <!-- Patient Name -->
+                <DataGridTextColumn Header="Patient Name" Binding="{Binding PatientFullName}" />
+
+                <!-- Doctor ID -->
+                <DataGridTextColumn Header="Doctor ID" Binding="{Binding DoctorId}" />
+
+                <!-- Doctor Name -->
+                <DataGridTextColumn Header="Doctor Name" Binding="{Binding DoctorFullName}" />
+
+                <!-- Date and Time -->
+                <DataGridTextColumn Header="Date and Time" Binding="{Binding DateTime, StringFormat={}{0:MM/dd/yyyy hh:mm tt}}" />
+
+                <!-- Reason -->
+                <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" />
+
+                <!-- Status -->
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Buttons in the second row -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="Add" Width="97" Height="28" Margin="0,0,10,0" Click="AddAppointment_Click"/>
+            <Button x:Name="EditButton" Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditAppointment_Click" IsEnabled="False"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

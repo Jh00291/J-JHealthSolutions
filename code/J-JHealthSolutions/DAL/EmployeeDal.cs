@@ -226,6 +226,49 @@ namespace J_JHealthSolutions.DAL
         }
 
         /// <summary>
+        /// Get all doctors
+        /// </summary>
+        /// <returns>List of all doctors as Employee objects</returns>
+        public List<Employee> GetAllDoctors()
+        {
+            var doctorList = new List<Employee>();
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+
+            connection.Open();
+            var query = @"
+        SELECT e.employee_id, e.user_id, e.f_name, e.l_name, e.dob, e.gender, 
+               e.address_1, e.address_2, e.city, e.state, e.zipcode, e.personal_phone 
+        FROM Employee e
+        INNER JOIN Doctor d ON e.employee_id = d.emp_id;
+    ";
+
+            using var command = new MySqlCommand(query, connection);
+            using var reader = command.ExecuteReader();
+
+            var employeeIdOrdinal = reader.GetOrdinal("employee_id");
+            var userIdOrdinal = reader.GetOrdinal("user_id");
+            var fNameOrdinal = reader.GetOrdinal("f_name");
+            var lNameOrdinal = reader.GetOrdinal("l_name");
+            var dobOrdinal = reader.GetOrdinal("dob");
+            var genderOrdinal = reader.GetOrdinal("gender");
+            var address1Ordinal = reader.GetOrdinal("address_1");
+            var address2Ordinal = reader.GetOrdinal("address_2");
+            var cityOrdinal = reader.GetOrdinal("city");
+            var stateOrdinal = reader.GetOrdinal("state");
+            var zipcodeOrdinal = reader.GetOrdinal("zipcode");
+            var personalPhoneOrdinal = reader.GetOrdinal("personal_phone");
+
+            while (reader.Read())
+            {
+                doctorList.Add(CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal, genderOrdinal,
+                    address1Ordinal, address2Ordinal, cityOrdinal, stateOrdinal, zipcodeOrdinal, personalPhoneOrdinal));
+            }
+
+            return doctorList;
+        }
+
+
+        /// <summary>
         /// Create an Employee object from a data reader
         /// </summary>
         /// <param name="reader">The MySqlDataReader containing employee data</param>

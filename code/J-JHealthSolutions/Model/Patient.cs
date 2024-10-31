@@ -31,7 +31,7 @@ namespace J_JHealthSolutions.Model
             internal set
             {
                 if (value <= 0)
-                    throw new ArgumentException("PatientId must be a positive integer.");
+                    throw new ArgumentException("Patient ID must be a positive integer greater than zero.");
                 _patientId = value;
             }
         }
@@ -45,7 +45,7 @@ namespace J_JHealthSolutions.Model
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("First name cannot be null or empty.");
+                    throw new ArgumentException("First name is required and cannot be empty.");
                 _fName = value;
             }
         }
@@ -59,7 +59,7 @@ namespace J_JHealthSolutions.Model
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Last name cannot be null or empty.");
+                    throw new ArgumentException("Last name is required and cannot be empty.");
                 _lName = value;
             }
         }
@@ -73,7 +73,7 @@ namespace J_JHealthSolutions.Model
             set
             {
                 if (value >= DateTime.Today)
-                    throw new ArgumentException("Date of birth must be in the past.");
+                    throw new ArgumentException("Date of birth must be in the past. /nPlease enter a valid date in the format MM/dd/yyyy.");
                 _dob = value;
             }
         }
@@ -87,7 +87,7 @@ namespace J_JHealthSolutions.Model
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Address1 cannot be null or empty.");
+                    throw new ArgumentException("Address Line 1 is required and cannot be empty.");
                 _address1 = value;
             }
         }
@@ -106,7 +106,7 @@ namespace J_JHealthSolutions.Model
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("City cannot be null or empty.");
+                    throw new ArgumentException("City is required and cannot be empty.");
                 _city = value;
             }
         }
@@ -120,7 +120,7 @@ namespace J_JHealthSolutions.Model
             set
             {
                 if (!IsValidState(value))
-                    throw new ArgumentException("Invalid state code.");
+                    throw new ArgumentException("State code is invalid. /nPlease enter or select a valid two-letter US state code, e.g., 'NY' for New York.");
                 _state = value.ToUpper();
             }
         }
@@ -134,7 +134,7 @@ namespace J_JHealthSolutions.Model
             set
             {
                 if (!Regex.IsMatch(value, @"^\d{5}(-\d{4})?$"))
-                    throw new ArgumentException("Invalid zipcode format.");
+                    throw new ArgumentException("Invalid Zipcode format. Use '12345' or '12345-6789'.");
                 _zipcode = value;
             }
         }
@@ -148,7 +148,7 @@ namespace J_JHealthSolutions.Model
             set
             {
                 if (!Regex.IsMatch(value, @"^\+?1?\d{10}$"))
-                    throw new ArgumentException("Invalid phone number format.");
+                    throw new ArgumentException("Invalid phone number format. A valid 10-digit US phone number is required, e.g., '1234567890'.");
                 _phone = value;
             }
         }

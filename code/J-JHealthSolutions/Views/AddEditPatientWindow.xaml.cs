@@ -66,6 +66,18 @@ namespace J_JHealthSolutions.Views
         {
             try
             {
+                // Validate required fields before accessing them
+                if (string.IsNullOrWhiteSpace(firstNameTextBox.Text))
+                    throw new ArgumentException("First name is required.");
+                if (string.IsNullOrWhiteSpace(lastNameTextBox.Text))
+                    throw new ArgumentException("Last name is required.");
+                if (dobDatePicker.SelectedDate == null)
+                    throw new ArgumentException("Date of birth is required. Please select a date.");
+                if (genderComboBox.SelectedItem == null)
+                    throw new ArgumentException("Gender is required. Please select an option.");
+                if (string.IsNullOrWhiteSpace(stateComboBox.Text))
+                    throw new ArgumentException("State is required. Please select a state.");
+
                 if (_patient == null || _patient.PatientId == null)
                 {
                     // If no patient exists, create a new one
@@ -147,7 +159,7 @@ namespace J_JHealthSolutions.Views
             {
                 Title = title,
                 Content = new TextBlock { Text = message, Margin = new Thickness(10) },
-                Width = 350,
+                Width =550,
                 Height = 150,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen
             };

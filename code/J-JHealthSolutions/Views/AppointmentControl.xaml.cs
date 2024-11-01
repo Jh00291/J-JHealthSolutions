@@ -49,6 +49,12 @@ namespace J_JHealthSolutions.Views
         /// </summary>
         private void AddAppointment_Click(object sender, RoutedEventArgs e)
         {
+            var addAppointmentWindow = new AddEditAppointmentWindow();
+            bool? dialogResult = addAppointmentWindow.ShowDialog();
+            if (dialogResult == true) {
+                LoadAppointments();
+            }
+
         }
 
         /// <summary>

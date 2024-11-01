@@ -174,5 +174,24 @@ namespace J_JHealthSolutions.DAL
 
             return appointments;
         }
+
+        public bool IsTimeSlotAvailable(int doctorId, DateTime dateTime)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"SELECT COUNT(*) FROM Appointment 
+                  WHERE doctor_id = @doctorId 
+                  AND `datetime` = @dateTime 
+                  AND `status` != 'Scheduled'";
+
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.Add("@doctorId", MySqlDbType.Int32).Value = doctorId;
+            command.Parameters.Add("@dateTime", MySqlDbType.DateTime).Value = dateTime;
+
+            var count = Convert.ToInt32(command.ExecuteScalar());
+            return count == 0;
+        }
+
     }
 }

@@ -153,6 +153,8 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        public string PatientFullName => $"{FName} {LName}";
+
         /// <summary>
         /// Gender of the patient, represented as a single character.
         /// </summary>
@@ -217,6 +219,11 @@ namespace J_JHealthSolutions.Model
                 "TX","UT","VT","VA","WA","WV","WI","WY"
             };
             return Array.Exists(states, s => s.Equals(state, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override string ToString()
+        {
+            return $"{FName} {LName}";
         }
     }
 }

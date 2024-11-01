@@ -14,7 +14,6 @@ namespace J_JHealthSolutions.Model
         Scheduled,
         Completed,
         Cancelled,
-        Rescheduled,
         NoShow,
         InProgress
     }

@@ -165,6 +165,8 @@ namespace J_JHealthSolutions.Model
         /// </summary>
         public bool Active { get; set; }
 
+        public string PatientDisplayInfo => $"{PatientFullName} | PatientID: {PatientId} | DOB: {DOB:MM/dd/yyyy}";
+
         /// <summary>
         /// Default constructor for the Patient class.
         /// </summary>
@@ -223,7 +225,7 @@ namespace J_JHealthSolutions.Model
 
         public override string ToString()
         {
-            return $"{FName} {LName}";
+            return PatientDisplayInfo;
         }
     }
 }

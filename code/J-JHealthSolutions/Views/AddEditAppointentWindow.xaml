@@ -28,10 +28,11 @@
 
         <!-- Date and Time Selection -->
         <Label Content="Date:" HorizontalAlignment="Left" Margin="144,143,0,0" VerticalAlignment="Top"/>
-        <DatePicker x:Name="datePicker" HorizontalAlignment="Left" Margin="258,147,0,0" VerticalAlignment="Top" Width="120"/>
+        <DatePicker x:Name="datePicker" HorizontalAlignment="Left" Margin="258,147,0,0" VerticalAlignment="Top" Width="120"
+                    SelectedDateChanged="DatePicker_SelectedDateChanged"/>
 
         <Label Content="Time:" HorizontalAlignment="Left" Margin="144,183,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="timeComboBox" HorizontalAlignment="Left" Margin="258,187,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="timeComboBox" HorizontalAlignment="Left" Margin="258,187,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
 
         <!-- Reason for Appointment -->
         <Label Content="Reason:" HorizontalAlignment="Left" Margin="144,223,0,0" VerticalAlignment="Top"/>

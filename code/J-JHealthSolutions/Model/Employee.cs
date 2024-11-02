@@ -220,7 +220,7 @@ namespace J_JHealthSolutions.Model
 
         public override string ToString()
         {
-            return EmployeeFullName;
+            return $"{EmployeeFullName} | EmployeeID: {EmployeeId}";
         }
     }
 }

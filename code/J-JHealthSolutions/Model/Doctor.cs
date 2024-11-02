@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace J_JHealthSolutions.Model
 {
-    class Doctor : Employee
+    public class Doctor : Employee
     {
         public int DoctorId { get; set; }
 

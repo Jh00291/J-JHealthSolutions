@@ -75,12 +75,17 @@ namespace J_JHealthSolutions.Views
             selectedPatient = patientAutoCompleteBox.SelectedItem as Patient;
         }
 
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.timeComboBox.IsEnabled = true;
+            UpdateAvailableTimeSlots();
+        }
+
         private void UpdateAvailableTimeSlots()
         {
             if (datePicker.SelectedDate.HasValue && doctorAutoCompleteBox.SelectedItem != null)
             {
                 int selectedDoctorId = ((Employee)doctorAutoCompleteBox.SelectedItem).EmployeeId.Value;
-
                 DateTime selectedDate = datePicker.SelectedDate.Value;
 
                 // Define start and end times, and interval
@@ -102,8 +107,8 @@ namespace J_JHealthSolutions.Views
                     bool isAvailable = appointmentDal.IsTimeSlotAvailable(selectedDoctorId, appointmentDateTime);
                     if (isAvailable)
                     {
-                        // Add available time slot to ComboBox
-                        timeComboBox.Items.Add(time.ToString(@"hh\:mm"));
+                        // Add available time slot to ComboBox in AM/PM format
+                        timeComboBox.Items.Add(appointmentDateTime.ToString("hh:mm tt"));
                     }
                 }
 
@@ -123,6 +128,7 @@ namespace J_JHealthSolutions.Views
                 timeComboBox.Items.Clear();
             }
         }
+
 
 
         // Event handler for doctor search

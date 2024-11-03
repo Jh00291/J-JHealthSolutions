@@ -180,7 +180,7 @@ namespace J_JHealthSolutions.Views
             {
                 PatientId = selectedPatient.PatientId.Value,
                 DoctorId = selectedDoctor.DoctorId,
-                DateTime = datePicker.SelectedDate.Value + TimeSpan.Parse(timeComboBox.SelectedItem.ToString()),
+                DateTime = CombineDateAndTime(datePicker.SelectedDate.Value, timeComboBox.SelectedItem.ToString()),
                 Reason = reasonTextBox.Text,
                 Status = appointmentStatus
             };
@@ -203,5 +203,24 @@ namespace J_JHealthSolutions.Views
         {
             this.Close();
         }
+
+        /// <summary>
+        /// Combines the selected date and time into a single DateTime object.
+        /// </summary>
+        /// <param name="date">Selected date.</param>
+        /// <param name="timeString">Selected time in string format.</param>
+        /// <returns>Combined DateTime object.</returns>
+        private DateTime CombineDateAndTime(DateTime date, string timeString)
+        {
+            if (DateTime.TryParse(timeString, out DateTime time))
+            {
+                return date.Date + time.TimeOfDay;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid time format.");
+            }
+        }
+
     }
 }

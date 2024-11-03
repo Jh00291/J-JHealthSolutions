@@ -40,7 +40,7 @@ namespace J_JHealthSolutions.Views
         {
             patientAutoCompleteBox.Text = appointment.PatientFullName;
             doctorAutoCompleteBox.Text = appointment.DoctorFullName;
-
+            
         }
 
         private void LoadPatients()
@@ -180,6 +180,7 @@ namespace J_JHealthSolutions.Views
             {
                 PatientId = selectedPatient.PatientId.Value,
                 DoctorId = selectedDoctor.DoctorId,
+                DateTime = datePicker.SelectedDate.Value + TimeSpan.Parse(timeComboBox.SelectedItem.ToString()),
                 Reason = reasonTextBox.Text,
                 Status = appointmentStatus
             };

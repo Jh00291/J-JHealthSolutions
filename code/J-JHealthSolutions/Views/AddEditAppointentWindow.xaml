@@ -28,19 +28,19 @@
 
         <!-- Date and Time Selection -->
         <Label Content="Date:" HorizontalAlignment="Left" Margin="144,143,0,0" VerticalAlignment="Top"/>
-        <DatePicker x:Name="datePicker" HorizontalAlignment="Left" Margin="258,147,0,0" VerticalAlignment="Top" Width="120"
-                    SelectedDateChanged="DatePicker_SelectedDateChanged" IsEnabled="False"/>
+        <DatePicker x:Name="datePicker" HorizontalAlignment="Left" Margin="258,147,0,0" VerticalAlignment="Top" Width="200"
+                    SelectedDateChanged="DatePicker_SelectedDateChanged" IsEnabled="False" Height="22"/>
 
         <Label Content="Time:" HorizontalAlignment="Left" Margin="144,183,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="timeComboBox" HorizontalAlignment="Left" Margin="258,187,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <ComboBox x:Name="timeComboBox" HorizontalAlignment="Left" Margin="258,187,0,0" VerticalAlignment="Top" Width="200" IsEnabled="False"/>
 
         <!-- Reason for Appointment -->
         <Label Content="Reason:" HorizontalAlignment="Left" Margin="144,223,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="reasonTextBox" HorizontalAlignment="Left" Margin="258,227,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263" Height="80" AcceptsReturn="True"/>
+        <TextBox x:Name="reasonTextBox" HorizontalAlignment="Left" Margin="258,227,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Height="80" AcceptsReturn="True"/>
 
         <!-- Status Selection -->
         <Label Content="Status:" HorizontalAlignment="Left" Margin="144,317,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="statusComboBox" HorizontalAlignment="Left" Margin="258,321,0,0" VerticalAlignment="Top" Width="120">
+        <ComboBox x:Name="statusComboBox" HorizontalAlignment="Left" Margin="258,321,0,0" VerticalAlignment="Top" Width="200">
             <ComboBoxItem Content="Scheduled"/>
             <ComboBoxItem Content="Completed"/>
             <ComboBoxItem Content="Cancelled"/>

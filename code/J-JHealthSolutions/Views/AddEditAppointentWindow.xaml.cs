@@ -9,9 +9,11 @@ namespace J_JHealthSolutions.Views
     {
         private List<Patient> allPatients;
         private IEnumerable<Doctor> allDoctors;
+        private IEnumerable<Nurse> allNurses;
 
         private Patient selectedPatient;
         private Doctor selectedDoctor;
+        private Nurse selectedNurse;
 
         private Appointment _appointment;
 
@@ -21,26 +23,52 @@ namespace J_JHealthSolutions.Views
 
             LoadPatients();
             LoadDoctors();
+            LoadNurses();
 
-            statusComboBox.Items.Clear();
             statusComboBox.ItemsSource = Enum.GetNames(typeof(Status));
-            statusComboBox.SelectedIndex = 0;
+            statusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
+
+            UpdateNurseAutoCompleteBox();
         }
 
         public AddEditAppointmentWindow(Appointment appointment)
         {
             InitializeComponent();
+
+            LoadPatients();
+            LoadDoctors();
+            LoadNurses();
+
             this.Title = "Edit Appointment";
             this.titleLabel.Content = "Edit Appointment";
             _appointment = appointment;
             PopulateAppointmentData(appointment);
+
+            statusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
+            UpdateNurseAutoCompleteBox();
         }
 
         private void PopulateAppointmentData(Appointment appointment)
         {
             patientAutoCompleteBox.Text = appointment.PatientFullName;
             doctorAutoCompleteBox.Text = appointment.DoctorFullName;
-            
+
+            selectedPatient = allPatients.FirstOrDefault(p => p.PatientId == appointment.PatientId);
+            selectedDoctor = allDoctors.FirstOrDefault(d => d.DoctorId == appointment.DoctorId);
+
+            datePicker.IsEnabled = true;
+            datePicker.SelectedDate = appointment.DateTime.Date;
+
+            UpdateAvailableTimeSlots();
+            timeComboBox.SelectedItem = appointment.DateTime.ToString("hh:mm tt");
+
+            reasonTextBox.Text = appointment.Reason;
+
+            statusComboBox.ItemsSource = Enum.GetNames(typeof(Status));
+            statusComboBox.SelectedItem = appointment.Status.ToString();
+
+            UpdateNurseAutoCompleteBox();
+
         }
 
         private void LoadPatients()
@@ -55,6 +83,12 @@ namespace J_JHealthSolutions.Views
             doctorAutoCompleteBox.ItemsSource = allDoctors;
         }
 
+        private void LoadNurses()
+        {
+            LoadAllNurses();
+            nurseAutoCompleteBox.ItemsSource = allNurses;
+        }
+
         private void LoadAllPatients()
         {
             PatientDal patientDal = new PatientDal();
@@ -67,10 +101,16 @@ namespace J_JHealthSolutions.Views
             allDoctors = da.GetDoctors();
         }
 
+        private void LoadAllNurses()
+        {
+            NurseDal da = new NurseDal();
+            allNurses = da.GetNurses();
+        }
+
         private void PatientAutoCompleteBox_Populating(object sender, PopulatingEventArgs e)
         {
             var searchText = patientAutoCompleteBox.SearchText.ToLower();
-            var filteredPatients = allPatients.Where(p => p.FName.ToLower().Contains(searchText)).ToList();
+            var filteredPatients = allPatients.Where(p => p.PatientFullName.ToLower().Contains(searchText)).ToList();
             patientAutoCompleteBox.ItemsSource = filteredPatients;
             patientAutoCompleteBox.PopulateComplete();
         }
@@ -84,6 +124,12 @@ namespace J_JHealthSolutions.Views
         {
             this.timeComboBox.IsEnabled = true;
             UpdateAvailableTimeSlots();
+            UpdateStatusComboBox();
+        }
+
+        private void TimeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateStatusComboBox();
         }
 
         private void UpdateAvailableTimeSlots()
@@ -130,7 +176,7 @@ namespace J_JHealthSolutions.Views
         private void DoctorAutoCompleteBox_Populating(object sender, PopulatingEventArgs e)
         {
             var searchText = doctorAutoCompleteBox.SearchText.ToLower();
-            var filteredDoctors = allDoctors.Where(d => (d.FName + " " + d.LName).ToLower().Contains(searchText)).ToList();
+            var filteredDoctors = allDoctors.Where(d => d.EmployeeFullName.ToLower().Contains(searchText)).ToList();
             doctorAutoCompleteBox.ItemsSource = filteredDoctors;
             doctorAutoCompleteBox.PopulateComplete();
         }
@@ -143,7 +189,10 @@ namespace J_JHealthSolutions.Views
 
         private void SaveAppointment_Click(object sender, RoutedEventArgs e)
         {
-            // Validate inputs
+            ValidatePatientSelection();
+            ValidateDoctorSelection();
+            ValidateNurseSelection();
+
             if (selectedPatient == null)
             {
                 MessageBox.Show("Please select a patient.");
@@ -162,7 +211,6 @@ namespace J_JHealthSolutions.Views
                 return;
             }
 
-
             if (string.IsNullOrWhiteSpace(reasonTextBox.Text))
             {
                 MessageBox.Show("Please enter a reason for the appointment.");
@@ -176,13 +224,19 @@ namespace J_JHealthSolutions.Views
                 return;
             }
 
+            if ((appointmentStatus == Status.InProgress || appointmentStatus == Status.Completed) && selectedNurse == null)
+            {
+                MessageBox.Show("Please select a nurse for the appointment.");
+                return;
+            }
+
             var appointment = new Appointment
             {
                 PatientId = selectedPatient.PatientId.Value,
                 DoctorId = selectedDoctor.DoctorId,
                 DateTime = CombineDateAndTime(datePicker.SelectedDate.Value, timeComboBox.SelectedItem.ToString()),
                 Reason = reasonTextBox.Text,
-                Status = appointmentStatus
+                Status = appointmentStatus,
             };
 
             SaveAppointment(appointment);
@@ -193,10 +247,25 @@ namespace J_JHealthSolutions.Views
 
         private void SaveAppointment(Appointment appointment)
         {
-            AppointmentDal appointmentDal = new AppointmentDal();
-            appointmentDal.AddAppointment(appointment);
-            this.DialogResult = true;
-            this.Close();
+            try
+            {
+                var appointmentDal = new AppointmentDal();
+                if (_appointment != null)
+                {
+                    appointment.AppointmentId = _appointment.AppointmentId;
+                    appointmentDal.UpdateAppointment(appointment);
+                }
+                else
+                {
+                    appointmentDal.AddAppointment(appointment);
+                }
+                this.DialogResult = true;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving appointment: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -204,12 +273,6 @@ namespace J_JHealthSolutions.Views
             this.Close();
         }
 
-        /// <summary>
-        /// Combines the selected date and time into a single DateTime object.
-        /// </summary>
-        /// <param name="date">Selected date.</param>
-        /// <param name="timeString">Selected time in string format.</param>
-        /// <returns>Combined DateTime object.</returns>
         private DateTime CombineDateAndTime(DateTime date, string timeString)
         {
             if (DateTime.TryParse(timeString, out DateTime time))
@@ -222,5 +285,154 @@ namespace J_JHealthSolutions.Views
             }
         }
 
+        private void ValidatePatientSelection()
+        {
+            string inputText = patientAutoCompleteBox.Text.Trim();
+            if (string.IsNullOrEmpty(inputText))
+            {
+                selectedPatient = null;
+                return;
+            }
+
+            var matchingPatient = allPatients.FirstOrDefault(p => p.PatientFullName.Equals(inputText, StringComparison.OrdinalIgnoreCase));
+            if (matchingPatient != null)
+            {
+                selectedPatient = matchingPatient;
+            }
+            else
+            {
+                selectedPatient = null;
+                MessageBox.Show("The patient you entered does not exist. Please select a valid patient from the list.", "Invalid Patient", MessageBoxButton.OK, MessageBoxImage.Warning);
+                patientAutoCompleteBox.Text = string.Empty;
+            }
+        }
+
+        private void ValidateDoctorSelection()
+        {
+            string inputText = doctorAutoCompleteBox.Text.Trim();
+            if (string.IsNullOrEmpty(inputText))
+            {
+                selectedDoctor = null;
+                return;
+            }
+
+            var matchingDoctor = allDoctors.FirstOrDefault(d => d.EmployeeFullName.Equals(inputText, StringComparison.OrdinalIgnoreCase));
+            if (matchingDoctor != null)
+            {
+                selectedDoctor = matchingDoctor;
+            }
+            else
+            {
+                selectedDoctor = null;
+                MessageBox.Show("The doctor you entered does not exist. Please select a valid doctor from the list.", "Invalid Doctor", MessageBoxButton.OK, MessageBoxImage.Warning);
+                doctorAutoCompleteBox.Text = string.Empty;
+            }
+        }
+
+        private void ValidateNurseSelection()
+        {
+            string inputText = nurseAutoCompleteBox.Text.Trim();
+            if (string.IsNullOrEmpty(inputText))
+            {
+                selectedNurse = null;
+                return;
+            }
+
+            var matchingNurse = allNurses.FirstOrDefault(n => n.EmployeeFullName.Equals(inputText, StringComparison.OrdinalIgnoreCase));
+            if (matchingNurse != null)
+            {
+                selectedNurse = matchingNurse;
+            }
+            else
+            {
+                selectedNurse = null;
+                MessageBox.Show("The nurse you entered does not exist. Please select a valid nurse from the list.", "Invalid Nurse", MessageBoxButton.OK, MessageBoxImage.Warning);
+                nurseAutoCompleteBox.Text = string.Empty;
+            }
+        }
+
+
+        private void UpdateStatusComboBox()
+        {
+            if (datePicker.SelectedDate.HasValue && timeComboBox.SelectedItem != null)
+            {
+                DateTime selectedDateTime = CombineDateAndTime(datePicker.SelectedDate.Value, timeComboBox.SelectedItem.ToString());
+                bool isPastDateTime = selectedDateTime < DateTime.Now;
+
+                var statuses = Enum.GetNames(typeof(Status)).ToList();
+
+                if (isPastDateTime)
+                {
+                    statuses.Remove("Scheduled");
+                }
+                else
+                {
+                    if (!statuses.Contains("Scheduled"))
+                    {
+                        statuses.Add("Scheduled");
+                    }
+                }
+
+                if (statusComboBox.SelectedItem != null)
+                {
+                    string currentStatus = statusComboBox.SelectedItem.ToString();
+                    if (!statuses.Contains(currentStatus))
+                    {
+                        statuses.Add(currentStatus);
+                    }
+                }
+
+                statusComboBox.ItemsSource = statuses;
+
+                if (statusComboBox.SelectedItem == null || !statuses.Contains(statusComboBox.SelectedItem.ToString()))
+                {
+                    statusComboBox.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+                statusComboBox.ItemsSource = Enum.GetNames(typeof(Status));
+            }
+
+            UpdateNurseAutoCompleteBox();
+        }
+
+        private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateNurseAutoCompleteBox();
+        }
+
+        private void UpdateNurseAutoCompleteBox()
+        {
+            if (statusComboBox.SelectedItem != null)
+            {
+                var statusString = statusComboBox.SelectedItem.ToString();
+                if (statusString == "InProgress" || statusString == "Completed" || statusString == "Scheduled")
+                {
+                    nurseAutoCompleteBox.Visibility = Visibility.Visible;
+                    nurseLabel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    nurseAutoCompleteBox.Visibility = Visibility.Hidden;
+                    nurseLabel.Visibility = Visibility.Hidden;
+                    nurseAutoCompleteBox.Text = string.Empty;
+                    selectedNurse = null;
+                }
+            }
+        }
+
+        private void NurseAutoCompleteBox_OnPopulating(object sender, PopulatingEventArgs e)
+        {
+            var searchText = nurseAutoCompleteBox.SearchText.ToLower();
+            var filteredNurses = allNurses.Where(n => n.EmployeeFullName.ToLower().Contains(searchText)).ToList();
+            nurseAutoCompleteBox.ItemsSource = filteredNurses;
+            nurseAutoCompleteBox.PopulateComplete();
+        }
+
+        private void NurseAutoCompleteBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedNurse = nurseAutoCompleteBox.SelectedItem as Nurse;
+        }
     }
 }

@@ -32,7 +32,7 @@
                     SelectedDateChanged="DatePicker_SelectedDateChanged" IsEnabled="False" Height="22"/>
 
         <Label Content="Time:" HorizontalAlignment="Left" Margin="144,183,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="timeComboBox" HorizontalAlignment="Left" Margin="258,187,0,0" VerticalAlignment="Top" Width="200" IsEnabled="False"/>
+        <ComboBox x:Name="timeComboBox" HorizontalAlignment="Left" Margin="258,187,0,0" VerticalAlignment="Top" Width="200" IsEnabled="False" SelectionChanged="TimeComboBox_SelectionChanged"/>
 
         <!-- Reason for Appointment -->
         <Label Content="Reason:" HorizontalAlignment="Left" Margin="144,223,0,0" VerticalAlignment="Top"/>
@@ -41,14 +41,21 @@
         <!-- Status Selection -->
         <Label Content="Status:" HorizontalAlignment="Left" Margin="144,317,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="statusComboBox" HorizontalAlignment="Left" Margin="258,321,0,0" VerticalAlignment="Top" Width="200">
-            <ComboBoxItem Content="Scheduled"/>
-            <ComboBoxItem Content="Completed"/>
-            <ComboBoxItem Content="Cancelled"/>
-            <!-- Add other statuses as defined in your Status enum -->
         </ComboBox>
 
+        <!-- Nurse Selection -->
+        <Label x:Name ="nurseLabel" Content="Nurse for Visit" HorizontalAlignment="Left" Margin="146,373,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+        <controls:AutoCompleteBox x:Name="nurseAutoCompleteBox" HorizontalAlignment="Left" Margin="258,375,0,0" VerticalAlignment="Top" Width="200"
+                                  FilterMode="Contains"
+                                  MinimumPrefixLength="1"
+                                  ValueMemberPath="EmployeeFullName"
+                                  Populating="NurseAutoCompleteBox_OnPopulating"
+                                  SelectionChanged="NurseAutoCompleteBox_SelectionChanged"
+                                  Visibility="Hidden"/>
+
         <!-- Save and Cancel Buttons -->
-        <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" Margin="166,400,0,0" VerticalAlignment="Top" Width="86" Height="32" Click="SaveAppointment_Click"/>
-        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="290,400,0,0" VerticalAlignment="Top" Width="86" Height="32" Click="Cancel_Click"/>
+        <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" Margin="189,442,0,0" VerticalAlignment="Top" Width="86" Height="32" Click="SaveAppointment_Click"/>
+        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="315,442,0,0" VerticalAlignment="Top" Width="86" Height="32" Click="Cancel_Click"/>
+
     </Grid>
 </Window>

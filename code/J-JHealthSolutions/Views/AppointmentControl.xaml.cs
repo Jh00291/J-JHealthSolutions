@@ -41,6 +41,7 @@ namespace J_JHealthSolutions.Views
         private void AppointmentsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             bool isItemSelected = AppointmentsDataGrid.SelectedItem != null;
+            Appointment selectedAppointment = AppointmentsDataGrid.SelectedItem as Appointment;
             EditButton.IsEnabled = isItemSelected;
         }
 
@@ -62,6 +63,12 @@ namespace J_JHealthSolutions.Views
         /// </summary>
         private void EditAppointment_Click(object sender, RoutedEventArgs e)
         {
+            var selectedAppointment = AppointmentsDataGrid.SelectedItem as Appointment;
+            var editAppointmentWindow = new AddEditAppointmentWindow(selectedAppointment);
+            bool? dialogResult = editAppointmentWindow.ShowDialog();
+            if (dialogResult == true) {
+                LoadAppointments();
+            }
         }
     }
 }

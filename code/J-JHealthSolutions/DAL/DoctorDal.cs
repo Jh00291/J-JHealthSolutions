@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using J_JHealthSolutions.Model;
+﻿using J_JHealthSolutions.Model;
 using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
 {
+    /// <summary>
+    /// Data Access Layer for Doctor-related operations.
+    /// </summary>
     public class DoctorDal
     {
+        /// <summary>
+        /// Adds a new doctor to the database.
+        /// </summary>
+        /// <param name="doctor">The <see cref="Doctor"/> object containing doctor details to be added.</param>
+        /// <returns>The generated Doctor ID after successful insertion.</returns>
+        /// <exception cref="Exception">Thrown when the specified Employee ID does not exist or if a database operation fails.</exception>
         public int AddDoctor(Doctor doctor)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -19,6 +23,7 @@ namespace J_JHealthSolutions.DAL
 
             try
             {
+                // Check if the employee exists
                 var employeeExistsQuery = "SELECT COUNT(1) FROM Employee WHERE employee_id = @employeeId;";
                 using var employeeCommand = new MySqlCommand(employeeExistsQuery, connection, transaction);
                 employeeCommand.Parameters.Add("@employeeId", MySqlDbType.Int32).Value = doctor.UserId;
@@ -27,9 +32,10 @@ namespace J_JHealthSolutions.DAL
                 if (!employeeExists)
                     throw new Exception($"EmployeeId {doctor.UserId} does not exist.");
 
+                // Insert the new doctor
                 var insertQuery = @"INSERT INTO Doctor (emp_id, doctor_id)
-                                        VALUES (@userId, @doctorId);
-                                        SELECT LAST_INSERT_ID();";
+                                    VALUES (@userId, @doctorId);
+                                    SELECT LAST_INSERT_ID();";
 
                 using var insertCommand = new MySqlCommand(insertQuery, connection, transaction);
                 insertCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = doctor.UserId;
@@ -49,6 +55,11 @@ namespace J_JHealthSolutions.DAL
             }
         }
 
+        /// <summary>
+        /// Retrieves a collection of all doctors from the database.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{Doctor}"/> containing all doctors.</returns>
+        /// <exception cref="MySqlException">Thrown when a database-related error occurs.</exception>
         public IEnumerable<Doctor> GetDoctors()
         {
             var doctors = new List<Doctor>();
@@ -57,28 +68,27 @@ namespace J_JHealthSolutions.DAL
             connection.Open();
 
             var query = @"
-        SELECT 
-            e.employee_id, 
-            e.user_id, 
-            e.f_name, 
-            e.l_name, 
-            e.dob, 
-            e.gender, 
-            e.address_1, 
-            e.address_2, 
-            e.city, 
-            e.state, 
-            e.zipcode, 
-            e.personal_phone, 
-            d.doctor_id
-        FROM Employee e
-        JOIN Doctor d ON e.employee_id = d.emp_id;
-    ";
+                SELECT 
+                    e.employee_id, 
+                    e.user_id, 
+                    e.f_name, 
+                    e.l_name, 
+                    e.dob, 
+                    e.gender, 
+                    e.address_1, 
+                    e.address_2, 
+                    e.city, 
+                    e.state, 
+                    e.zipcode, 
+                    e.personal_phone, 
+                    d.doctor_id
+                FROM Employee e
+                JOIN Doctor d ON e.employee_id = d.emp_id;
+            ";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
 
-            // Get ordinals using exact column names
             var employeeIdOrdinal = reader.GetOrdinal("employee_id");
             var userIdOrdinal = reader.GetOrdinal("user_id");
             var fNameOrdinal = reader.GetOrdinal("f_name");
@@ -115,7 +125,5 @@ namespace J_JHealthSolutions.DAL
 
             return doctors;
         }
-
-
     }
 }

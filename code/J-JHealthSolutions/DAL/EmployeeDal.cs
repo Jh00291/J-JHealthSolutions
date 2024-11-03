@@ -1,6 +1,4 @@
-﻿using System;
-using J_JHealthSolutions.Model;
-using System.Collections.Generic;
+﻿using J_JHealthSolutions.Model;
 using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL

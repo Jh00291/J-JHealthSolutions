@@ -5,8 +5,17 @@ using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
 {
+    /// <summary>
+    /// Data Access Layer for Nurse-related operations.
+    /// </summary>
     public class NurseDal
     {
+        /// <summary>
+        /// Adds a new nurse to the database.
+        /// </summary>
+        /// <param name="nurse">The <see cref="Nurse"/> object containing nurse details to be added.</param>
+        /// <returns>The generated Nurse ID after successful insertion.</returns>
+        /// <exception cref="Exception">Thrown when the specified Employee ID does not exist or if a database operation fails.</exception>
         public int AddNurse(Nurse nurse)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -46,6 +55,11 @@ namespace J_JHealthSolutions.DAL
             }
         }
 
+        /// <summary>
+        /// Retrieves a collection of all nurses from the database.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{Nurse}"/> containing all nurses.</returns>
+        /// <exception cref="MySqlException">Thrown when a database-related error occurs.</exception>
         public IEnumerable<Nurse> GetNurses()
         {
             var nurses = new List<Nurse>();
@@ -96,7 +110,7 @@ namespace J_JHealthSolutions.DAL
                     fName: reader.GetString(fNameOrdinal),
                     lName: reader.GetString(lNameOrdinal),
                     dob: reader.GetDateTime(dobOrdinal),
-                    gender: reader.GetString(genderOrdinal)[0], // Assuming gender is stored as a single character
+                    gender: reader.GetString(genderOrdinal)[0],
                     address1: reader.GetString(address1Ordinal),
                     address2: reader.IsDBNull(address2Ordinal) ? null : reader.GetString(address2Ordinal),
                     city: reader.GetString(cityOrdinal),

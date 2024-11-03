@@ -64,9 +64,8 @@ namespace J_JHealthSolutions.Views
 
             reasonTextBox.Text = appointment.Reason;
 
-            statusComboBox.ItemsSource = Enum.GetNames(typeof(Status));
-            statusComboBox.SelectedItem = appointment.Status.ToString();
 
+            UpdateStatusComboBox();
             UpdateNurseAutoCompleteBox();
 
         }
@@ -359,43 +358,42 @@ namespace J_JHealthSolutions.Views
                 DateTime selectedDateTime = CombineDateAndTime(datePicker.SelectedDate.Value, timeComboBox.SelectedItem.ToString());
                 bool isPastDateTime = selectedDateTime < DateTime.Now;
 
-                var statuses = Enum.GetNames(typeof(Status)).ToList();
+                List<string> statuses;
 
                 if (isPastDateTime)
                 {
-                    statuses.Remove("Scheduled");
+                    // Allow only "Cancel", "Completed", or "NoShow" if the date and time have passed
+                    statuses = new List<string> { "Cancelled", "Completed", "NoShow" };
                 }
                 else
                 {
-                    if (!statuses.Contains("Scheduled"))
-                    {
-                        statuses.Add("Scheduled");
-                    }
+                    // Exclude "Cancel", "Completed", and "NoShow" if the date and time haven't passed
+                    statuses = new List<string> { "Scheduled", "InProgress" };
                 }
 
-                if (statusComboBox.SelectedItem != null)
+                // Preserve the current selection if it's still valid
+                string currentStatus = statusComboBox.SelectedItem?.ToString();
+                if (!string.IsNullOrEmpty(currentStatus) && statuses.Contains(currentStatus))
                 {
-                    string currentStatus = statusComboBox.SelectedItem.ToString();
-                    if (!statuses.Contains(currentStatus))
-                    {
-                        statuses.Add(currentStatus);
-                    }
+                    statusComboBox.ItemsSource = statuses;
+                    statusComboBox.SelectedItem = currentStatus;
                 }
-
-                statusComboBox.ItemsSource = statuses;
-
-                if (statusComboBox.SelectedItem == null || !statuses.Contains(statusComboBox.SelectedItem.ToString()))
+                else
                 {
-                    statusComboBox.SelectedIndex = 0;
+                    statusComboBox.ItemsSource = statuses;
+                    if (statuses.Count > 0)
+                        statusComboBox.SelectedIndex = 0;
                 }
             }
             else
             {
+                // If date or time is not selected, show all statuses
                 statusComboBox.ItemsSource = Enum.GetNames(typeof(Status));
             }
 
             UpdateNurseAutoCompleteBox();
         }
+
 
         private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

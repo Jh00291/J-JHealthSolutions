@@ -29,13 +29,6 @@
                 <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
                 <DataGridTextColumn Header="Doctor ID" Binding="{Binding DoctorId}" />
                 <DataGridTextColumn Header="Visit DateTime" Binding="{Binding VisitDateTime, StringFormat=\{0:MM/dd/yyyy HH:mm\}}" />
-                <DataGridTextColumn Header="Weight (kg)" Binding="{Binding Weight}" />
-                <DataGridTextColumn Header="Height (cm)" Binding="{Binding Height}" />
-                <DataGridTextColumn Header="Blood Pressure (Systolic)" Binding="{Binding BloodPressureSystolic}" />
-                <DataGridTextColumn Header="Blood Pressure (Diastolic)" Binding="{Binding BloodPressureDiastolic}" />
-                <DataGridTextColumn Header="Temperature (°C)" Binding="{Binding Temperature}" />
-                <DataGridTextColumn Header="Pulse" Binding="{Binding Pulse}" />
-                <DataGridTextColumn Header="Symptoms" Binding="{Binding Symptoms}" />
                 <DataGridTextColumn Header="Initial Diagnosis" Binding="{Binding InitialDiagnosis}" />
                 <DataGridTextColumn Header="Final Diagnosis" Binding="{Binding FinalDiagnosis}" />
                 <DataGridTextColumn Header="Status" Binding="{Binding VisitStatus}" />
@@ -45,7 +38,7 @@
 
         <!-- Buttons for Add, Edit, Delete -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <Button Content="Check-Up" Width="97" Height="28" Margin="0,0,100,0" Click="CheckUp_Click"/>
+            <Button Content="CheckUpButton" Width="97" Height="28" Margin="0,0,100,0" Click="CheckUp_Click"/>
             <Button Content="Add" Width="97" Height="28" Margin="0,0,10,0" Click="AddVisit_Click"/>
             <Button x:Name="EditButton" Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditVisit_Click" IsEnabled="False"/>
             <Button x:Name="DeleteButton" Content="Delete" Width="97" Height="28" Click="DeleteVisit_Click" IsEnabled="False"/>

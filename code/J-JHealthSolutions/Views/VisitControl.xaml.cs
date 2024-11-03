@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using J_JHealthSolutions.Model;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace J_JHealthSolutions.Views
@@ -9,6 +10,8 @@ namespace J_JHealthSolutions.Views
         {
             InitializeComponent();
             LoadVisits();
+            VisitsDataGrid.SelectionChanged += VisitsDataGrid_SelectionChanged;
+            CheckUpButton.IsEnabled = false; // Disable Check-Up button by default
         }
 
         private void VisitsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -82,6 +85,24 @@ namespace J_JHealthSolutions.Views
                 return (Visit)VisitsDataGrid.SelectedItem;
             }
         }
+
+        private void VisitsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Enable Check-Up button only if a visit is selected
+            CheckUpButton.IsEnabled = VisitsDataGrid.SelectedItem != null;
+        }
+
+        private void CheckUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (VisitsDataGrid.SelectedItem is Visit selectedVisit)
+            {
+                // Pass the selected visit to the CheckUpWindow
+                var checkUpWindow = new CheckUpWindow(selectedVisit);
+                checkUpWindow.ShowDialog();
+            }
+        }
+
+
     }
 }
 

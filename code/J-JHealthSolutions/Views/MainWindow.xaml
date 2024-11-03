@@ -46,7 +46,7 @@
         <ContentControl Grid.Row="1" Grid.Column="1" x:Name="MainContentControl"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <!-- Initial content -->
-            <views:PatientControl x:Name="patientControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <views:PatientControl x:Name="patientControl" Height="433"/>
         </ContentControl>
     </Grid>
 </Window>

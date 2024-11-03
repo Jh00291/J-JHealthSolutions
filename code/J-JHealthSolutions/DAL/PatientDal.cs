@@ -148,5 +148,75 @@ namespace J_JHealthSolutions.DAL
             return patients;
         }
 
+        /// <summary>
+        /// Searches for patients based on last name, first name, and date of birth.
+        /// </summary>
+        /// <param name="lastName">The last name to search for.</param>
+        /// <param name="firstName">The first name to search for.</param>
+        /// <param name="dob">The date of birth to search for.</param>
+        /// <returns>A list of patients that match the search criteria.</returns>
+        public List<Patient> SearchPatients(string lastName, string firstName, DateTime? dob)
+        {
+            var patients = new List<Patient>();
+
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            // Base query with a condition that is always true to simplify adding optional conditions
+            var query = @"SELECT patient_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active
+                  FROM Patient
+                  WHERE 1=1";
+
+            var parameters = new List<MySqlParameter>();
+
+            // Add conditions based on provided values
+            if (!string.IsNullOrWhiteSpace(lastName))
+            {
+                query += " AND l_name LIKE @lastName";
+                parameters.Add(new MySqlParameter("@lastName", "%" + lastName + "%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(firstName))
+            {
+                query += " AND f_name LIKE @firstName";
+                parameters.Add(new MySqlParameter("@firstName", "%" + firstName + "%"));
+            }
+
+            if (dob.HasValue)
+            {
+                query += " AND dob = @dob";
+                parameters.Add(new MySqlParameter("@dob", dob.Value.Date));
+            }
+
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddRange(parameters.ToArray());
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var patient = new Patient
+                {
+                    PatientId = reader.GetInt32("patient_id"),
+                    FName = reader.GetString("f_name"),
+                    LName = reader.GetString("l_name"),
+                    DOB = reader.GetDateTime("dob"),
+                    Gender = reader.GetChar("gender"),
+                    Address1 = reader.GetString("address_1"),
+                    Address2 = reader.IsDBNull(reader.GetOrdinal("address_2")) ? null : reader.GetString("address_2"),
+                    City = reader.GetString("city"),
+                    State = reader.GetString("state"),
+                    Zipcode = reader.GetString("zipcode"),
+                    Phone = reader.GetString("phone"),
+                    Active = reader.GetBoolean("active")
+                };
+
+                patients.Add(patient);
+            }
+
+            return patients;
+        }
+
+
     }
 }

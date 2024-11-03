@@ -41,9 +41,11 @@
                 <DataGridTextColumn Header="Status" Binding="{Binding VisitStatus}" />
             </DataGrid.Columns>
         </DataGrid>
+        
 
         <!-- Buttons for Add, Edit, Delete -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="Check-Up" Width="97" Height="28" Margin="0,0,100,0" Click="CheckUp_Click"/>
             <Button Content="Add" Width="97" Height="28" Margin="0,0,10,0" Click="AddVisit_Click"/>
             <Button x:Name="EditButton" Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditVisit_Click" IsEnabled="False"/>
             <Button x:Name="DeleteButton" Content="Delete" Width="97" Height="28" Click="DeleteVisit_Click" IsEnabled="False"/>

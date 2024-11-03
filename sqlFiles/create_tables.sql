@@ -156,4 +156,14 @@ CREATE TABLE TestOrder (
     ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
+ALTER TABLE Visit
+MODIFY weight DECIMAL(5, 2),
+MODIFY height DECIMAL(5, 2),
+MODIFY blood_pressure_systolic INT,
+MODIFY blood_pressure_diastolic INT,
+MODIFY temperature DECIMAL(4, 2),
+MODIFY pulse INT,
+MODIFY symptoms TEXT,
+MODIFY initial_diagnosis VARCHAR(255);
+
 SET foreign_key_checks = 1;

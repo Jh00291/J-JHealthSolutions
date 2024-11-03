@@ -27,7 +27,7 @@ namespace J_JHealthSolutions.DAL
                 if (!employeeExists)
                     throw new Exception($"EmployeeId {doctor.UserId} does not exist.");
 
-                var insertQuery = @"INSERT INTO Doctor (user_id, doctor_id)
+                var insertQuery = @"INSERT INTO Doctor (emp_id, doctor_id)
                                         VALUES (@userId, @doctorId);
                                         SELECT LAST_INSERT_ID();";
 
@@ -56,28 +56,58 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            var query = @"SELECT e.user_id, e.fname, e.lname, e.dob, e.gender, e.address1, e.address2, e.city, e.state, e.zipcode, e.personal_phone, d.doctor_id
-                          FROM Employee e
-                          JOIN Doctor d ON e.user_id = d.user_id;";
+            var query = @"
+        SELECT 
+            e.employee_id, 
+            e.user_id, 
+            e.f_name, 
+            e.l_name, 
+            e.dob, 
+            e.gender, 
+            e.address_1, 
+            e.address_2, 
+            e.city, 
+            e.state, 
+            e.zipcode, 
+            e.personal_phone, 
+            d.doctor_id
+        FROM Employee e
+        JOIN Doctor d ON e.employee_id = d.emp_id;
+    ";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
 
+            // Get ordinals using exact column names
+            var employeeIdOrdinal = reader.GetOrdinal("employee_id");
+            var userIdOrdinal = reader.GetOrdinal("user_id");
+            var fNameOrdinal = reader.GetOrdinal("f_name");
+            var lNameOrdinal = reader.GetOrdinal("l_name");
+            var dobOrdinal = reader.GetOrdinal("dob");
+            var genderOrdinal = reader.GetOrdinal("gender");
+            var address1Ordinal = reader.GetOrdinal("address_1");
+            var address2Ordinal = reader.GetOrdinal("address_2");
+            var cityOrdinal = reader.GetOrdinal("city");
+            var stateOrdinal = reader.GetOrdinal("state");
+            var zipcodeOrdinal = reader.GetOrdinal("zipcode");
+            var personalPhoneOrdinal = reader.GetOrdinal("personal_phone");
+            var doctorIdOrdinal = reader.GetOrdinal("doctor_id");
+
             while (reader.Read())
             {
                 var doctor = new Doctor(
-                    userId: reader.GetInt32("user_id"),
-                    fName: reader.GetString("fname"),
-                    lName: reader.GetString("lname"),
-                    dob: reader.GetDateTime("dob"),
-                    gender: reader.GetChar("gender"),
-                    address1: reader.GetString("address1"),
-                    address2: reader.GetString("address2"),
-                    city: reader.GetString("city"),
-                    state: reader.GetString("state"),
-                    zipcode: reader.GetString("zipcode"),
-                    personalPhone: reader.GetString("personal_phone"),
-                    doctorId: reader.GetInt32("doctor_id")
+                    userId: reader.GetInt32(userIdOrdinal),
+                    fName: reader.GetString(fNameOrdinal),
+                    lName: reader.GetString(lNameOrdinal),
+                    dob: reader.GetDateTime(dobOrdinal),
+                    gender: reader.GetString(genderOrdinal)[0], // Assuming gender is stored as a single character
+                    address1: reader.GetString(address1Ordinal),
+                    address2: reader.IsDBNull(address2Ordinal) ? null : reader.GetString(address2Ordinal),
+                    city: reader.GetString(cityOrdinal),
+                    state: reader.GetString(stateOrdinal),
+                    zipcode: reader.GetString(zipcodeOrdinal),
+                    personalPhone: reader.GetString(personalPhoneOrdinal),
+                    doctorId: reader.GetInt32(doctorIdOrdinal)
                 );
 
                 doctors.Add(doctor);
@@ -85,5 +115,7 @@ namespace J_JHealthSolutions.DAL
 
             return doctors;
         }
+
+
     }
 }

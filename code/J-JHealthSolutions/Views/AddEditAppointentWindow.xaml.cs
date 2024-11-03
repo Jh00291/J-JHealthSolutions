@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using J_JHealthSolutions.Model;
-using System.Linq;
-using System.Numerics;
 using J_JHealthSolutions.DAL;
 
 namespace J_JHealthSolutions.Views
@@ -12,40 +8,50 @@ namespace J_JHealthSolutions.Views
     public partial class AddEditAppointmentWindow : Window
     {
         private List<Patient> allPatients;
-        private List<Employee> allDoctors;
+        private IEnumerable<Doctor> allDoctors;
 
         private Patient selectedPatient;
-        private Employee selectedDoctor;
+        private Doctor selectedDoctor;
+
+        private Appointment _appointment;
 
         public AddEditAppointmentWindow()
         {
             InitializeComponent();
 
-            // Load patients and doctors
             LoadPatients();
             LoadDoctors();
 
-            // Populate statusComboBox
             statusComboBox.Items.Clear();
             statusComboBox.ItemsSource = Enum.GetNames(typeof(Status));
-            statusComboBox.SelectedIndex = 0; // Default to first status
+            statusComboBox.SelectedIndex = 0;
+        }
+
+        public AddEditAppointmentWindow(Appointment appointment)
+        {
+            InitializeComponent();
+            this.Title = "Edit Appointment";
+            this.titleLabel.Content = "Edit Appointment";
+            _appointment = appointment;
+            PopulateAppointmentData(appointment);
+        }
+
+        private void PopulateAppointmentData(Appointment appointment)
+        {
+            patientAutoCompleteBox.Text = appointment.PatientFullName;
+            doctorAutoCompleteBox.Text = appointment.DoctorFullName;
+
         }
 
         private void LoadPatients()
         {
-            // Fetch patients from your data source
             LoadAllPatients();
-
-            // Optionally, set an initial ItemsSource
             patientAutoCompleteBox.ItemsSource = allPatients;
         }
 
         private void LoadDoctors()
         {
-            // Fetch doctors from your data source
             LoadAllDoctors();
-
-            // Optionally, set an initial ItemsSource
             doctorAutoCompleteBox.ItemsSource = allDoctors;
         }
 
@@ -57,11 +63,10 @@ namespace J_JHealthSolutions.Views
 
         private void LoadAllDoctors()
         {
-            EmployeeDal employeeDal = new EmployeeDal();
-            allDoctors = employeeDal.GetAllDoctors();
+            DoctorDal da = new DoctorDal();
+            allDoctors = da.GetDoctors();
         }
 
-        // Event handler for patient search
         private void PatientAutoCompleteBox_Populating(object sender, PopulatingEventArgs e)
         {
             var searchText = patientAutoCompleteBox.SearchText.ToLower();
@@ -85,34 +90,28 @@ namespace J_JHealthSolutions.Views
         {
             if (datePicker.SelectedDate.HasValue && doctorAutoCompleteBox.SelectedItem != null)
             {
-                int selectedDoctorId = ((Employee)doctorAutoCompleteBox.SelectedItem).EmployeeId.Value;
+                int selectedDoctorId = ((Doctor)doctorAutoCompleteBox.SelectedItem).DoctorId;
                 DateTime selectedDate = datePicker.SelectedDate.Value;
 
-                // Define start and end times, and interval
-                TimeSpan startTime = TimeSpan.FromHours(8); // 8 AM
-                TimeSpan endTime = TimeSpan.FromHours(17);  // 5 PM
-                TimeSpan interval = TimeSpan.FromMinutes(20); // 20-minute intervals
+                TimeSpan startTime = TimeSpan.FromHours(8);
+                TimeSpan endTime = TimeSpan.FromHours(17);
+                TimeSpan interval = TimeSpan.FromMinutes(20);
 
-                // Clear existing items in ComboBox
                 timeComboBox.Items.Clear();
 
                 var appointmentDal = new AppointmentDal();
 
-                // Loop through each time slot, checking availability
                 for (TimeSpan time = startTime; time < endTime; time += interval)
                 {
                     DateTime appointmentDateTime = selectedDate.Date + time;
 
-                    // Check if the time slot is available
                     bool isAvailable = appointmentDal.IsTimeSlotAvailable(selectedDoctorId, appointmentDateTime);
                     if (isAvailable)
                     {
-                        // Add available time slot to ComboBox in AM/PM format
                         timeComboBox.Items.Add(appointmentDateTime.ToString("hh:mm tt"));
                     }
                 }
 
-                // Set a default selection if available slots are found
                 if (timeComboBox.Items.Count > 0)
                 {
                     timeComboBox.SelectedItem = timeComboBox.Items[0];
@@ -124,14 +123,10 @@ namespace J_JHealthSolutions.Views
             }
             else
             {
-                // Clear ComboBox if no date or doctor is selected
                 timeComboBox.Items.Clear();
             }
         }
 
-
-
-        // Event handler for doctor search
         private void DoctorAutoCompleteBox_Populating(object sender, PopulatingEventArgs e)
         {
             var searchText = doctorAutoCompleteBox.SearchText.ToLower();
@@ -142,7 +137,8 @@ namespace J_JHealthSolutions.Views
 
         private void DoctorAutoCompleteBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            selectedDoctor = doctorAutoCompleteBox.SelectedItem as Employee;
+            selectedDoctor = doctorAutoCompleteBox.SelectedItem as Doctor;
+            this.datePicker.IsEnabled = true;
         }
 
         private void SaveAppointment_Click(object sender, RoutedEventArgs e)
@@ -173,7 +169,6 @@ namespace J_JHealthSolutions.Views
                 return;
             }
 
-            // Get selected status
             var statusString = statusComboBox.SelectedItem.ToString();
             if (!Enum.TryParse(statusString, out Status appointmentStatus))
             {
@@ -181,16 +176,14 @@ namespace J_JHealthSolutions.Views
                 return;
             }
 
-            // Create new appointment
             var appointment = new Appointment
             {
                 PatientId = selectedPatient.PatientId.Value,
-                DoctorId = selectedDoctor.EmployeeId.Value,
+                DoctorId = selectedDoctor.DoctorId,
                 Reason = reasonTextBox.Text,
                 Status = appointmentStatus
             };
 
-            // Save appointment to your data source
             SaveAppointment(appointment);
 
             MessageBox.Show("Appointment saved successfully.");
@@ -199,7 +192,10 @@ namespace J_JHealthSolutions.Views
 
         private void SaveAppointment(Appointment appointment)
         {
-            // Implement logic to save the appointment to your database or service
+            AppointmentDal appointmentDal = new AppointmentDal();
+            appointmentDal.AddAppointment(appointment);
+            this.DialogResult = true;
+            this.Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

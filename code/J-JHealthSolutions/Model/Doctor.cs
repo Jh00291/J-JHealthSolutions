@@ -16,5 +16,10 @@ namespace J_JHealthSolutions.Model
         {
             DoctorId = doctorId;
         }
+
+        public override string ToString()
+        {
+            return $"{EmployeeFullName} | DoctorID:{DoctorId}";
+        }
     }
 }

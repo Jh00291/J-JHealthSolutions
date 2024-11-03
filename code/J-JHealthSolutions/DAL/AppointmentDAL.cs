@@ -180,17 +180,21 @@ namespace J_JHealthSolutions.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            var query = @"SELECT COUNT(*) FROM Appointment 
-                  WHERE doctor_id = @doctorId 
+            var query = @"
+            SELECT EXISTS (
+                SELECT 1 
+                FROM Appointment 
+                WHERE doctor_id = @doctorId 
                   AND `datetime` = @dateTime 
-                  AND `status` != 'Scheduled'";
+                  AND `status` = 'Scheduled'
+            )";
 
             using var command = new MySqlCommand(query, connection);
             command.Parameters.Add("@doctorId", MySqlDbType.Int32).Value = doctorId;
             command.Parameters.Add("@dateTime", MySqlDbType.DateTime).Value = dateTime;
 
-            var count = Convert.ToInt32(command.ExecuteScalar());
-            return count == 0;
+            var exists = Convert.ToBoolean(command.ExecuteScalar());
+            return !exists;
         }
 
     }

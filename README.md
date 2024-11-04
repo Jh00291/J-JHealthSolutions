@@ -122,97 +122,97 @@ The second sprint introduces patient appointment scheduling and status managemen
 
 **Update Add/Edit Validation to be more informative**
 - **Expected Time**: 1 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 1 hour
 - **Assigned to**: Jacob
 - Improve the validation messages for adding/editing patient information to be more descriptive.
 
 **Alter Patient DAL to allow for search by criteria**
 - **Expected Time**: 2.5 hours
-- **Actual Time**: (not completed)
+- **Actual Time**: 2.5 hours
 - **Assigned to**: Jacob
 - Modify the Patient Data Access Layer (DAL) to enable patient searches based on specific criteria.
 
 **Alter Patient Control to have a search bar**
 - **Expected Time**: 1.5 hours
-- **Actual Time**: (not completed)
+- **Actual Time**: 1.5 hours
 - **Assigned to**: Jacob
 - Add a search bar in the Patient Control UI to facilitate quick patient lookups.
 
 **Create Appointment DAL to allow for creation**
 - **Expected Time**: 2 hours
-- **Actual Time**: (not completed)
+- **Actual Time**: 2 hours
 - **Assigned to**: Jason
 - Develop the Appointment Data Access Layer to support appointment creation.
   
 **Create Appointment View Control**
 - **Expected Time**: 2 hours
-- **Actual Time**: (not completed)
+- **Actual Time**: 2 hours
 - **Assigned to**: Jason
 - Design a user interface for viewing the appointments.
 
 **Create Add/Edit Appointment Control**
 - **Expected Time**: 1.5 hours
-- **Actual Time**: (not completed)
+- **Actual Time**: 1.5 hours
 - **Assigned to**: Jason
 - Design a user interface for adding and editing patient appointments.
 
 **Update Menu Control to allow switching between Patient and Appointment controls**
 - **Expected Time**: 2 hours
-- **Actual Time**: (not completed)
+- **Actual Time**: 2 hours
 - **Assigned to**: Jason
 - Update the Menu Control so users can navigate between Patient and Appointment sections.
 
 **Alter MainWindow to allow for switching between different controls**
 - **Expected Time**: 1.5 hours
-- **Actual Time**: (not completed)
+- **Actual Time**: 1.5 hours
 - **Assigned to**: Jason
 - Modify the MainWindow to support switching between various controls in the application.
 
 **Alter EmployeeDAL to Dapper**
 - **Expected Time**: 0.5 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 0.5 hour
 - **Assigned to**: Jacob
 - Convert the Employee Data Access Layer to use Dapper ORM for database interactions.
 
 **Alter PatientDAL to Dapper**
 - **Expected Time**: 0.5 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 0.5 hour
 - **Assigned to**: Jacob
 - Convert the Patient Data Access Layer to use Dapper ORM for improved performance.
 
 **Alter VisitDAL to Dapper**
 - **Expected Time**: 0.5 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 0.5 hour
 - **Assigned to**: Jacob
 - Convert the Visit Data Access Layer to use Dapper ORM for improved performance.
 
 **Alter UserDAL to Dapper**
 - **Expected Time**: 0.5 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 0.5 hour
 - **Assigned to**: Jacob
 - Migrate the User Data Access Layer to Dapper ORM for enhanced database performance.
 
 **Alter AppointmentDAL to Dapper**
 - **Expected Time**: 0.5 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 0.5 hour
 - **Assigned to**: Jacob
 - Migrate the Appointment Data Access Layer to Dapper ORM for enhanced database performance.
 
 **Create Visit Control**
 - **Expected Time**: 1.5 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 1.5 hour
 - **Assigned to**: Jacob
 - Create the view to allow for visits
 
 **Create Visit DAL**
 - **Expected Time**: 2 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 2 hour
 - **Assigned to**: Jason
 - Create the DAL to interact with the database
 
 **Create Checkup Window**
 - **Expected Time**: 1.5 hour
-- **Actual Time**: (not completed)
+- **Actual Time**: 1.5 hour
 - **Assigned to**: Jacob
 - Create the Checkup Window to allow for the nurse to gather the initial information about the patient
 

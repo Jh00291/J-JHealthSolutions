@@ -96,6 +96,7 @@ namespace J_JHealthSolutions.Views
             mainMenuControl.UserRole = CurrentUser.Role.ToString();
 
             InitializeCommands();
+            SubscribeToEvents();
 
             mainMenuControl.LogOutCommand = LogOutCommand;
 

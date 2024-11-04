@@ -1,4 +1,9 @@
-﻿using J_JHealthSolutions.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Dapper;
+using J_JHealthSolutions.Model;
 using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
@@ -6,303 +11,244 @@ namespace J_JHealthSolutions.DAL
     public class EmployeeDal
     {
         /// <summary>
-        /// Get all employees
+        /// Get all employees.
         /// </summary>
-        /// <returns>List of all employees</returns>
+        /// <returns>List of all employees.</returns>
         public List<Employee> GetAllEmployees()
         {
-            var employeeList = new List<Employee>();
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = "SELECT employee_id, user_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone FROM Employee;";
 
-            using var command = new MySqlCommand(query, connection);
-            using var reader = command.ExecuteReader();
+            var query = @"
+                SELECT 
+                    employee_id AS EmployeeId,
+                    user_id AS UserId,
+                    f_name AS FName,
+                    l_name AS LName,
+                    dob AS Dob,
+                    gender AS Gender,
+                    address_1 AS Address1,
+                    address_2 AS Address2,
+                    city AS City,
+                    state AS State,
+                    zipcode AS Zipcode,
+                    personal_phone AS PersonalPhone
+                FROM Employee;
+            ";
 
-            var employeeIdOrdinal = reader.GetOrdinal("employee_id");
-            var userIdOrdinal = reader.GetOrdinal("user_id");
-            var fNameOrdinal = reader.GetOrdinal("f_name");
-            var lNameOrdinal = reader.GetOrdinal("l_name");
-            var dobOrdinal = reader.GetOrdinal("dob");
-            var genderOrdinal = reader.GetOrdinal("gender");
-            var address1Ordinal = reader.GetOrdinal("address_1");
-            var address2Ordinal = reader.GetOrdinal("address_2");
-            var cityOrdinal = reader.GetOrdinal("city");
-            var stateOrdinal = reader.GetOrdinal("state");
-            var zipcodeOrdinal = reader.GetOrdinal("zipcode");
-            var personalPhoneOrdinal = reader.GetOrdinal("personal_phone");
-
-            while (reader.Read())
-            {
-                employeeList.Add(CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal, genderOrdinal,
-                    address1Ordinal, address2Ordinal, cityOrdinal, stateOrdinal, zipcodeOrdinal, personalPhoneOrdinal));
-            }
-
+            var employeeList = connection.Query<Employee>(query).ToList();
             return employeeList;
         }
 
         /// <summary>
-        /// Get employee by ID
+        /// Get employee by ID.
         /// </summary>
-        /// <param name="employeeId">Employee ID</param>
-        /// <returns>Employee object or null if not found</returns>
+        /// <param name="employeeId">Employee ID.</param>
+        /// <returns>Employee object or null if not found.</returns>
         public Employee GetEmployeeById(int employeeId)
         {
-            Employee employee = null;
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = "SELECT employee_id, user_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone FROM Employee WHERE employee_id = @employeeId;";
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@employeeId", MySqlDbType.Int32).Value = employeeId;
+            var query = @"
+                SELECT 
+                    employee_id AS EmployeeId,
+                    user_id AS UserId,
+                    f_name AS FName,
+                    l_name AS LName,
+                    dob AS Dob,
+                    gender AS Gender,
+                    address_1 AS Address1,
+                    address_2 AS Address2,
+                    city AS City,
+                    state AS State,
+                    zipcode AS Zipcode,
+                    personal_phone AS PersonalPhone
+                FROM Employee
+                WHERE employee_id = @employeeId;
+            ";
 
-            using var reader = command.ExecuteReader();
-
-            if (reader.Read())
-            {
-                var employeeIdOrdinal = reader.GetOrdinal("employee_id");
-                var userIdOrdinal = reader.GetOrdinal("user_id");
-                var fNameOrdinal = reader.GetOrdinal("f_name");
-                var lNameOrdinal = reader.GetOrdinal("l_name");
-                var dobOrdinal = reader.GetOrdinal("dob");
-                var genderOrdinal = reader.GetOrdinal("gender");
-                var address1Ordinal = reader.GetOrdinal("address_1");
-                var address2Ordinal = reader.GetOrdinal("address_2");
-                var cityOrdinal = reader.GetOrdinal("city");
-                var stateOrdinal = reader.GetOrdinal("state");
-                var zipcodeOrdinal = reader.GetOrdinal("zipcode");
-                var personalPhoneOrdinal = reader.GetOrdinal("personal_phone");
-
-                employee = CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal, genderOrdinal,
-                    address1Ordinal, address2Ordinal, cityOrdinal, stateOrdinal, zipcodeOrdinal, personalPhoneOrdinal);
-            }
-
+            var employee = connection.QuerySingleOrDefault<Employee>(query, new { employeeId });
             return employee;
         }
 
         /// <summary>
-        /// Get employees by city
+        /// Get employees by city.
         /// </summary>
-        /// <param name="city">City name</param>
-        /// <returns>List of employees in the given city</returns>
+        /// <param name="city">City name.</param>
+        /// <returns>List of employees in the given city.</returns>
         public List<Employee> GetEmployeesByCity(string city)
         {
-            var employeeList = new List<Employee>();
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = "SELECT employee_id, user_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone FROM Employee WHERE city = @city;";
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@city", MySqlDbType.VarChar).Value = city;
+            var query = @"
+                SELECT 
+                    employee_id AS EmployeeId,
+                    user_id AS UserId,
+                    f_name AS FName,
+                    l_name AS LName,
+                    dob AS Dob,
+                    gender AS Gender,
+                    address_1 AS Address1,
+                    address_2 AS Address2,
+                    city AS City,
+                    state AS State,
+                    zipcode AS Zipcode,
+                    personal_phone AS PersonalPhone
+                FROM Employee
+                WHERE city = @city;
+            ";
 
-            using var reader = command.ExecuteReader();
-
-            var employeeIdOrdinal = reader.GetOrdinal("employee_id");
-            var userIdOrdinal = reader.GetOrdinal("user_id");
-            var fNameOrdinal = reader.GetOrdinal("f_name");
-            var lNameOrdinal = reader.GetOrdinal("l_name");
-            var dobOrdinal = reader.GetOrdinal("dob");
-            var genderOrdinal = reader.GetOrdinal("gender");
-            var address1Ordinal = reader.GetOrdinal("address_1");
-            var address2Ordinal = reader.GetOrdinal("address_2");
-            var cityOrdinal = reader.GetOrdinal("city");
-            var stateOrdinal = reader.GetOrdinal("state");
-            var zipcodeOrdinal = reader.GetOrdinal("zipcode");
-            var personalPhoneOrdinal = reader.GetOrdinal("personal_phone");
-
-            while (reader.Read())
-            {
-                employeeList.Add(CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal, genderOrdinal,
-                    address1Ordinal, address2Ordinal, cityOrdinal, stateOrdinal, zipcodeOrdinal, personalPhoneOrdinal));
-            }
-
+            var employeeList = connection.Query<Employee>(query, new { city }).ToList();
             return employeeList;
         }
 
         /// <summary>
-        /// Get total count of employees
+        /// Get total count of employees.
         /// </summary>
-        /// <returns>Total number of employees</returns>
+        /// <returns>Total number of employees.</returns>
         public int GetEmployeeCount()
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
+
             var query = "SELECT COUNT(*) FROM Employee;";
-
-            using var command = new MySqlCommand(query, connection);
-            var count = Convert.ToInt32(command.ExecuteScalar());
-
+            var count = connection.ExecuteScalar<int>(query);
             return count;
         }
 
         /// <summary>
-        /// Create a new employee
+        /// Create a new employee.
         /// </summary>
-        /// <param name="employee">Employee object</param>
-        /// <returns>Employee ID of the newly created employee</returns>
+        /// <param name="employee">Employee object.</param>
+        /// <returns>Employee ID of the newly created employee.</returns>
         public int CreateEmployee(Employee employee)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = @"INSERT INTO Employee (f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone)
-                          VALUES (@userId, @fName, @lName, @dob, @gender, @address1, @address2, @city, @state, @zipcode, @personalPhone);
-                          SELECT LAST_INSERT_ID();";
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@userId", MySqlDbType.Int32).Value = (object)employee.UserId ?? DBNull.Value;
-            command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = employee.FName;
-            command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = employee.LName;
-            command.Parameters.Add("@dob", MySqlDbType.Date).Value = employee.Dob;
-            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = employee.Gender;
-            command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = employee.Address1;
-            command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = employee.Address2 ?? (object)DBNull.Value;
-            command.Parameters.Add("@city", MySqlDbType.VarChar).Value = employee.City;
-            command.Parameters.Add("@state", MySqlDbType.VarChar).Value = employee.State;
-            command.Parameters.Add("@zipcode", MySqlDbType.VarChar).Value = employee.Zipcode;
-            command.Parameters.Add("@personalPhone", MySqlDbType.VarChar).Value = employee.PersonalPhone;
+            var query = @"
+                INSERT INTO Employee (
+                    user_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, personal_phone
+                )
+                VALUES (
+                    @UserId, @FName, @LName, @Dob, @Gender, @Address1, @Address2, @City, @State, @Zipcode, @PersonalPhone
+                );
+                SELECT LAST_INSERT_ID();
+            ";
 
-            var employeeId = Convert.ToInt32(command.ExecuteScalar());
+            var parameters = new
+            {
+                employee.UserId,
+                employee.FName,
+                employee.LName,
+                employee.Dob,
+                employee.Gender,
+                employee.Address1,
+                Address2 = employee.Address2 ?? (object)DBNull.Value,
+                employee.City,
+                employee.State,
+                employee.Zipcode,
+                employee.PersonalPhone
+            };
+
+            var employeeId = connection.ExecuteScalar<int>(query, parameters);
             employee.EmployeeId = employeeId;
             return employeeId;
         }
 
         /// <summary>
-        /// Update an existing employee
+        /// Update an existing employee.
         /// </summary>
-        /// <param name="employee">Employee object</param>
-        /// <returns>True if successful, false otherwise</returns>
+        /// <param name="employee">Employee object.</param>
+        /// <returns>True if successful, false otherwise.</returns>
         public bool UpdateEmployee(Employee employee)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = @"UPDATE Employee
-                          SET user_id = @userId, f_name = @fName, l_name = @lName, dob = @dob, gender = @gender, address_1 = @address1, address_2 = @address2,
-                              city = @city, state = @state, zipcode = @zipcode, personal_phone = @personalPhone
-                          WHERE employee_id = @employeeId;";
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@userId", MySqlDbType.Int32).Value = (object)employee.UserId ?? DBNull.Value;
-            command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = employee.FName;
-            command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = employee.LName;
-            command.Parameters.Add("@dob", MySqlDbType.Date).Value = employee.Dob;
-            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = employee.Gender;
-            command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = employee.Address1;
-            command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = employee.Address2 ?? (object)DBNull.Value;
-            command.Parameters.Add("@city", MySqlDbType.VarChar).Value = employee.City;
-            command.Parameters.Add("@state", MySqlDbType.VarChar).Value = employee.State;
-            command.Parameters.Add("@zipcode", MySqlDbType.VarChar).Value = employee.Zipcode;
-            command.Parameters.Add("@personalPhone", MySqlDbType.VarChar).Value = employee.PersonalPhone;
-            command.Parameters.Add("@employeeId", MySqlDbType.Int32).Value = employee.EmployeeId;
+            var query = @"
+                UPDATE Employee
+                SET
+                    user_id = @UserId,
+                    f_name = @FName,
+                    l_name = @LName,
+                    dob = @Dob,
+                    gender = @Gender,
+                    address_1 = @Address1,
+                    address_2 = @Address2,
+                    city = @City,
+                    state = @State,
+                    zipcode = @Zipcode,
+                    personal_phone = @PersonalPhone
+                WHERE employee_id = @EmployeeId;
+            ";
 
-            var affectedRows = command.ExecuteNonQuery();
+            var parameters = new
+            {
+                employee.UserId,
+                employee.FName,
+                employee.LName,
+                employee.Dob,
+                employee.Gender,
+                employee.Address1,
+                Address2 = employee.Address2 ?? (object)DBNull.Value,
+                employee.City,
+                employee.State,
+                employee.Zipcode,
+                employee.PersonalPhone,
+                employee.EmployeeId
+            };
+
+            var affectedRows = connection.Execute(query, parameters);
             return affectedRows > 0;
         }
 
         /// <summary>
-        /// Delete an employee by ID
+        /// Delete an employee by ID.
         /// </summary>
-        /// <param name="employeeId">Employee ID</param>
-        /// <returns>True if successful, false otherwise</returns>
+        /// <param name="employeeId">Employee ID.</param>
+        /// <returns>True if successful, false otherwise.</returns>
         public bool DeleteEmployee(int employeeId)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = @"DELETE FROM Employee WHERE employee_id = @employeeId;";
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@employeeId", MySqlDbType.Int32).Value = employeeId;
-
-            var affectedRows = command.ExecuteNonQuery();
+            var query = "DELETE FROM Employee WHERE employee_id = @employeeId;";
+            var affectedRows = connection.Execute(query, new { employeeId });
             return affectedRows > 0;
         }
 
         /// <summary>
-        /// Get all doctors
+        /// Get all doctors.
         /// </summary>
-        /// <returns>List of all doctors as Employee objects</returns>
+        /// <returns>List of all doctors as Employee objects.</returns>
         public List<Employee> GetAllDoctors()
         {
-            var doctorList = new List<Employee>();
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
+
             var query = @"
-        SELECT e.employee_id, e.user_id, e.f_name, e.l_name, e.dob, e.gender, 
-               e.address_1, e.address_2, e.city, e.state, e.zipcode, e.personal_phone 
-        FROM Employee e
-        INNER JOIN Doctor d ON e.employee_id = d.emp_id;
-    ";
+                SELECT 
+                    e.employee_id AS EmployeeId,
+                    e.user_id AS UserId,
+                    e.f_name AS FName,
+                    e.l_name AS LName,
+                    e.dob AS Dob,
+                    e.gender AS Gender,
+                    e.address_1 AS Address1,
+                    e.address_2 AS Address2,
+                    e.city AS City,
+                    e.state AS State,
+                    e.zipcode AS Zipcode,
+                    e.personal_phone AS PersonalPhone
+                FROM Employee e
+                INNER JOIN Doctor d ON e.employee_id = d.emp_id;
+            ";
 
-            using var command = new MySqlCommand(query, connection);
-            using var reader = command.ExecuteReader();
-
-            var employeeIdOrdinal = reader.GetOrdinal("employee_id");
-            var userIdOrdinal = reader.GetOrdinal("user_id");
-            var fNameOrdinal = reader.GetOrdinal("f_name");
-            var lNameOrdinal = reader.GetOrdinal("l_name");
-            var dobOrdinal = reader.GetOrdinal("dob");
-            var genderOrdinal = reader.GetOrdinal("gender");
-            var address1Ordinal = reader.GetOrdinal("address_1");
-            var address2Ordinal = reader.GetOrdinal("address_2");
-            var cityOrdinal = reader.GetOrdinal("city");
-            var stateOrdinal = reader.GetOrdinal("state");
-            var zipcodeOrdinal = reader.GetOrdinal("zipcode");
-            var personalPhoneOrdinal = reader.GetOrdinal("personal_phone");
-
-            while (reader.Read())
-            {
-                doctorList.Add(CreateEmployee(reader, employeeIdOrdinal, userIdOrdinal, fNameOrdinal, lNameOrdinal, dobOrdinal, genderOrdinal,
-                    address1Ordinal, address2Ordinal, cityOrdinal, stateOrdinal, zipcodeOrdinal, personalPhoneOrdinal));
-            }
-
+            var doctorList = connection.Query<Employee>(query).ToList();
             return doctorList;
         }
-
-
-        /// <summary>
-        /// Create an Employee object from a data reader
-        /// </summary>
-        /// <param name="reader">The MySqlDataReader containing employee data</param>
-        /// <param name="employeeIdOrdinal">Ordinal position of employee ID</param>
-        /// <param name="userIdOrdinal">Ordinal position of user ID</param>
-        /// <param name="fNameOrdinal">Ordinal position of first name</param>
-        /// <param name="lNameOrdinal">Ordinal position of last name</param>
-        /// <param name="dobOrdinal">Ordinal position of date of birth</param>
-        /// <param name="genderOrdinal">Ordinal position of gender</param>
-        /// <param name="address1Ordinal">Ordinal position of address line 1</param>
-        /// <param name="address2Ordinal">Ordinal position of address line 2</param>
-        /// <param name="cityOrdinal">Ordinal position of city</param>
-        /// <param name="stateOrdinal">Ordinal position of state</param>
-        /// <param name="zipcodeOrdinal">Ordinal position of zipcode</param>
-        /// <param name="personalPhoneOrdinal">Ordinal position of personal phone</param>
-        /// <returns>A new Employee object populated with the data from the reader</returns>
-        private static Employee CreateEmployee(MySqlDataReader reader, int employeeIdOrdinal, int userIdOrdinal,
-            int fNameOrdinal, int lNameOrdinal, int dobOrdinal, int genderOrdinal, int address1Ordinal, int address2Ordinal,
-            int cityOrdinal, int stateOrdinal, int zipcodeOrdinal, int personalPhoneOrdinal)
-        {
-            return new Employee
-            {
-                EmployeeId = reader.GetInt32(employeeIdOrdinal),
-                UserId = reader.IsDBNull(userIdOrdinal) ? (int?)null : reader.GetInt32(userIdOrdinal),
-                FName = reader.GetString(fNameOrdinal),
-                LName = reader.GetString(lNameOrdinal),
-                Dob = reader.GetDateTime(dobOrdinal),
-                Gender = reader.GetChar(genderOrdinal),
-                Address1 = reader.GetString(address1Ordinal),
-                Address2 = reader.IsDBNull(address2Ordinal) ? null : reader.GetString(address2Ordinal),
-                City = reader.GetString(cityOrdinal),
-                State = reader.GetString(stateOrdinal),
-                Zipcode = reader.GetString(zipcodeOrdinal),
-                PersonalPhone = reader.GetString(personalPhoneOrdinal)
-            };
-        }
     }
-
 }

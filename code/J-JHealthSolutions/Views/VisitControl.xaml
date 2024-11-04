@@ -7,20 +7,25 @@
              d:DesignHeight="450" d:DesignWidth="800"
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-    <Grid Margin="0,-47,0,0">
+    <Grid Margin="10">
         <!-- Define Grid Rows -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*"/>
+            <!-- DataGrid -->
+            <RowDefinition Height="Auto"/>
+            <!-- Buttons -->
+            <RowDefinition Height="Auto"/>
+            <!-- CheckUp Information -->
         </Grid.RowDefinitions>
 
         <!-- DataGrid for displaying visits -->
         <DataGrid x:Name="VisitsDataGrid"
+                  Grid.Row="0"
                   AutoGenerateColumns="False"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
                   IsReadOnly="True"
-                  Margin="0,76,0,10"
+                  Margin="0,10,0,10"
                   ColumnWidth="*"
                   SelectionChanged="VisitsDataGrid_SelectionChanged">
             <DataGrid.Columns>
@@ -28,20 +33,18 @@
                 <DataGridTextColumn Header="Appointment ID" Binding="{Binding AppointmentId}" />
                 <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
                 <DataGridTextColumn Header="Doctor ID" Binding="{Binding DoctorId}" />
-                <DataGridTextColumn Header="Visit DateTime" Binding="{Binding VisitDateTime, StringFormat=\{0:MM/dd/yyyy HH:mm\}}" />
+                <DataGridTextColumn Header="Visit DateTime" Binding="{Binding VisitDateTime, StringFormat={}{0:MM/dd/yyyy HH:mm}}" />
                 <DataGridTextColumn Header="Initial Diagnosis" Binding="{Binding InitialDiagnosis}" />
                 <DataGridTextColumn Header="Final Diagnosis" Binding="{Binding FinalDiagnosis}" />
                 <DataGridTextColumn Header="Status" Binding="{Binding VisitStatus}" />
             </DataGrid.Columns>
         </DataGrid>
-        
 
-        <!-- Buttons for Add, Edit, Delete -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <Button Content="CheckUpButton" Width="97" Height="28" Margin="0,0,100,0" Click="CheckUp_Click"/>
-            <Button Content="Add" Width="97" Height="28" Margin="0,0,10,0" Click="AddVisit_Click"/>
-            <Button x:Name="EditButton" Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditVisit_Click" IsEnabled="False"/>
-            <Button x:Name="DeleteButton" Content="Delete" Width="97" Height="28" Click="DeleteVisit_Click" IsEnabled="False"/>
+        <!-- Buttons for Edit and Check Up Information -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+            <Button x:Name="EditButton" Content="Edit" Width="97" Height="28" Margin="0,0,10,0" IsEnabled="False" Click="EditButton_Click"/>
+            <Button x:Name="CheckUpButton" Content="Check Up Information" Click="CheckUp_Click" Width="150" Height="28"/>
         </StackPanel>
+        
     </Grid>
 </UserControl>

@@ -242,8 +242,6 @@ namespace J_JHealthSolutions.Views
             };
 
             SaveAppointment(appointment);
-
-            MessageBox.Show("Appointment saved successfully.");
             this.Close();
         }
 
@@ -259,8 +257,41 @@ namespace J_JHealthSolutions.Views
                 }
                 else
                 {
-                    appointmentDal.AddAppointment(appointment);
+                    int newAppointmentId = appointmentDal.AddAppointment(appointment);
+                    appointment.AppointmentId = newAppointmentId;
                 }
+
+                if (selectedNurse != null)
+                {
+                    VisitDal visitDal = new VisitDal();
+                    var existingVisit = visitDal.GetVisitByAppointmentId(appointment.AppointmentId.Value);
+
+                    if (existingVisit == null)
+                    {
+                        Visit newVisit = new Visit
+                        {
+                            AppointmentId = appointment.AppointmentId.Value,
+                            PatientId = appointment.PatientId,
+                            DoctorId = appointment.DoctorId,
+                            NurseId = selectedNurse.NurseId,
+                            VisitDateTime = appointment.DateTime,
+                            VisitStatus = "InProgress",
+                            BloodPressureDiastolic = 0,
+                            BloodPressureSystolic = 0,
+                            Height = 0,
+                            Weight = 0,
+                            Pulse = 0,
+                            Temperature = 0,
+                            Symptoms = string.Empty,
+                            InitialDiagnosis = string.Empty,
+                            FinalDiagnosis = string.Empty
+                        };
+
+                        visitDal.AddVisit(newVisit);
+                    }
+                }
+
+                MessageBox.Show("Appointment saved successfully.");
                 this.DialogResult = true;
                 this.Close();
             }
@@ -269,6 +300,7 @@ namespace J_JHealthSolutions.Views
                 MessageBox.Show($"Error saving appointment: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
@@ -395,7 +427,7 @@ namespace J_JHealthSolutions.Views
             if (statusComboBox.SelectedItem != null)
             {
                 var statusString = statusComboBox.SelectedItem.ToString();
-                if (statusString == "InProgress" || statusString == "Completed" || statusString == "Scheduled")
+                if (statusString == "InProgress" || statusString == "Completed")
                 {
                     nurseAutoCompleteBox.Visibility = Visibility.Visible;
                     nurseLabel.Visibility = Visibility.Visible;

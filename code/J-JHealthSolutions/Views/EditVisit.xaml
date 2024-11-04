@@ -1,0 +1,47 @@
+﻿<Window x:Class="J_JHealthSolutions.Views.EditVisit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:J_JHealthSolutions.Views"
+        mc:Ignorable="d"
+        Title="EditVisit" Height="450" Width="800">
+    <Grid Margin="10">
+        <!-- Define Rows and Columns -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Initial Diagnosis -->
+            <RowDefinition Height="Auto"/>
+            <!-- Final Diagnosis -->
+            <RowDefinition Height="Auto"/>
+            <!-- Status -->
+            <RowDefinition Height="Auto"/>
+            <!-- Buttons -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <!-- Labels -->
+            <ColumnDefinition Width="*"/>
+            <!-- Input Controls -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Initial Diagnosis -->
+        <Label Grid.Row="0" Grid.Column="0" Content="Initial Diagnosis:" VerticalAlignment="Center" Margin="5"/>
+        <TextBox x:Name="initialDiagnosisTextbox" Grid.Row="0" Grid.Column="1" Margin="5"/>
+
+        <!-- Final Diagnosis -->
+        <Label Grid.Row="1" Grid.Column="0" Content="Final Diagnosis:" VerticalAlignment="Center" Margin="5"/>
+        <TextBox x:Name="finalDiagnosisTextBox" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+        <!-- Status -->
+        <Label Grid.Row="2" Grid.Column="0" Content="Status:" VerticalAlignment="Center" Margin="5"/>
+        <ComboBox x:Name="statusComboBox" Grid.Row="2" Grid.Column="1" Margin="5">
+        </ComboBox>
+
+        <!-- Save and Cancel Buttons -->
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <Button x:Name="saveButton" Content="Save" Width="75" Margin="5" Click="SaveButton_Click"/>
+            <Button x:Name="cancelButton" Content="Cancel" Width="75" Margin="5" Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

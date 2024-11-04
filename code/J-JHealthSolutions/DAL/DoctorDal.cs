@@ -1,4 +1,8 @@
-﻿using J_JHealthSolutions.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using Dapper;
+using J_JHealthSolutions.Model;
 using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
@@ -25,23 +29,16 @@ namespace J_JHealthSolutions.DAL
             {
                 // Check if the employee exists
                 var employeeExistsQuery = "SELECT COUNT(1) FROM Employee WHERE employee_id = @employeeId;";
-                using var employeeCommand = new MySqlCommand(employeeExistsQuery, connection, transaction);
-                employeeCommand.Parameters.Add("@employeeId", MySqlDbType.Int32).Value = doctor.UserId;
-
-                var employeeExists = Convert.ToInt32(employeeCommand.ExecuteScalar()) > 0;
+                var employeeExists = connection.ExecuteScalar<int>(employeeExistsQuery, new { employeeId = doctor.UserId }, transaction) > 0;
                 if (!employeeExists)
                     throw new Exception($"EmployeeId {doctor.UserId} does not exist.");
 
                 // Insert the new doctor
-                var insertQuery = @"INSERT INTO Doctor (emp_id, doctor_id)
-                                    VALUES (@userId, @doctorId);
+                var insertQuery = @"INSERT INTO Doctor (emp_id)
+                                    VALUES (@userId);
                                     SELECT LAST_INSERT_ID();";
 
-                using var insertCommand = new MySqlCommand(insertQuery, connection, transaction);
-                insertCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = doctor.UserId;
-                insertCommand.Parameters.Add("@doctorId", MySqlDbType.Int32).Value = doctor.DoctorId;
-
-                var generatedId = Convert.ToInt32(insertCommand.ExecuteScalar());
+                var generatedId = connection.ExecuteScalar<int>(insertQuery, new { userId = doctor.UserId }, transaction);
                 doctor.DoctorId = generatedId;
 
                 transaction.Commit();
@@ -62,66 +59,29 @@ namespace J_JHealthSolutions.DAL
         /// <exception cref="MySqlException">Thrown when a database-related error occurs.</exception>
         public IEnumerable<Doctor> GetDoctors()
         {
-            var doctors = new List<Doctor>();
-
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
             var query = @"
                 SELECT 
-                    e.employee_id, 
-                    e.user_id, 
-                    e.f_name, 
-                    e.l_name, 
-                    e.dob, 
-                    e.gender, 
-                    e.address_1, 
-                    e.address_2, 
-                    e.city, 
-                    e.state, 
-                    e.zipcode, 
-                    e.personal_phone, 
-                    d.doctor_id
+                    e.employee_id AS EmployeeId, 
+                    e.user_id AS UserId, 
+                    e.f_name AS FName, 
+                    e.l_name AS LName, 
+                    e.dob AS Dob, 
+                    e.gender AS Gender, 
+                    e.address_1 AS Address1, 
+                    e.address_2 AS Address2, 
+                    e.city AS City, 
+                    e.state AS State, 
+                    e.zipcode AS Zipcode, 
+                    e.personal_phone AS PersonalPhone, 
+                    d.doctor_id AS DoctorId
                 FROM Employee e
                 JOIN Doctor d ON e.employee_id = d.emp_id;
             ";
 
-            using var command = new MySqlCommand(query, connection);
-            using var reader = command.ExecuteReader();
-
-            var employeeIdOrdinal = reader.GetOrdinal("employee_id");
-            var userIdOrdinal = reader.GetOrdinal("user_id");
-            var fNameOrdinal = reader.GetOrdinal("f_name");
-            var lNameOrdinal = reader.GetOrdinal("l_name");
-            var dobOrdinal = reader.GetOrdinal("dob");
-            var genderOrdinal = reader.GetOrdinal("gender");
-            var address1Ordinal = reader.GetOrdinal("address_1");
-            var address2Ordinal = reader.GetOrdinal("address_2");
-            var cityOrdinal = reader.GetOrdinal("city");
-            var stateOrdinal = reader.GetOrdinal("state");
-            var zipcodeOrdinal = reader.GetOrdinal("zipcode");
-            var personalPhoneOrdinal = reader.GetOrdinal("personal_phone");
-            var doctorIdOrdinal = reader.GetOrdinal("doctor_id");
-
-            while (reader.Read())
-            {
-                var doctor = new Doctor(
-                    userId: reader.GetInt32(userIdOrdinal),
-                    fName: reader.GetString(fNameOrdinal),
-                    lName: reader.GetString(lNameOrdinal),
-                    dob: reader.GetDateTime(dobOrdinal),
-                    gender: reader.GetString(genderOrdinal)[0], // Assuming gender is stored as a single character
-                    address1: reader.GetString(address1Ordinal),
-                    address2: reader.IsDBNull(address2Ordinal) ? null : reader.GetString(address2Ordinal),
-                    city: reader.GetString(cityOrdinal),
-                    state: reader.GetString(stateOrdinal),
-                    zipcode: reader.GetString(zipcodeOrdinal),
-                    personalPhone: reader.GetString(personalPhoneOrdinal),
-                    doctorId: reader.GetInt32(doctorIdOrdinal)
-                );
-
-                doctors.Add(doctor);
-            }
+            var doctors = connection.Query<Doctor>(query);
 
             return doctors;
         }

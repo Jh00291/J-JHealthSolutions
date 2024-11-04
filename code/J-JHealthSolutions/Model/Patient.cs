@@ -153,6 +153,8 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        public string PatientFullName => $"{FName} {LName}";
+
         /// <summary>
         /// Gender of the patient, represented as a single character.
         /// </summary>
@@ -162,6 +164,8 @@ namespace J_JHealthSolutions.Model
         /// Indicates whether the patient is active in the system.
         /// </summary>
         public bool Active { get; set; }
+
+        public string PatientDisplayInfo => $"{PatientFullName} | PatientID: {PatientId} | DOB: {DOB:MM/dd/yyyy}";
 
         /// <summary>
         /// Default constructor for the Patient class.
@@ -217,6 +221,11 @@ namespace J_JHealthSolutions.Model
                 "TX","UT","VT","VA","WA","WV","WI","WY"
             };
             return Array.Exists(states, s => s.Equals(state, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override string ToString()
+        {
+            return PatientDisplayInfo;
         }
     }
 }

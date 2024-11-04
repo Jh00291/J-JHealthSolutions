@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="775"
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-    <Grid>
+
+    <Grid Margin="0,-47,0,0">
         <!-- Define Grid Rows -->
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -17,20 +18,43 @@
         </Grid.RowDefinitions>
 
         <!-- DataGrid in the first row -->
+        <StackPanel Orientation="Horizontal" Margin="10,0,10,378" Grid.Row="0">
+            <!-- Last Name Section -->
+            <StackPanel Orientation="Vertical" Margin="10,0,10,0" VerticalAlignment="Center">
+                <TextBlock Text="Last Name" FontSize="14" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                <TextBox x:Name="SearchLastName" Width="130" Height="28" FontSize="14"/>
+            </StackPanel>
+
+            <!-- First Name Section -->
+            <StackPanel Orientation="Vertical" Margin="10,0,10,0" VerticalAlignment="Center">
+                <TextBlock Text="First Name" FontSize="14" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                <TextBox x:Name="SearchFirstName" Width="130" Height="28" FontSize="14"/>
+            </StackPanel>
+
+            <!-- Date of Birth Section -->
+            <StackPanel Orientation="Vertical" Margin="10,0,10,0" VerticalAlignment="Center">
+                <TextBlock Text="Date of Birth" FontSize="14" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                <DatePicker x:Name="SearchDOB" Width="175" Height="28" FontSize="14"/>
+            </StackPanel>
+
+            <!-- Search Button -->
+            <Button Content="Search" Width="75" Height="28" VerticalAlignment="Bottom" Click="SearchButton_Click" FontSize="14"/>
+        </StackPanel>
+
+        <!-- DataGrid in the next row -->
         <DataGrid x:Name="PatientsDataGrid"
                   AutoGenerateColumns="False"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
                   IsReadOnly="True"
-                  Grid.Row="0"
-                  Margin="10"
+                  Margin="0,76,0,10"
                   ColumnWidth="*"
                   SelectionChanged="PatientsDataGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
                 <DataGridTextColumn Header="First Name" Binding="{Binding FName}" />
                 <DataGridTextColumn Header="Last Name" Binding="{Binding LName}" />
-                <DataGridTextColumn Header="Date of Birth" Binding="{Binding DOB, StringFormat={}{0:MM/dd/yyyy}}" />
+                <DataGridTextColumn Header="Date of Birth" Binding="{Binding DOB, StringFormat=\{0:MM/dd/yyyy\}}" />
                 <DataGridTextColumn Header="Address" Binding="{Binding Address1}" />
                 <DataGridTextColumn Header="City" Binding="{Binding City}" />
                 <DataGridTextColumn Header="State" Binding="{Binding State}" />
@@ -40,8 +64,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Buttons in the second row -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+        <!-- Buttons in the last row -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button Content="Add" Width="97" Height="28" Margin="0,0,10,0" Click="AddPatient_Click"/>
             <Button x:Name="EditButton" Content="Edit" Width="97" Height="28" Margin="0,0,10,0" Click="EditPatient_Click" IsEnabled="False"/>
             <Button x:Name="DeleteButton" Content="Delete" Width="97" Height="28" Click="DeletePatient_Click" IsEnabled="False"/>

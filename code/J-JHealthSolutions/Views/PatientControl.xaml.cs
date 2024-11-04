@@ -116,5 +116,16 @@ namespace J_JHealthSolutions.Views
                 return (Patient)PatientsDataGrid.SelectedItem;
             }
         }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            var lastName = SearchLastName.Text;
+            var firstName = SearchFirstName.Text;
+            var dob = SearchDOB.SelectedDate;
+
+            var patients = _patientDal.SearchPatients(lastName, firstName, dob);
+            PatientsDataGrid.ItemsSource = patients;
+        }
+
     }
 }

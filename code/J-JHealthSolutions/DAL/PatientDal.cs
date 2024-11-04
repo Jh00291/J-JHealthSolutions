@@ -1,10 +1,10 @@
-﻿using J_JHealthSolutions.Model;
-using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Dapper;
+using J_JHealthSolutions.Model;
+using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
 {
@@ -18,26 +18,30 @@ namespace J_JHealthSolutions.DAL
         public int AddPatient(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = @"INSERT INTO Patient (f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active)
-                          VALUES (@fName, @lName, @dob, @gender, @address1, @address2, @city, @state, @zipcode, @phone, @active);
-                          SELECT LAST_INSERT_ID();";
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = patient.FName;
-            command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = patient.LName;
-            command.Parameters.Add("@dob", MySqlDbType.Date).Value = patient.DOB;
-            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = patient.Gender;
-            command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = patient.Address1;
-            command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = (object)patient.Address2 ?? DBNull.Value;
-            command.Parameters.Add("@city", MySqlDbType.VarChar).Value = patient.City;
-            command.Parameters.Add("@state", MySqlDbType.VarChar).Value = patient.State;
-            command.Parameters.Add("@zipcode", MySqlDbType.VarChar).Value = patient.Zipcode;
-            command.Parameters.Add("@phone", MySqlDbType.VarChar).Value = patient.Phone;
-            command.Parameters.Add("@active", MySqlDbType.Bit).Value = patient.Active;
+            var query = @"
+                INSERT INTO Patient (f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active)
+                VALUES (@FName, @LName, @DOB, @Gender, @Address1, @Address2, @City, @State, @Zipcode, @Phone, @Active);
+                SELECT LAST_INSERT_ID();
+            ";
 
-            var generatedId = Convert.ToInt32(command.ExecuteScalar());
+            var parameters = new
+            {
+                patient.FName,
+                patient.LName,
+                patient.DOB,
+                patient.Gender,
+                patient.Address1,
+                Address2 = patient.Address2 ?? (object)DBNull.Value,
+                patient.City,
+                patient.State,
+                patient.Zipcode,
+                patient.Phone,
+                patient.Active
+            };
+
+            var generatedId = connection.ExecuteScalar<int>(query, parameters);
             patient.PatientId = generatedId;
 
             return generatedId;
@@ -54,37 +58,42 @@ namespace J_JHealthSolutions.DAL
                 throw new ArgumentException("PatientId cannot be null for update operation.");
 
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = @"UPDATE Patient
-                          SET f_name = @fName,
-                              l_name = @lName,
-                              dob = @dob,
-                              gender = @gender,
-                              address_1 = @address1,
-                              address_2 = @address2,
-                              city = @city,
-                              state = @state,
-                              zipcode = @zipcode,
-                              phone = @phone,
-                              active = @active
-                          WHERE patient_id = @patientId;";
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@fName", MySqlDbType.VarChar).Value = patient.FName;
-            command.Parameters.Add("@lName", MySqlDbType.VarChar).Value = patient.LName;
-            command.Parameters.Add("@dob", MySqlDbType.Date).Value = patient.DOB;
-            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = patient.Gender;
-            command.Parameters.Add("@address1", MySqlDbType.VarChar).Value = patient.Address1;
-            command.Parameters.Add("@address2", MySqlDbType.VarChar).Value = (object)patient.Address2 ?? DBNull.Value;
-            command.Parameters.Add("@city", MySqlDbType.VarChar).Value = patient.City;
-            command.Parameters.Add("@state", MySqlDbType.VarChar).Value = patient.State;
-            command.Parameters.Add("@zipcode", MySqlDbType.VarChar).Value = patient.Zipcode;
-            command.Parameters.Add("@phone", MySqlDbType.VarChar).Value = patient.Phone;
-            command.Parameters.Add("@active", MySqlDbType.Bit).Value = patient.Active;
-            command.Parameters.Add("@patientId", MySqlDbType.Int32).Value = patient.PatientId;
+            var query = @"
+                UPDATE Patient
+                SET
+                    f_name = @FName,
+                    l_name = @LName,
+                    dob = @DOB,
+                    gender = @Gender,
+                    address_1 = @Address1,
+                    address_2 = @Address2,
+                    city = @City,
+                    state = @State,
+                    zipcode = @Zipcode,
+                    phone = @Phone,
+                    active = @Active
+                WHERE patient_id = @PatientId;
+            ";
 
-            var affectedRows = command.ExecuteNonQuery();
+            var parameters = new
+            {
+                patient.FName,
+                patient.LName,
+                patient.DOB,
+                patient.Gender,
+                patient.Address1,
+                Address2 = patient.Address2 ?? (object)DBNull.Value,
+                patient.City,
+                patient.State,
+                patient.Zipcode,
+                patient.Phone,
+                patient.Active,
+                patient.PatientId
+            };
+
+            var affectedRows = connection.Execute(query, parameters);
             return affectedRows > 0;
         }
 
@@ -96,14 +105,11 @@ namespace J_JHealthSolutions.DAL
         public bool DeletePatient(int patientId)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
-
             connection.Open();
-            var query = @"DELETE FROM Patient WHERE patient_id = @patientId;";
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@patientId", MySqlDbType.Int32).Value = patientId;
+            var query = @"DELETE FROM Patient WHERE patient_id = @PatientId;";
 
-            var affectedRows = command.ExecuteNonQuery();
+            var affectedRows = connection.Execute(query, new { PatientId = patientId });
             return affectedRows > 0;
         }
 
@@ -113,40 +119,84 @@ namespace J_JHealthSolutions.DAL
         /// <returns>A list of Patient objects.</returns>
         public List<Patient> GetPatients()
         {
-            var patients = new List<Patient>();
-
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            var query = @"SELECT patient_id, f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active
-                          FROM Patient;";
+            var query = @"
+                SELECT
+                    patient_id AS PatientId,
+                    f_name AS FName,
+                    l_name AS LName,
+                    dob AS DOB,
+                    gender AS Gender,
+                    address_1 AS Address1,
+                    address_2 AS Address2,
+                    city AS City,
+                    state AS State,
+                    zipcode AS Zipcode,
+                    phone AS Phone,
+                    active AS Active
+                FROM Patient;
+            ";
 
-            using var command = new MySqlCommand(query, connection);
-            using var reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                var patient = new Patient
-                {
-                    PatientId = reader.GetInt32("patient_id"),
-                    FName = reader.GetString("f_name"),
-                    LName = reader.GetString("l_name"),
-                    DOB = reader.GetDateTime("dob"),
-                    Gender = reader.GetChar("gender"),
-                    Address1 = reader.GetString("address_1"),
-                    Address2 = reader.IsDBNull(reader.GetOrdinal("address_2")) ? null : reader.GetString("address_2"),
-                    City = reader.GetString("city"),
-                    State = reader.GetString("state"),
-                    Zipcode = reader.GetString("zipcode"),
-                    Phone = reader.GetString("phone"),
-                    Active = reader.GetBoolean("active")
-                };
-
-                patients.Add(patient);
-            }
+            var patients = connection.Query<Patient>(query).ToList();
 
             return patients;
         }
 
+        /// <summary>
+        /// Searches for patients based on last name, first name, and date of birth.
+        /// </summary>
+        /// <param name="lastName">The last name to search for.</param>
+        /// <param name="firstName">The first name to search for.</param>
+        /// <param name="dob">The date of birth to search for.</param>
+        /// <returns>A list of patients that match the search criteria.</returns>
+        public List<Patient> SearchPatients(string lastName, string firstName, DateTime? dob)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+                SELECT
+                    patient_id AS PatientId,
+                    f_name AS FName,
+                    l_name AS LName,
+                    dob AS DOB,
+                    gender AS Gender,
+                    address_1 AS Address1,
+                    address_2 AS Address2,
+                    city AS City,
+                    state AS State,
+                    zipcode AS Zipcode,
+                    phone AS Phone,
+                    active AS Active
+                FROM Patient
+                WHERE 1=1
+            ";
+
+            var parameters = new DynamicParameters();
+
+            if (!string.IsNullOrWhiteSpace(lastName))
+            {
+                query += " AND l_name LIKE @LastName";
+                parameters.Add("LastName", "%" + lastName + "%");
+            }
+
+            if (!string.IsNullOrWhiteSpace(firstName))
+            {
+                query += " AND f_name LIKE @FirstName";
+                parameters.Add("FirstName", "%" + firstName + "%");
+            }
+
+            if (dob.HasValue)
+            {
+                query += " AND dob = @DOB";
+                parameters.Add("DOB", dob.Value.Date);
+            }
+
+            var patients = connection.Query<Patient>(query, parameters).ToList();
+
+            return patients;
+        }
     }
 }

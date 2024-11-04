@@ -42,7 +42,31 @@ namespace J_JHealthSolutions.Views
 
             InitializeCommands();
 
+            SubscribeToEvents();
+
             mainMenuControl.LogOutCommand = LogOutCommand;
+        }
+
+        private void SubscribeToEvents()
+        {
+            mainMenuControl.ManageVisitSelected += MainMenuControl_ManageVisitSelected;
+            mainMenuControl.ManagePatientsSelected += MainMenuControl_ManagePatientsSelected;
+            mainMenuControl.ManageAppointmentsSelected += MainContentControl_ManageAppointmentSelected;
+        }
+
+        private void MainContentControl_ManageAppointmentSelected(object? sender, EventArgs e)
+        {
+            MainContentControl.Content = new AppointmentControl();
+        }
+
+        private void MainMenuControl_ManagePatientsSelected(object? sender, EventArgs e)
+        {
+            MainContentControl.Content = new PatientControl();
+        }
+
+        private void MainMenuControl_ManageVisitSelected(object? sender, EventArgs e)
+        {
+            MainContentControl.Content = new VisitControl();
         }
 
         /// <summary>

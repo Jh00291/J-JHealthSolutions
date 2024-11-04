@@ -45,9 +45,16 @@
         <!-- Right Column: ContentControl -->
         <ContentControl Grid.Row="1" Grid.Column="1" x:Name="MainContentControl"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <!-- Initial content -->
-            <!-- <views:PatientControl x:Name="patientControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/> -->
-            <views:AppointmentControl x:Name ="appointmentControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Grid Background="White">
+                <TextBlock Text="Welcome to J&amp;J Solutions Healthcare"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="#333"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="20"/>
+            </Grid>
         </ContentControl>
     </Grid>
 </Window>

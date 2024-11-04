@@ -20,6 +20,12 @@ namespace J_JHealthSolutions.Views
     /// </summary>
     public partial class MainMenuControl : UserControl
     {
+
+        public event EventHandler ManageVisitSelected;
+        public event EventHandler ManageEmployeesSelected;
+        public event EventHandler ManagePatientsSelected;
+        public event EventHandler ManageAppointmentsSelected;
+
         /// <summary>
         /// Initializes a new instance of the MainMenuControl class.
         /// </summary>
@@ -80,5 +86,24 @@ namespace J_JHealthSolutions.Views
             set { SetValue(LogOutCommandProperty, value); }
         }
 
+        private void ManageEmployeeClick(object sender, RoutedEventArgs e)
+        {
+            ManageEmployeesSelected?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ManagePatientsClick(object sender, RoutedEventArgs e)
+        {
+            ManagePatientsSelected?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ManageVisitsClick(object sender, RoutedEventArgs e)
+        {
+            ManageVisitSelected?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ManageAppointmentsClick(object sender, RoutedEventArgs e)
+        {
+            ManageAppointmentsSelected?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

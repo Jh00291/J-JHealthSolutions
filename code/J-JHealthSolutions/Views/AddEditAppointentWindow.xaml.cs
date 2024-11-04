@@ -51,6 +51,7 @@ namespace J_JHealthSolutions.Views
             statusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
             UpdateNurseAutoCompleteBox();
             UpdateStatusComboBox();
+            UpdateStatusComboBox(_appointment.Status);
         }
 
         private void PopulateAppointmentData(Appointment appointment)
@@ -386,7 +387,7 @@ namespace J_JHealthSolutions.Views
         }
 
 
-        private void UpdateStatusComboBox()
+        private void UpdateStatusComboBox(Status? currentStatus = null)
         {
             List<string> statuses;
 
@@ -401,17 +402,17 @@ namespace J_JHealthSolutions.Views
                 statuses = new List<string> { "Scheduled", "InProgress" };
             }
 
-            string currentStatus = statusComboBox.SelectedItem?.ToString();
-            if (!string.IsNullOrEmpty(currentStatus) && statuses.Contains(currentStatus))
+            statusComboBox.ItemsSource = statuses;
+
+            // Set the current status if provided and it exists in the list
+            if (currentStatus != null && statuses.Contains(currentStatus.ToString()))
             {
-                statusComboBox.ItemsSource = statuses;
-                statusComboBox.SelectedItem = currentStatus;
+                statusComboBox.SelectedItem = currentStatus.ToString();
             }
-            else
+            else if (statuses.Count > 0)
             {
-                statusComboBox.ItemsSource = statuses;
-                if (statuses.Count > 0)
-                    statusComboBox.SelectedIndex = 0;
+                // Default to the first item if no current status is provided or if it's not in the allowed list
+                statusComboBox.SelectedIndex = 0;
             }
 
             UpdateNurseAutoCompleteBox();

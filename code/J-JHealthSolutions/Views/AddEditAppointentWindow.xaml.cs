@@ -392,8 +392,8 @@ namespace J_JHealthSolutions.Views
 
             if (isEdit)
             {
-                // Editing an existing appointment: only allow "Completed", "NoShow", "Cancelled"
-                statuses = new List<string> { "Completed", "NoShow", "Cancelled" };
+                // Editing an existing appointment: allow "Scheduled" and the other statuses.
+                statuses = new List<string> { "Scheduled", "Completed", "InProgress", "NoShow", "Cancelled" };
             }
             else
             {

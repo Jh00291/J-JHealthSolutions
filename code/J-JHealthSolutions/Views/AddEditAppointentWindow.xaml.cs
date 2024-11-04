@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using J_JHealthSolutions.Model;
 using J_JHealthSolutions.DAL;
+using Mysqlx.Crud;
 
 namespace J_JHealthSolutions.Views
 {
@@ -17,6 +18,8 @@ namespace J_JHealthSolutions.Views
 
         private Appointment _appointment;
 
+        private Boolean isEdit = false;
+
         public AddEditAppointmentWindow()
         {
             InitializeComponent();
@@ -25,14 +28,15 @@ namespace J_JHealthSolutions.Views
             LoadDoctors();
             LoadNurses();
 
-            statusComboBox.ItemsSource = Enum.GetNames(typeof(Status));
             statusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
 
+            UpdateStatusComboBox();
             UpdateNurseAutoCompleteBox();
         }
 
         public AddEditAppointmentWindow(Appointment appointment)
         {
+            isEdit = true;
             InitializeComponent();
 
             LoadPatients();
@@ -46,6 +50,7 @@ namespace J_JHealthSolutions.Views
 
             statusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
             UpdateNurseAutoCompleteBox();
+            UpdateStatusComboBox();
         }
 
         private void PopulateAppointmentData(Appointment appointment)
@@ -123,12 +128,10 @@ namespace J_JHealthSolutions.Views
         {
             this.timeComboBox.IsEnabled = true;
             UpdateAvailableTimeSlots();
-            UpdateStatusComboBox();
         }
 
         private void TimeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateStatusComboBox();
         }
 
         private void UpdateAvailableTimeSlots()
@@ -353,47 +356,34 @@ namespace J_JHealthSolutions.Views
 
         private void UpdateStatusComboBox()
         {
-            if (datePicker.SelectedDate.HasValue && timeComboBox.SelectedItem != null)
+            List<string> statuses;
+
+            if (isEdit)
             {
-                DateTime selectedDateTime = CombineDateAndTime(datePicker.SelectedDate.Value, timeComboBox.SelectedItem.ToString());
-                bool isPastDateTime = selectedDateTime < DateTime.Now;
-
-                List<string> statuses;
-
-                if (isPastDateTime)
-                {
-                    // Allow only "Cancel", "Completed", or "NoShow" if the date and time have passed
-                    statuses = new List<string> { "Cancelled", "Completed", "NoShow" };
-                }
-                else
-                {
-                    // Exclude "Cancel", "Completed", and "NoShow" if the date and time haven't passed
-                    statuses = new List<string> { "Scheduled", "InProgress" };
-                }
-
-                // Preserve the current selection if it's still valid
-                string currentStatus = statusComboBox.SelectedItem?.ToString();
-                if (!string.IsNullOrEmpty(currentStatus) && statuses.Contains(currentStatus))
-                {
-                    statusComboBox.ItemsSource = statuses;
-                    statusComboBox.SelectedItem = currentStatus;
-                }
-                else
-                {
-                    statusComboBox.ItemsSource = statuses;
-                    if (statuses.Count > 0)
-                        statusComboBox.SelectedIndex = 0;
-                }
+                // Editing an existing appointment: only allow "Completed", "NoShow", "Cancelled"
+                statuses = new List<string> { "Completed", "NoShow", "Cancelled" };
             }
             else
             {
-                // If date or time is not selected, show all statuses
-                statusComboBox.ItemsSource = Enum.GetNames(typeof(Status));
+                // Adding a new appointment: only allow "Scheduled", "InProgress"
+                statuses = new List<string> { "Scheduled", "InProgress" };
+            }
+
+            string currentStatus = statusComboBox.SelectedItem?.ToString();
+            if (!string.IsNullOrEmpty(currentStatus) && statuses.Contains(currentStatus))
+            {
+                statusComboBox.ItemsSource = statuses;
+                statusComboBox.SelectedItem = currentStatus;
+            }
+            else
+            {
+                statusComboBox.ItemsSource = statuses;
+                if (statuses.Count > 0)
+                    statusComboBox.SelectedIndex = 0;
             }
 
             UpdateNurseAutoCompleteBox();
         }
-
 
         private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

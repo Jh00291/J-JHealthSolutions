@@ -53,111 +53,111 @@ namespace J_JHealthSolutions.Views
             pulseErrorLabel.Visibility = Visibility.Collapsed;
 
             // Validate and assign Weight
-            if (!string.IsNullOrWhiteSpace(weightTextBox.Text))
+            if (string.IsNullOrWhiteSpace(weightTextBox.Text))
             {
-                if (decimal.TryParse(weightTextBox.Text, out decimal weight))
-                {
-                    _visit.Weight = weight;
-                }
-                else
-                {
-                    weightErrorLabel.Visibility = Visibility.Visible;
-                    hasError = true;
-                }
+                weightErrorLabel.Content = "Weight is required.";
+                weightErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+            else if (!decimal.TryParse(weightTextBox.Text, out decimal weight))
+            {
+                weightErrorLabel.Content = "Invalid weight. Please enter a numeric value.";
+                weightErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
             else
             {
-                _visit.Weight = null;
+                _visit.Weight = weight;
             }
 
             // Validate and assign Height
-            if (!string.IsNullOrWhiteSpace(heightTextBox.Text))
+            if (string.IsNullOrWhiteSpace(heightTextBox.Text))
             {
-                if (decimal.TryParse(heightTextBox.Text, out decimal height))
-                {
-                    _visit.Height = height;
-                }
-                else
-                {
-                    heightErrorLabel.Visibility = Visibility.Visible;
-                    hasError = true;
-                }
+                heightErrorLabel.Content = "Height is required.";
+                heightErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+            else if (!decimal.TryParse(heightTextBox.Text, out decimal height))
+            {
+                heightErrorLabel.Content = "Invalid height. Please enter a numeric value.";
+                heightErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
             else
             {
-                _visit.Height = null;
+                _visit.Height = height;
             }
 
             // Validate and assign BloodPressureSystolic
-            if (!string.IsNullOrWhiteSpace(bpSystolicTextBox.Text))
+            if (string.IsNullOrWhiteSpace(bpSystolicTextBox.Text))
             {
-                if (int.TryParse(bpSystolicTextBox.Text, out int bpSystolic))
-                {
-                    _visit.BloodPressureSystolic = bpSystolic;
-                }
-                else
-                {
-                    bpSystolicErrorLabel.Visibility = Visibility.Visible;
-                    hasError = true;
-                }
+                bpSystolicErrorLabel.Content = "Systolic blood pressure is required.";
+                bpSystolicErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+            else if (!int.TryParse(bpSystolicTextBox.Text, out int bpSystolic))
+            {
+                bpSystolicErrorLabel.Content = "Invalid systolic pressure. Enter a numeric value.";
+                bpSystolicErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
             else
             {
-                _visit.BloodPressureSystolic = null;
+                _visit.BloodPressureSystolic = bpSystolic;
             }
 
             // Validate and assign BloodPressureDiastolic
-            if (!string.IsNullOrWhiteSpace(bpDiastolicTextBox.Text))
+            if (string.IsNullOrWhiteSpace(bpDiastolicTextBox.Text))
             {
-                if (int.TryParse(bpDiastolicTextBox.Text, out int bpDiastolic))
-                {
-                    _visit.BloodPressureDiastolic = bpDiastolic;
-                }
-                else
-                {
-                    bpDiastolicErrorLabel.Visibility = Visibility.Visible;
-                    hasError = true;
-                }
+                bpDiastolicErrorLabel.Content = "Diastolic blood pressure is required.";
+                bpDiastolicErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+            else if (!int.TryParse(bpDiastolicTextBox.Text, out int bpDiastolic))
+            {
+                bpDiastolicErrorLabel.Content = "Invalid diastolic pressure. Enter a numeric value.";
+                bpDiastolicErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
             else
             {
-                _visit.BloodPressureDiastolic = null;
+                _visit.BloodPressureDiastolic = bpDiastolic;
             }
 
             // Validate and assign Temperature
-            if (!string.IsNullOrWhiteSpace(temperatureTextBox.Text))
+            if (string.IsNullOrWhiteSpace(temperatureTextBox.Text))
             {
-                if (decimal.TryParse(temperatureTextBox.Text, out decimal temperature))
-                {
-                    _visit.Temperature = temperature;
-                }
-                else
-                {
-                    temperatureErrorLabel.Visibility = Visibility.Visible;
-                    hasError = true;
-                }
+                temperatureErrorLabel.Content = "Temperature is required.";
+                temperatureErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+            else if (!decimal.TryParse(temperatureTextBox.Text, out decimal temperature))
+            {
+                temperatureErrorLabel.Content = "Invalid temperature. Enter a numeric value.";
+                temperatureErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
             else
             {
-                _visit.Temperature = null;
+                _visit.Temperature = temperature;
             }
 
             // Validate and assign Pulse
-            if (!string.IsNullOrWhiteSpace(pulseTextBox.Text))
+            if (string.IsNullOrWhiteSpace(pulseTextBox.Text))
             {
-                if (int.TryParse(pulseTextBox.Text, out int pulse))
-                {
-                    _visit.Pulse = pulse;
-                }
-                else
-                {
-                    pulseErrorLabel.Visibility = Visibility.Visible;
-                    hasError = true;
-                }
+                pulseErrorLabel.Content = "Pulse is required.";
+                pulseErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+            else if (!int.TryParse(pulseTextBox.Text, out int pulse))
+            {
+                pulseErrorLabel.Content = "Invalid pulse. Please enter a numeric value.";
+                pulseErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
             else
             {
-                _visit.Pulse = null;
+                _visit.Pulse = pulse;
             }
 
             // Stop processing if any errors are present
@@ -166,7 +166,7 @@ namespace J_JHealthSolutions.Views
                 return;
             }
 
-            // Assign Symptoms
+            // Assign Symptoms (no validation required for symptoms as it is optional)
             _visit.Symptoms = symptomsTextBox.Text;
 
             // Save the updated visit to the database
@@ -179,9 +179,12 @@ namespace J_JHealthSolutions.Views
             }
             catch (Exception ex)
             {
+                // Show an error message if there is a problem during saving
                 MessageBox.Show($"An error occurred while saving data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+
 
 
 

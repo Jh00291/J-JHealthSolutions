@@ -40,7 +40,7 @@
 
         <!-- Test Dropdown -->
         <Label Grid.Row="0" Grid.Column="0" Content="Test:" VerticalAlignment="Center" Margin="5"/>
-        <ComboBox x:Name="testComboBox" Grid.Row="0" Grid.Column="1" Margin="5">
+        <ComboBox x:Name="testComboBox" Grid.Row="0" Grid.Column="1" Margin="5" SelectionChanged="TestComboBox_OnSelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -56,10 +56,8 @@
                         <TextBlock Text =" ) " Foreground="Gray" />
 
                     </StackPanel>
-
                 </DataTemplate>
             </ComboBox.ItemTemplate>
-                
         </ComboBox>
 
         <!-- Test Date -->

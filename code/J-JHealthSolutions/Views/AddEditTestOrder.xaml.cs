@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ namespace J_JHealthSolutions.Views
     public partial class AddEditTestOrder : Window
     {
         private TestOrder _selectedTestOrder;
+        private Test _selectedTest;
+        private UnitOfMeasure _selectedTestUnitOfMeasure;
 
         public AddEditTestOrder()
         {
@@ -50,5 +53,19 @@ namespace J_JHealthSolutions.Views
         }
 
 
+        private void TestComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (testComboBox.SelectedItem != null)
+            {
+                _selectedTest = (Test)testComboBox.SelectedItem;
+                UpdateLabelUOM();
+            }
+        }
+
+        private void UpdateLabelUOM()
+        {
+            var converter = new EnumDescriptionConverter();
+            this.unitTextLabel.Content = converter.Convert(_selectedTest.Unit, typeof(string), null, CultureInfo.InvariantCulture);
+        }
     }
 }

@@ -75,5 +75,20 @@ namespace J_JHealthSolutions.Views
         {
             this.Close();
         }
+
+        private void EditTestOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DeleteTestOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AddTestOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

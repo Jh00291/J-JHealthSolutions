@@ -9,10 +9,10 @@ using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
 {
-    public class TestOrderDal
+    public static class TestOrderDal
     {
 
-        public Test GetTestOrder(int visitID, int testCode, DateTime orderDateTime)
+        public static Test GetTestOrder(int visitID, int testCode, DateTime orderDateTime)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -37,6 +37,44 @@ namespace J_JHealthSolutions.DAL
 
         }
 
-        
+        public static IEnumerable<TestOrder> GetTestOrdersFromVisit(int visitID)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+                SELECT * FROM TestOrder
+                Where visit_id = @VisitID;
+            ";
+
+            var parameters = new DynamicParameters();
+
+            if (visitID > 0)
+                parameters.Add("@VisitID", visitID);
+
+            var testOrders = connection.Query<TestOrder>(query, parameters);
+
+            return testOrders;
+        }
+
+        public static bool DeleteTestOrder(int testOrderID)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+                DELETE FROM TestOrder
+                WHERE test_order_id = @TestOrderID;
+            ";
+
+            var parameters = new DynamicParameters();
+
+            if (testOrderID > 0)
+                parameters.Add("@TestOrderID", testOrderID);
+
+            var result = connection.Execute(query, parameters);
+
+            return result > 0;
+        }
     }
 }

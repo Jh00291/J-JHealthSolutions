@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
+using J_JHealthSolutions.ViewModel;
 
 namespace J_JHealthSolutions.Views
 {
@@ -29,19 +30,23 @@ namespace J_JHealthSolutions.Views
         public AddEditTestOrder()
         {
             InitializeComponent();
-            LoadTests();
+            this.DataContext = new AddEditTestOrderViewModel();
         }
 
-        private void LoadTests()
+        public AddEditTestOrder(int visitDoctorID)
         {
-            this.testComboBox.ItemsSource = TestDal.GetTests();
+            InitializeComponent();
+            testOrderedByTextBox.Text = DoctorDal.GetDoctor(visitDoctorID).ToString();
+            this.DataContext = new AddEditTestOrderViewModel();
         }
 
-        public AddEditTestOrder(TestOrder test)
+        public AddEditTestOrder(TestOrder test, Doctor visitDoctor)
         {
             InitializeComponent();
             _selectedTestOrder = test;
             LoadTest();
+            testOrderedByTextBox.Text = visitDoctor.ToString();
+            this.DataContext = new AddEditTestOrderViewModel();
         }
 
         private void LoadTest()
@@ -53,19 +58,28 @@ namespace J_JHealthSolutions.Views
         }
 
 
-        private void TestComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (testComboBox.SelectedItem != null)
-            {
-                _selectedTest = (Test)testComboBox.SelectedItem;
-                UpdateLabelUOM();
-            }
-        }
-
         private void UpdateLabelUOM()
         {
             var converter = new EnumDescriptionConverter();
             this.unitTextLabel.Content = converter.Convert(_selectedTest.Unit, typeof(string), null, CultureInfo.InvariantCulture);
         }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var viewModel = DataContext as AddEditTestOrderViewModel;
+            if (viewModel != null)
+            {
+                if (viewModel.Save())
+                {
+                    // Close the window or navigate away
+                    this.Close();
+                }
+                else
+                {
+                    // Errors will be displayed; no need to do anything else
+                }
+            }
+        }
+
     }
 }

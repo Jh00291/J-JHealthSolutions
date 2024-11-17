@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:J_JHealthSolutions.Views"
+        xmlns:local="clr-namespace:J_JHealthSolutions.Views" xmlns:viewmodels="clr-namespace:J_JHealthSolutions.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:EditVisitViewModel}"
         mc:Ignorable="d"
         Title="EditVisit" Height="450" Width="800">
     <Grid Margin="10">
@@ -29,55 +29,63 @@
 
         <!-- Initial Diagnosis -->
         <Label Grid.Row="0" Grid.Column="0" Content="Initial Diagnosis:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox x:Name="initialDiagnosisTextbox" Grid.Row="0" Grid.Column="1" Margin="5"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding InitialDiagnosis, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- Final Diagnosis -->
         <Label Grid.Row="1" Grid.Column="0" Content="Final Diagnosis:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox x:Name="finalDiagnosisTextBox" Grid.Row="1" Grid.Column="1" Margin="5"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding FinalDiagnosis, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- TestOrder ListView -->
         <Label Grid.Row="2" Grid.Column="0" Content="Test Orders" VerticalAlignment="Center" Margin="5"/>
+        <!-- TestOrder ListView -->
+        <Label Grid.Row="2" Grid.Column="0" Content="Test Orders" VerticalAlignment="Center" Margin="5"/>
         <Grid Grid.Column="1" Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <!-- Adjusted to 'Auto' for the buttons -->
             </Grid.RowDefinitions>
 
-            <ListView x:Name="testOrderListView" Grid.Row="0" Margin="5,5,5,5" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2">
+            <!-- ListView in the first row -->
+            <ListView Grid.Row="0" Margin="5"
+              ItemsSource="{Binding TestOrders}"
+              SelectedItem="{Binding SelectedTestOrder}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Test Name" Width="*" DisplayMemberBinding="{Binding TestName}"/>
-                        <GridViewColumn Header="Test Order ID" Width="*" DisplayMemberBinding="{Binding TestDate}"/>
-                        <GridViewColumn Header="Ordered Date" Width="2*" DisplayMemberBinding="{Binding OrderedDate}"/>
-                        <GridViewColumn Header="Performed Date" Width="2*" DisplayMemberBinding="{Binding PerformedDate}"/>
-                        <GridViewColumn Header="Abnormal" Width="*" DisplayMemberBinding="{Binding Abnormal}"/>
-                        <GridViewColumn Header ="Result" Width ="*" DisplayMemberBinding="{Binding Result}"/>
+                        <GridViewColumn Header="Test Name" Width="100" DisplayMemberBinding="{Binding TestName}"/>
+                        <GridViewColumn Header="Test Order ID" Width="100" DisplayMemberBinding="{Binding TestOrderID}"/>
+                        <GridViewColumn Header="Ordered Date" Width="150" DisplayMemberBinding="{Binding OrderedDate}"/>
+                        <GridViewColumn Header="Performed Date" Width="150" DisplayMemberBinding="{Binding PerformedDate}"/>
+                        <GridViewColumn Header="Abnormal" Width="75" DisplayMemberBinding="{Binding Abnormal}"/>
+                        <GridViewColumn Header="Result" Width="100" DisplayMemberBinding="{Binding Result}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
 
-            <!-- StackPanel for Buttons -->
-            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin ="5">
-                <Button x:Name="editTestOrderButton" Content="Edit Test Order" Width="*" Margin="5" Click="EditTestOrderButton_Click" IsEnabled="False"/>
-                <Button x:Name="deleteTestOrderButton" Content="Delete Test Order" Width="*" Margin="5" Click="DeleteTestOrderButton_Click" IsEnabled="False"/>
-                <Button x:Name="addTestOrderButton" Content="Add Test Order" Width="*" Margin="5" Click="AddTestOrderButton_Click"/>
+            <!-- Buttons in the second row -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                <Button Content="Edit Test Order" Margin="5"
+                        Command="{Binding EditTestOrderCommand}"/>
+                <Button Content="Delete Test Order" Margin="5"
+                        Command="{Binding DeleteTestOrderCommand}"/>
+                <Button Content="Add Test Order" Margin="5"
+                Command="{Binding AddTestOrderCommand}"/>
             </StackPanel>
-
-
         </Grid>
 
         <!-- Status -->
         <Label Grid.Row="3" Grid.Column="0" Content="Status:" VerticalAlignment="Center" Margin="5"/>
-        <ComboBox x:Name="statusComboBox" Grid.Row="3" Grid.Column="1" Margin="5">
-        </ComboBox>
+        <ComboBox Grid.Row="3" Grid.Column="1" Margin="5"
+                  ItemsSource="{Binding Statuses}"
+                  SelectedItem="{Binding SelectedStatus}"/>
+
 
         <!-- Save and Cancel Buttons -->
         <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-            <Button x:Name="saveButton" Content="Save" Width="75" Margin="5" Click="SaveButton_Click"/>
-            <Button x:Name="cancelButton" Content="Cancel" Width="75" Margin="5" Click="CancelButton_Click"/>
+            <Button Content="Save" Width="75" Margin="5" Command="{Binding SaveCommand}"/>
+            <Button Content="Cancel" Width="75" Margin="5" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </Window>

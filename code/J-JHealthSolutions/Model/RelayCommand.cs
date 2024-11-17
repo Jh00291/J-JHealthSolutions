@@ -66,6 +66,12 @@ namespace J_JHealthSolutions.Model
         {
             _execute(parameter);
         }
+
+        public void RaiseCanExecuteChanged()
+        {
+            CommandManager.InvalidateRequerySuggested();
+        }
+
     }
 
 }

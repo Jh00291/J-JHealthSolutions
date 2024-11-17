@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
+using J_JHealthSolutions.ViewModels;
 
 namespace J_JHealthSolutions.Views
 {
@@ -31,64 +32,9 @@ namespace J_JHealthSolutions.Views
         public EditVisit(Visit visit)
         {
             InitializeComponent();
-            List<string> statuses = new List<string> { "Completed", "InProgress", "Pending" };
-            statusComboBox.ItemsSource = statuses;
-            _visit = visit;
-            PopulateVisitData(visit);
-        }
-
-        private void PopulateVisitData(Visit visit)
-        {
-           initialDiagnosisTextbox.Text = visit.InitialDiagnosis;
-           finalDiagnosisTextBox.Text = visit.FinalDiagnosis;
-           statusComboBox.SelectedItem = visit.VisitStatus;
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            ValidateStatus();
-            try
-            {
-                var visitDal = new VisitDal();
-                _visit.InitialDiagnosis = initialDiagnosisTextbox.Text;
-                _visit.FinalDiagnosis = finalDiagnosisTextBox.Text;
-                _visit.VisitStatus = statusComboBox.SelectedItem.ToString();
-                visitDal.UpdateVisit(_visit);
-                this.DialogResult = true;
-                this.Close();
-            } catch (Exception ex)
-            {
-                MessageBox.Show($"Error saving visit: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void ValidateStatus()
-        {
-            if (statusComboBox.SelectedItem == null)
-            {
-                MessageBox.Show("Please select a status for the visit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void EditTestOrderButton_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void DeleteTestOrderButton_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void AddTestOrderButton_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
+            var viewModel = new EditVisitViewModel(visit);
+            viewModel.RequestClose += (s, e) => this.Close();
+            this.DataContext = viewModel;
         }
     }
 }

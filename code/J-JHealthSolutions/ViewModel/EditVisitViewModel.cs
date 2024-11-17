@@ -73,8 +73,11 @@ namespace J_JHealthSolutions.ViewModels
             get => _finalDiagnosis;
             set
             {
-                _finalDiagnosis = value;
-                OnPropertyChanged(nameof(FinalDiagnosis));
+                if (_finalDiagnosis != value)
+                {
+                    _finalDiagnosis = value;
+                    OnPropertyChanged(nameof(FinalDiagnosis));
+                }
             }
         }
 
@@ -86,8 +89,11 @@ namespace J_JHealthSolutions.ViewModels
             get => _selectedStatus;
             set
             {
-                _selectedStatus = value;
-                OnPropertyChanged(nameof(SelectedStatus));
+                if (_selectedStatus != value)
+                {
+                    _selectedStatus = value;
+                    OnPropertyChanged(nameof(SelectedStatus));
+                }
             }
         }
 
@@ -121,10 +127,26 @@ namespace J_JHealthSolutions.ViewModels
 
         #region Command Methods
 
+        public event EventHandler VisitUpdated;
         private void Save(object parameter)
         {
             if (!ValidateStatus())
                 return;
+
+            // Show confirmation if status is 'Completed' or final diagnosis is provided
+            if (SelectedStatus == "Completed" || !string.IsNullOrWhiteSpace(FinalDiagnosis))
+            {
+                var result = MessageBox.Show(
+                    "Setting the status to 'Completed' or providing a final diagnosis will make the visit information permanent. Are you sure you want to save these changes?",
+                    "Confirm Save",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.No)
+                {
+                    return; // Cancel the save
+                }
+            }
 
             try
             {
@@ -139,6 +161,9 @@ namespace J_JHealthSolutions.ViewModels
                 {
                     IsReadOnlyMode = true;
                 }
+
+                // Raise the VisitUpdated event
+                VisitUpdated?.Invoke(this, EventArgs.Empty);
 
                 // Close the window
                 CloseWindow();

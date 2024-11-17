@@ -34,6 +34,11 @@ namespace J_JHealthSolutions.Views
             InitializeComponent();
             var viewModel = new EditVisitViewModel(visit);
             viewModel.RequestClose += (s, e) => this.Close();
+            viewModel.VisitUpdated += (s, e) =>
+            {
+                this.DialogResult = true;
+            };
+
             this.DataContext = viewModel;
         }
     }

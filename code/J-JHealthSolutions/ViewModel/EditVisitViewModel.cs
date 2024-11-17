@@ -24,6 +24,9 @@ namespace J_JHealthSolutions.ViewModels
             FinalDiagnosis = _visit.FinalDiagnosis;
             SelectedStatus = _visit.VisitStatus;
 
+            // Determine when to make things read only
+            IsReadOnlyMode = _visit.VisitStatus == "Completed" || !string.IsNullOrWhiteSpace(_visit.FinalDiagnosis);
+
             // Initialize statuses
             Statuses = new ObservableCollection<string> { "Completed", "InProgress", "Pending" };
 
@@ -48,6 +51,19 @@ namespace J_JHealthSolutions.ViewModels
             {
                 _initialDiagnosis = value;
                 OnPropertyChanged(nameof(InitialDiagnosis));
+            }
+        }
+
+        public bool IsStatusEnabled => !_isReadOnlyMode;
+        private bool _isReadOnlyMode;
+        public bool IsReadOnlyMode
+        {
+            get => _isReadOnlyMode;
+            set
+            {
+                _isReadOnlyMode = value;
+                OnPropertyChanged(nameof(IsReadOnlyMode));
+                OnPropertyChanged(nameof(IsStatusEnabled));
             }
         }
 
@@ -118,6 +134,12 @@ namespace J_JHealthSolutions.ViewModels
                 _visit.VisitStatus = this.SelectedStatus;
                 visitDal.UpdateVisit(_visit);
 
+                // Make Final Diagnosis read-only if set
+                if (!string.IsNullOrWhiteSpace(FinalDiagnosis))
+                {
+                    IsReadOnlyMode = true;
+                }
+
                 // Close the window
                 CloseWindow();
             }
@@ -130,7 +152,7 @@ namespace J_JHealthSolutions.ViewModels
         private bool CanSave(object parameter)
         {
             // Can execute if status is selected
-            return !string.IsNullOrEmpty(SelectedStatus);
+            return !IsReadOnlyMode && !string.IsNullOrEmpty(SelectedStatus);
         }
 
         private void Cancel(object parameter)

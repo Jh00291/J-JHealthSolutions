@@ -54,10 +54,11 @@
               VerticalAlignment="Stretch">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Test Name" Width="100" DisplayMemberBinding="{Binding TestName}"/>
+                        <GridViewColumn Header="Test Name" Width="100" DisplayMemberBinding="{Binding Test.TestName}"/>
+                        <GridViewColumn Header="Test Code" Width="100" DisplayMemberBinding="{Binding Test.TestCode}"/>
                         <GridViewColumn Header="Test Order ID" Width="100" DisplayMemberBinding="{Binding TestOrderID}"/>
-                        <GridViewColumn Header="Ordered Date" Width="150" DisplayMemberBinding="{Binding OrderedDate}"/>
-                        <GridViewColumn Header="Performed Date" Width="150" DisplayMemberBinding="{Binding PerformedDate}"/>
+                        <GridViewColumn Header="Ordered Date" Width="150" DisplayMemberBinding="{Binding OrderDateTime}"/>
+                        <GridViewColumn Header="Performed Date" Width="150" DisplayMemberBinding="{Binding PerformedDateTime}"/>
                         <GridViewColumn Header="Abnormal" Width="75" DisplayMemberBinding="{Binding Abnormal}"/>
                         <GridViewColumn Header="Result" Width="100" DisplayMemberBinding="{Binding Result}"/>
                     </GridView>

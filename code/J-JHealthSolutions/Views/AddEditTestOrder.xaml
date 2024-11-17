@@ -62,17 +62,19 @@
         <!-- Define Rows and Columns -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Test Dropdown -->
+            <!-- 0 Test Dropdown -->
             <RowDefinition Height="Auto"/>
-            <!-- Test Date -->
+            <!-- 1 Test Date -->
             <RowDefinition Height="Auto"/>
-            <!-- Test Ordered By -->
+            <!-- 2 Test Ordered By -->
             <RowDefinition Height="Auto"/>
-            <!-- Test Performed DatePicker -->
+            <!-- 3 Test Performed DatePicker -->
             <RowDefinition Height="Auto"/>
-            <!-- Result -->
+            <!-- 4 Result -->
             <RowDefinition Height="Auto"/>
-            <!-- Buttons -->
+            <!-- 5 Abnormal ComboBox -->
+            <RowDefinition Height="Auto"/>
+            <!-- 6 Buttons -->
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -146,8 +148,20 @@
                        Text="{Binding ElementName=resultTextBox, Path=(Validation.Errors)[0].ErrorContent}"/>
         </Grid>
 
+        <Label Grid.Row="5" Grid.Column="0" Content="Abnormal:" VerticalAlignment="Center" Margin="5"
+               Visibility="{Binding IsAbnormalVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <StackPanel Grid.Row="5" Grid.Column="1" Margin="5"
+                    Visibility="{Binding IsAbnormalVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ComboBox x:Name="abnormalComboBox"
+                      ItemsSource="{Binding AbnormalOptions}"
+                      SelectedItem="{Binding Abnormal, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+            </ComboBox>
+            <TextBlock Foreground="Red" FontSize="12" 
+                       Text="{Binding ElementName=abnormalComboBox, Path=(Validation.Errors)[0].ErrorContent}"/>
+        </StackPanel>
+
         <!-- Buttons in a UniformGrid -->
-        <UniformGrid Grid.Row="5" Grid.Column="1" Rows="1" Columns="2" HorizontalAlignment="Right" Margin="5">
+        <UniformGrid Grid.Row="6" Grid.Column="1" Rows="1" Columns="2" HorizontalAlignment="Right" Margin="5">
             <Button x:Name="saveButton" Content="Save" Margin="5" Padding="2"
                     Click="SaveButton_Click"/>
             <Button x:Name="cancelButton" Content="Cancel" Margin="5" Padding="2"/>

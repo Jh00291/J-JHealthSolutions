@@ -33,11 +33,11 @@ namespace J_JHealthSolutions.Views
             this.DataContext = new AddEditTestOrderViewModel();
         }
 
-        public AddEditTestOrder(int visitDoctorID)
+        public AddEditTestOrder(Visit currentVisit)
         {
             InitializeComponent();
-            testOrderedByTextBox.Text = DoctorDal.GetDoctor(visitDoctorID).ToString();
-            this.DataContext = new AddEditTestOrderViewModel();
+            testOrderedByTextBox.Text = DoctorDal.GetDoctor(currentVisit.DoctorId).ToString();
+            this.DataContext = new AddEditTestOrderViewModel(currentVisit);
         }
 
         public AddEditTestOrder(TestOrder test, Doctor visitDoctor)

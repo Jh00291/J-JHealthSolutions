@@ -163,7 +163,7 @@ namespace J_JHealthSolutions.ViewModels
 
         private void AddTestOrder(object parameter)
         {
-           bool? dialogResult = new AddEditTestOrder(_visit.DoctorId).ShowDialog();
+           bool? dialogResult = new AddEditTestOrder(_visit).ShowDialog();
         }
 
 

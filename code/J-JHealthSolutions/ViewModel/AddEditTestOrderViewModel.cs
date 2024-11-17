@@ -15,12 +15,21 @@ namespace J_JHealthSolutions.ViewModel
         private string _result;
         private UnitOfMeasure _unit;
         private bool _isSaveAttempted;
+        private Visit _currentVisit;
+        private string _abnormal;
 
         public AddEditTestOrderViewModel()
         {
             // Initialize the Tests collection (replace with your actual data retrieval logic)
             Tests = GetAvailableTests();
 
+            TestDate = DateTime.Now;
+        }
+
+        public AddEditTestOrderViewModel(Visit currentVisit)
+        {
+            _currentVisit = currentVisit;
+            Tests = GetAvailableTests();
             TestDate = DateTime.Now;
         }
 
@@ -112,6 +121,35 @@ namespace J_JHealthSolutions.ViewModel
             }
         }
 
+        public string Abnormal
+        {
+            get => _abnormal;
+            set
+            {
+                _abnormal = value;
+                OnPropertyChanged(nameof(Abnormal));
+            }
+        }
+
+        // Abnormal Options
+        private static readonly List<string> _abnormalOptions = new List<string> { "Yes", "No" };
+        public IEnumerable<string> AbnormalOptions => _abnormalOptions;
+
+        // Visibility of Abnormal ComboBox
+        public bool IsAbnormalVisible
+        {
+            get
+            {
+                if (SelectedTest != null && !string.IsNullOrWhiteSpace(Result))
+                {
+                    // Check if LowValue and HighValue are null
+                    bool lowHighValuesAreNull = SelectedTest.LowValue == null && SelectedTest.HighValue == null;
+                    return lowHighValuesAreNull;
+                }
+                return false;
+            }
+        }
+
         public IEnumerable<UnitOfMeasure> UnitsOfMeasures { get; } = Enum.GetValues(typeof(UnitOfMeasure)).Cast<UnitOfMeasure>();
 
         // IDataErrorInfo implementation
@@ -140,6 +178,12 @@ namespace J_JHealthSolutions.ViewModel
                             error = "Result must be a valid number.";
                         }
                         break;
+                    case nameof(Abnormal):
+                        if (IsAbnormalVisible && string.IsNullOrEmpty(Abnormal))
+                        {
+                            error = "Please select if the result is abnormal.";
+                        }
+                        break;
                 }
                 return error;
             }
@@ -155,14 +199,13 @@ namespace J_JHealthSolutions.ViewModel
             // Notify the UI that properties have changed to re-trigger validation
             OnPropertyChanged(nameof(SelectedTest));
             OnPropertyChanged(nameof(Result));
+            OnPropertyChanged(nameof(Abnormal));
 
             // Check if there are any validation errors
             if (!HasErrors())
             {
-                // Proceed with saving data
-                // Add your save logic here
-
-                return true; // Indicate success
+                //TestOrderDal.AddTestOrder(CreateTestOrder());
+                return true; 
             }
 
             return false; // Indicate failure due to validation errors
@@ -183,7 +226,7 @@ namespace J_JHealthSolutions.ViewModel
 
         private bool HasErrors()
         {
-            return !ValidateSelectedTest() || !ValidateResult();
+            return !ValidateSelectedTest() || !ValidateResult() || !ValidateAbnormal();
         }
 
         private bool ValidateSelectedTest()
@@ -194,6 +237,15 @@ namespace J_JHealthSolutions.ViewModel
         private bool ValidateResult()
         {
             return !string.IsNullOrWhiteSpace(Result) && double.TryParse(Result, out _);
+        }
+
+        private bool ValidateAbnormal()
+        {
+            if (IsAbnormalVisible)
+            {
+                return !string.IsNullOrEmpty(Abnormal);
+            }
+            return true;
         }
     }
 }

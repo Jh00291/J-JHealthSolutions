@@ -56,6 +56,23 @@ namespace J_JHealthSolutions.Views
                 LoadVisits();
             }
         }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            var patientName = SearchPatientName.Text;
+            var dob = SearchDOB.SelectedDate;
+
+            VisitDal visitDal = new VisitDal();
+            var visits = visitDal.SearchVisits(patientName, dob);
+            VisitsDataGrid.ItemsSource = visits;
+        }
+
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            SearchPatientName.Clear();
+            SearchDOB.SelectedDate = null;
+            LoadVisits();
+        }
     }
 }
 

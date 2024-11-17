@@ -32,7 +32,11 @@
                 <DataGridTextColumn Header="Visit ID" Binding="{Binding VisitId}" />
                 <DataGridTextColumn Header="Appointment ID" Binding="{Binding AppointmentId}" />
                 <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
+                <DataGridTextColumn Header="Patient Full Name" Binding="{Binding PatientFullName}" />
                 <DataGridTextColumn Header="Doctor ID" Binding="{Binding DoctorId}" />
+                <DataGridTextColumn Header="Doctor Full Name" Binding="{Binding DoctorFullName}" />
+                <DataGridTextColumn Header="# of Tests" Binding="{Binding NumberOfTests}" />
+                <DataGridTextColumn Header="# of Abnormal Tests" Binding="{Binding NumberOfAbnormalTests}" />
                 <DataGridTextColumn Header="Visit DateTime" Binding="{Binding VisitDateTime, StringFormat={}{0:MM/dd/yyyy HH:mm}}" />
                 <DataGridTextColumn Header="Initial Diagnosis" Binding="{Binding InitialDiagnosis}" />
                 <DataGridTextColumn Header="Final Diagnosis" Binding="{Binding FinalDiagnosis}" />

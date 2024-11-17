@@ -108,6 +108,16 @@ namespace J_JHealthSolutions.Model
         public string FinalDiagnosis { get; set; }
 
         /// <summary>
+        /// Full name of the patient.
+        /// </summary>
+        public string PatientFullName { get; set; }
+
+        /// <summary>
+        /// Full name of the doctor.
+        /// </summary>
+        public string DoctorFullName { get; set; }
+
+        /// <summary>
         /// Status of the visit, cannot be null or empty.
         /// </summary>
         private string _visitStatus;

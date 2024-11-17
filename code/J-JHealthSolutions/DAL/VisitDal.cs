@@ -175,7 +175,10 @@ namespace J_JHealthSolutions.DAL
                     nurseEmp.f_name AS NurseFirstName,
                     nurseEmp.l_name AS NurseLastName,
                     p.f_name AS PatientFirstName,
-                    p.l_name AS PatientLastName
+                    p.l_name AS PatientLastName,
+                    CONCAT(docEmp.f_name, ' ', docEmp.l_name) AS DoctorFullName,
+                    CONCAT(nurseEmp.f_name, ' ', nurseEmp.l_name) AS NurseFullName,
+                    CONCAT(p.f_name, ' ', p.l_name) AS PatientFullName
                 FROM Visit v
                 INNER JOIN Patient p ON v.patient_id = p.patient_id
                 INNER JOIN Doctor d ON v.doctor_id = d.doctor_id

@@ -24,6 +24,9 @@ namespace J_JHealthSolutions.ViewModels
             FinalDiagnosis = _visit.FinalDiagnosis;
             SelectedStatus = _visit.VisitStatus;
 
+            // Determine when to make things read only
+            IsReadOnlyMode = _visit.VisitStatus == "Completed" || !string.IsNullOrWhiteSpace(_visit.FinalDiagnosis);
+
             // Initialize statuses
             Statuses = new ObservableCollection<string> { "Completed", "InProgress", "Pending" };
 
@@ -51,14 +54,30 @@ namespace J_JHealthSolutions.ViewModels
             }
         }
 
+        public bool IsStatusEnabled => !_isReadOnlyMode;
+        private bool _isReadOnlyMode;
+        public bool IsReadOnlyMode
+        {
+            get => _isReadOnlyMode;
+            set
+            {
+                _isReadOnlyMode = value;
+                OnPropertyChanged(nameof(IsReadOnlyMode));
+                OnPropertyChanged(nameof(IsStatusEnabled));
+            }
+        }
+
         private string _finalDiagnosis;
         public string FinalDiagnosis
         {
             get => _finalDiagnosis;
             set
             {
-                _finalDiagnosis = value;
-                OnPropertyChanged(nameof(FinalDiagnosis));
+                if (_finalDiagnosis != value)
+                {
+                    _finalDiagnosis = value;
+                    OnPropertyChanged(nameof(FinalDiagnosis));
+                }
             }
         }
 
@@ -70,8 +89,11 @@ namespace J_JHealthSolutions.ViewModels
             get => _selectedStatus;
             set
             {
-                _selectedStatus = value;
-                OnPropertyChanged(nameof(SelectedStatus));
+                if (_selectedStatus != value)
+                {
+                    _selectedStatus = value;
+                    OnPropertyChanged(nameof(SelectedStatus));
+                }
             }
         }
 
@@ -105,10 +127,26 @@ namespace J_JHealthSolutions.ViewModels
 
         #region Command Methods
 
+        public event EventHandler VisitUpdated;
         private void Save(object parameter)
         {
             if (!ValidateStatus())
                 return;
+
+            // Show confirmation if status is 'Completed' or final diagnosis is provided
+            if (SelectedStatus == "Completed" || !string.IsNullOrWhiteSpace(FinalDiagnosis))
+            {
+                var result = MessageBox.Show(
+                    "Setting the status to 'Completed' or providing a final diagnosis will make the visit information permanent. Are you sure you want to save these changes?",
+                    "Confirm Save",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.No)
+                {
+                    return; // Cancel the save
+                }
+            }
 
             try
             {
@@ -117,6 +155,15 @@ namespace J_JHealthSolutions.ViewModels
                 _visit.FinalDiagnosis = this.FinalDiagnosis;
                 _visit.VisitStatus = this.SelectedStatus;
                 visitDal.UpdateVisit(_visit);
+
+                // Make Final Diagnosis read-only if set
+                if (!string.IsNullOrWhiteSpace(FinalDiagnosis))
+                {
+                    IsReadOnlyMode = true;
+                }
+
+                // Raise the VisitUpdated event
+                VisitUpdated?.Invoke(this, EventArgs.Empty);
 
                 // Close the window
                 CloseWindow();
@@ -130,7 +177,7 @@ namespace J_JHealthSolutions.ViewModels
         private bool CanSave(object parameter)
         {
             // Can execute if status is selected
-            return !string.IsNullOrEmpty(SelectedStatus);
+            return !IsReadOnlyMode && !string.IsNullOrEmpty(SelectedStatus);
         }
 
         private void Cancel(object parameter)

@@ -29,11 +29,13 @@
 
         <!-- Initial Diagnosis -->
         <Label Grid.Row="0" Grid.Column="0" Content="Initial Diagnosis:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding InitialDiagnosis, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding InitialDiagnosis, UpdateSourceTrigger=PropertyChanged}"
+                 IsReadOnly="{Binding IsReadOnlyMode}"/>
 
         <!-- Final Diagnosis -->
         <Label Grid.Row="1" Grid.Column="0" Content="Final Diagnosis:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding FinalDiagnosis, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding FinalDiagnosis, UpdateSourceTrigger=PropertyChanged}"
+                 IsReadOnly="{Binding IsReadOnlyMode}"/>
 
         <!-- TestOrder ListView -->
         <Label Grid.Row="2" Grid.Column="0" Content="Test Orders" VerticalAlignment="Center" Margin="5"/>
@@ -80,8 +82,8 @@
         <Label Grid.Row="3" Grid.Column="0" Content="Status:" VerticalAlignment="Center" Margin="5"/>
         <ComboBox Grid.Row="3" Grid.Column="1" Margin="5"
                   ItemsSource="{Binding Statuses}"
-                  SelectedItem="{Binding SelectedStatus}"/>
-
+                  SelectedItem="{Binding SelectedStatus}"
+                  IsEnabled="{Binding IsStatusEnabled}"/>
 
         <!-- Save and Cancel Buttons -->
         <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">

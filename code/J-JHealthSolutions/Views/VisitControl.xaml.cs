@@ -49,11 +49,14 @@ namespace J_JHealthSolutions.Views
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedVisit = VisitsDataGrid.SelectedItem as Visit;
-            var editVisitWindow = new EditVisit(selectedVisit);
-            bool? dialogResult = editVisitWindow.ShowDialog();
-            if (dialogResult == true)
+            if (selectedVisit != null)
             {
-                LoadVisits();
+                var editVisitWindow = new EditVisit(selectedVisit);
+                bool? dialogResult = editVisitWindow.ShowDialog();
+                if (dialogResult == true)
+                {
+                    LoadVisits(); // Refresh DataGrid
+                }
             }
         }
     }

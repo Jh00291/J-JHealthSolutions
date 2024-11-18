@@ -32,6 +32,7 @@ namespace J_JHealthSolutions.ViewModel
         {
             _dialogService = dialogService;
             _currentVisit = currentVisit;
+            TestDate = DateTime.Now;
             TestOrderedBy = DoctorDal.GetDoctor(_currentVisit.DoctorId).ToString();
             Initialize();
         }
@@ -49,7 +50,6 @@ namespace J_JHealthSolutions.ViewModel
 
         private void Initialize()
         {
-            TestDate = DateTime.Now;
             SaveCommand = new RelayCommand(param => SaveTestOrder(), param => CanSaveTestOrder());
             CancelCommand = new RelayCommand(param => Cancel(), param => true);
             Tests = new ObservableCollection<Test>(TestDal.GetTests());
@@ -73,6 +73,7 @@ namespace J_JHealthSolutions.ViewModel
         {
             if (_existingTestOrder != null)
             {
+                TestDate = _existingTestOrder.OrderDateTime;
                 SelectedTest = Tests.FirstOrDefault(t => t.TestCode == _existingTestOrder.TestCode);
                 TestPerformedDate = _existingTestOrder.PerformedDateTime;
                 Result = _existingTestOrder.Result?.ToString();
@@ -227,6 +228,9 @@ namespace J_JHealthSolutions.ViewModel
                         } else if (IsResultEnabled && !double.TryParse(Result, out _))
                         {
                             error = "Result must be a valid number.";
+                        } else if (!string.IsNullOrEmpty(Result) && Result.Length > 12)
+                        {
+                            error = "Result must be less than 12 digits.";
                         }
                         break;
                     case nameof(Abnormal):
@@ -287,7 +291,7 @@ namespace J_JHealthSolutions.ViewModel
 
         private bool UpdateTestOrder()
         {
-            return TestOrderDal.UpdateTestOrder(CreateTestOrder());
+            return TestOrderDal.UpdateTestOrder(CreateTestOrder(_existingTestOrder.TestOrderID));
         }
 
         private bool ConfirmToAddDuplicateTestType()
@@ -329,7 +333,14 @@ namespace J_JHealthSolutions.ViewModel
                 if (double.TryParse(Result, out double parsedResult))
                 {
                     resultValue = parsedResult;
-                    abnormalValue = Abnormal == "Yes";
+                    if (SelectedTest.LowValue.HasValue && SelectedTest.HighValue.HasValue)
+                    {
+                        abnormalValue = parsedResult < SelectedTest.LowValue.Value || parsedResult > SelectedTest.HighValue.Value;
+                    }
+                    else
+                    {
+                        abnormalValue = Abnormal == "Yes";
+                    }
                 }
                 else
                 {
@@ -346,7 +357,7 @@ namespace J_JHealthSolutions.ViewModel
                 TestOrderID = testOrderID,
                 VisitId = (int)_currentVisit.VisitId,
                 TestCode = SelectedTest.TestCode,
-                OrderDateTime = DateTime.Now,
+                OrderDateTime = TestDate,
                 PerformedDateTime = TestPerformedDate,
                 Result = resultValue,
                 Abnormal = abnormalValue

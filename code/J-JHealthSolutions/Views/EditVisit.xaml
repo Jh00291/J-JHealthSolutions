@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:J_JHealthSolutions.Views" xmlns:viewmodels="clr-namespace:J_JHealthSolutions.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:EditVisitViewModel}"
         mc:Ignorable="d"
-        Title="EditVisit" Height="450" Width="800">
+        Title="EditVisit" Height="450" Width="950">
     <Grid Margin="10">
         <!-- Define Rows and Columns -->
         <Grid.RowDefinitions>

@@ -20,5 +20,10 @@ namespace J_JHealthSolutions.Model
             var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
             return result == MessageBoxResult.Yes;
         }
+
+        public void ShowMessage(string message, string caption)
+        {
+            MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 }

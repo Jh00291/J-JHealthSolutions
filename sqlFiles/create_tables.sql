@@ -137,7 +137,7 @@ CREATE TABLE Test (
     test_name VARCHAR(100) UNIQUE NOT NULL,
     low_value DECIMAL(10, 2),
     high_value DECIMAL(10, 2),
-    unit_of_measurement VARCHAR(20) NOT NULL
+    unit_of_measurement VARCHAR(30) NOT NULL
 );
 
 -- Table for TestOrder
@@ -146,9 +146,9 @@ CREATE TABLE TestOrder (
     visit_id INT NOT NULL,
     test_code INT NOT NULL,
     ordered_datetime DATETIME NOT NULL,
-    performed_datetime DATETIME NOT NULL,
-    result DECIMAL(10, 2) NOT NULL,
-    abnormal BOOLEAN NOT NULL,
+    performed_datetime DATETIME,
+    result DECIMAL(10, 2),
+    abnormal BOOLEAN,
     UNIQUE (visit_id, test_code, ordered_datetime),
     FOREIGN KEY (visit_id) REFERENCES Visit(visit_id) 
     ON DELETE CASCADE ON UPDATE CASCADE,

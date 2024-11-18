@@ -51,8 +51,14 @@ INSERT INTO DoctorSpecialty (doctor_id, specialty_id) VALUES
 
 -- Insert sample data into Test table
 INSERT INTO Test (test_name, low_value, high_value, unit_of_measurement) VALUES
-('Blood Pressure', 60, 120, 'mmHg'),
-('Cholesterol', 100, 200, 'mg/dL');
+('Blood Pressure', 60, 120, 'MillimetersOfMercury'),
+('Cholesterol', 100, 200, 'MilligramsPerDeciliter'),
+('Weight', NULL, NULL, 'Kilograms'),
+('Blood Sugar', 70, 140, 'MilligramsPerDeciliter'),
+('Heart Rate', 60, 100, 'BeatsPerMinute'),
+('Body Temperature', 97, 99, 'Fahrenheit'),
+('Respiratory Rate', 12, 20, 'BreathsPerMinute'),
+('Hemoglobin', 12, 18, 'GramsPerDeciliter');
 
 -- Insert sample data into TestOrder table
 INSERT INTO TestOrder (visit_id, test_code, ordered_datetime, performed_datetime, result, abnormal) VALUES

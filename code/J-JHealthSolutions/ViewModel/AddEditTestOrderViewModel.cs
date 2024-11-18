@@ -135,7 +135,7 @@ namespace J_JHealthSolutions.ViewModel
             {
                 if (value != null)
                 {
-                    if (value.Value.Date < DateTime.Today)
+                    if (value.Value.Date < TestDate.Date)
                     {
                         throw new ArgumentException("Test Performed Date cannot be in the past.");
                     }
@@ -151,7 +151,7 @@ namespace J_JHealthSolutions.ViewModel
             }
         }
 
-        public DateTime MinTestPerformedDate => DateTime.Today;
+        public DateTime MinTestPerformedDate => TestDate;
         public DateTime MaxTestPerformedDate => DateTime.Today;
 
         public UnitOfMeasure Unit

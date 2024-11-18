@@ -35,6 +35,12 @@
                 <!-- Patient Name -->
                 <DataGridTextColumn Header="Patient Name" Binding="{Binding PatientFullName}" />
 
+                <!-- Patient DOB -->
+                <DataGridTextColumn Header="Patient DOB" Binding="{Binding PatientDOB, StringFormat={}{0:MM/dd/yyyy}}" />
+
+                <!-- Nurse Name -->
+                <DataGridTextColumn Header="Nurse Full Name" Binding="{Binding NurseFullName}" />
+
                 <!-- Doctor ID -->
                 <DataGridTextColumn Header="Doctor ID" Binding="{Binding DoctorId}" />
 

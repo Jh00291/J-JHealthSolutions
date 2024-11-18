@@ -176,6 +176,7 @@ namespace J_JHealthSolutions.DAL
                     nurseEmp.l_name AS NurseLastName,
                     p.f_name AS PatientFirstName,
                     p.l_name AS PatientLastName,
+                    p.dob AS PatientDOB,
                     CONCAT(docEmp.f_name, ' ', docEmp.l_name) AS DoctorFullName,
                     CONCAT(nurseEmp.f_name, ' ', nurseEmp.l_name) AS NurseFullName,
                     CONCAT(p.f_name, ' ', p.l_name) AS PatientFullName

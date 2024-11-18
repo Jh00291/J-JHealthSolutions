@@ -118,6 +118,22 @@ namespace J_JHealthSolutions.Model
         public string DoctorFullName { get; set; }
 
         /// <summary>
+        /// Gets or sets the full name of the nurse.
+        /// </summary>
+        /// <value>
+        /// The full name of the nurse.
+        /// </value>
+        public string NurseFullName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the patient dob.
+        /// </summary>
+        /// <value>
+        /// The patient dob.
+        /// </value>
+        public DateTime PatientDOB { get; set; }
+
+        /// <summary>
         /// Status of the visit, cannot be null or empty.
         /// </summary>
         private string _visitStatus;

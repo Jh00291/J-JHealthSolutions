@@ -50,6 +50,8 @@
                 <DataGridTextColumn Header="Appointment ID" Binding="{Binding AppointmentId}" />
                 <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
                 <DataGridTextColumn Header="Patient Full Name" Binding="{Binding PatientFullName}" />
+                <DataGridTextColumn Header="Patient DOB" Binding="{Binding PatientDOB, StringFormat={}{0:MM/dd/yyyy}}" />
+                <DataGridTextColumn Header="Nurse Full Name" Binding="{Binding NurseFullName}" />
                 <DataGridTextColumn Header="Doctor ID" Binding="{Binding DoctorId}" />
                 <DataGridTextColumn Header="Doctor Full Name" Binding="{Binding DoctorFullName}" />
                 <DataGridTextColumn Header="# of Tests" Binding="{Binding NumberOfTests}" />

@@ -57,7 +57,7 @@ namespace J_JHealthSolutions.Views
         private void PopulateAppointmentData(Appointment appointment)
         {
             patientAutoCompleteBox.Text = appointment.PatientFullName;
-            doctorAutoCompleteBox.Text = appointment.DoctorFullName;
+            doctorComboBox.SelectedItem = allDoctors.FirstOrDefault(d => d.DoctorId == appointment.DoctorId);
 
             selectedPatient = allPatients.FirstOrDefault(p => p.PatientId == appointment.PatientId);
             selectedDoctor = allDoctors.FirstOrDefault(d => d.DoctorId == appointment.DoctorId);
@@ -76,6 +76,12 @@ namespace J_JHealthSolutions.Views
 
         }
 
+        private void DoctorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedDoctor = doctorComboBox.SelectedItem as Doctor;
+            this.datePicker.IsEnabled = selectedDoctor != null;
+        }
+
         private void LoadPatients()
         {
             LoadAllPatients();
@@ -85,7 +91,8 @@ namespace J_JHealthSolutions.Views
         private void LoadDoctors()
         {
             LoadAllDoctors();
-            doctorAutoCompleteBox.ItemsSource = allDoctors;
+            doctorComboBox.ItemsSource = allDoctors;
+            doctorComboBox.DisplayMemberPath = "EmployeeFullName";
         }
 
         private void LoadNurses()
@@ -136,9 +143,9 @@ namespace J_JHealthSolutions.Views
 
         private void UpdateAvailableTimeSlots()
         {
-            if (datePicker.SelectedDate.HasValue && doctorAutoCompleteBox.SelectedItem != null)
+            if (datePicker.SelectedDate.HasValue && doctorComboBox.SelectedItem != null)
             {
-                int selectedDoctorId = ((Doctor)doctorAutoCompleteBox.SelectedItem).DoctorId;
+                int selectedDoctorId = selectedDoctor.DoctorId;
                 DateTime selectedDate = datePicker.SelectedDate.Value;
 
                 TimeSpan startTime = TimeSpan.FromHours(8);
@@ -174,17 +181,10 @@ namespace J_JHealthSolutions.Views
             }
         }
 
-        private void DoctorAutoCompleteBox_Populating(object sender, PopulatingEventArgs e)
-        {
-            var searchText = doctorAutoCompleteBox.SearchText.ToLower();
-            var filteredDoctors = allDoctors.Where(d => d.EmployeeFullName.ToLower().Contains(searchText)).ToList();
-            doctorAutoCompleteBox.ItemsSource = filteredDoctors;
-            doctorAutoCompleteBox.PopulateComplete();
-        }
 
         private void DoctorAutoCompleteBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            selectedDoctor = doctorAutoCompleteBox.SelectedItem as Doctor;
+            selectedDoctor = doctorComboBox.SelectedItem as Doctor;
             this.datePicker.IsEnabled = true;
         }
 
@@ -372,7 +372,7 @@ namespace J_JHealthSolutions.Views
 
         private void ValidateDoctorSelection()
         {
-            string inputText = doctorAutoCompleteBox.Text.Trim();
+            string inputText = doctorComboBox.Text.Trim();
             if (string.IsNullOrEmpty(inputText))
             {
                 selectedDoctor = null;
@@ -388,7 +388,7 @@ namespace J_JHealthSolutions.Views
             {
                 selectedDoctor = null;
                 MessageBox.Show("The doctor you entered does not exist. Please select a valid doctor from the list.", "Invalid Doctor", MessageBoxButton.OK, MessageBoxImage.Warning);
-                doctorAutoCompleteBox.Text = string.Empty;
+                doctorComboBox.Text = string.Empty;
             }
         }
 

@@ -18,14 +18,10 @@
                                  SelectionChanged="PatientAutoCompleteBox_SelectionChanged"/>
         <Label x:Name="patientErrorLabel" Content="Please select a patient." Foreground="Red" Visibility="Collapsed" Margin="470,67,0,0" VerticalAlignment="Top"/>
 
-        <!-- Doctor Search Bar -->
+        <!-- Doctor ComboBox -->
         <Label Content="Doctor:" HorizontalAlignment="Left" Margin="144,103,0,0" VerticalAlignment="Top"/>
-        <controls:AutoCompleteBox x:Name="doctorAutoCompleteBox" HorizontalAlignment="Left" Margin="258,107,0,0" VerticalAlignment="Top" Width="200"
-                                 FilterMode="Contains"
-                                 MinimumPrefixLength="1"
-                                 ValueMemberPath="EmployeeFullName"
-                                 Populating="DoctorAutoCompleteBox_Populating"
-                                 SelectionChanged="DoctorAutoCompleteBox_SelectionChanged"/>
+        <ComboBox x:Name="doctorComboBox" HorizontalAlignment="Left" Margin="258,107,0,0" VerticalAlignment="Top" Width="200"
+          SelectionChanged="DoctorComboBox_SelectionChanged"/>
         <Label x:Name="doctorErrorLabel" Content="Please select a doctor." Foreground="Red" Visibility="Collapsed" Margin="470,107,0,0" VerticalAlignment="Top"/>
 
         <!-- Date and Time Selection -->

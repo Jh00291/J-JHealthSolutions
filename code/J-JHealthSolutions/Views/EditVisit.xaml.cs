@@ -32,7 +32,8 @@ namespace J_JHealthSolutions.Views
         public EditVisit(Visit visit)
         {
             InitializeComponent();
-            var viewModel = new EditVisitViewModel(visit);
+            var dialogService = new DialogService();
+            var viewModel = new EditVisitViewModel(visit, dialogService);
             viewModel.RequestClose += (s, e) => this.Close();
             viewModel.VisitUpdated += (s, e) =>
             {

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
+using System.Windows.Input;
 using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
 
@@ -15,25 +14,73 @@ namespace J_JHealthSolutions.ViewModel
         private string _result;
         private UnitOfMeasure _unit;
         private bool _isSaveAttempted;
+        private bool _isEditAttempt;
         private Visit _currentVisit;
         private string _abnormal;
+        private Doctor _visitDoctor;
+        private readonly IDialogService _dialogService;
+        private TestOrder _existingTestOrder;
+        public string TestOrderedBy { get; set; }
 
-        public AddEditTestOrderViewModel()
+        public AddEditTestOrderViewModel(IDialogService dialogService)
         {
-            // Initialize the Tests collection (replace with your actual data retrieval logic)
-            Tests = GetAvailableTests();
-
-            TestDate = DateTime.Now;
+            _dialogService = dialogService;
+            Initialize();
         }
 
-        public AddEditTestOrderViewModel(Visit currentVisit)
+        public AddEditTestOrderViewModel(Visit currentVisit, IDialogService dialogService)
         {
+            _dialogService = dialogService;
             _currentVisit = currentVisit;
-            Tests = GetAvailableTests();
-            TestDate = DateTime.Now;
+            TestOrderedBy = DoctorDal.GetDoctor(_currentVisit.DoctorId).ToString();
+            Initialize();
         }
 
-        public DateTime TestDate { get; }
+        public AddEditTestOrderViewModel(TestOrder testOrder, Visit currentVisit, IDialogService dialogService)
+        {
+            _dialogService = dialogService;
+            _existingTestOrder = testOrder;
+            _currentVisit = currentVisit;
+            TestOrderedBy = DoctorDal.GetDoctor(_currentVisit.DoctorId).ToString();
+            _isEditAttempt = true;
+            Initialize();
+            LoadExistingTestOrder();
+        }
+
+        private void Initialize()
+        {
+            TestDate = DateTime.Now;
+            SaveCommand = new RelayCommand(param => SaveTestOrder(), param => CanSaveTestOrder());
+            CancelCommand = new RelayCommand(param => Cancel(), param => true);
+            Tests = new ObservableCollection<Test>(TestDal.GetTests());
+        }
+
+        private void SaveTestOrder()
+        {
+            if (Save())
+            {
+                OnTestOrderSaved?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+
+        private bool CanSaveTestOrder()
+        {
+            return true; 
+        }
+
+        private void LoadExistingTestOrder()
+        {
+            if (_existingTestOrder != null)
+            {
+                SelectedTest = Tests.FirstOrDefault(t => t.TestCode == _existingTestOrder.TestCode);
+                TestPerformedDate = _existingTestOrder.PerformedDateTime;
+                Result = _existingTestOrder.Result?.ToString();
+                Abnormal = _existingTestOrder.Abnormal.HasValue ? (_existingTestOrder.Abnormal.Value ? "Yes" : "No") : null;
+            }
+        }
+
+        public DateTime TestDate { get; internal set; }
 
         public IEnumerable<Test> Tests
         {
@@ -53,12 +100,14 @@ namespace J_JHealthSolutions.ViewModel
                 _selectedTest = value;
                 OnPropertyChanged(nameof(SelectedTest));
 
-                // Update the Unit based on the selected test
                 Unit = (UnitOfMeasure)_selectedTest?.Unit;
-
-                // Optionally, update other properties related to the selected test
             }
         }
+
+        public ICommand SaveCommand { get; internal set; }
+        public ICommand CancelCommand { get; internal set; }
+        public event EventHandler OnCancelRequested;
+        public event EventHandler OnTestOrderSaved;
 
         public string Result
         {
@@ -68,6 +117,11 @@ namespace J_JHealthSolutions.ViewModel
                 _result = value;
                 OnPropertyChanged(nameof(Result));
             }
+        }
+
+        private void Cancel()
+        {
+            OnCancelRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private DateTime? _testPerformedDate;
@@ -133,6 +187,8 @@ namespace J_JHealthSolutions.ViewModel
 
         // Abnormal Options
         private static readonly List<string> _abnormalOptions = new List<string> { "Yes", "No" };
+
+
         public IEnumerable<string> AbnormalOptions => _abnormalOptions;
 
         // Visibility of Abnormal ComboBox
@@ -193,22 +249,108 @@ namespace J_JHealthSolutions.ViewModel
 
         public bool Save()
         {
-            // Set the flag to true to activate validation
+
             IsSaveAttempted = true;
 
-            // Notify the UI that properties have changed to re-trigger validation
             OnPropertyChanged(nameof(SelectedTest));
             OnPropertyChanged(nameof(Result));
             OnPropertyChanged(nameof(Abnormal));
 
-            // Check if there are any validation errors
             if (!HasErrors())
             {
-                //TestOrderDal.AddTestOrder(CreateTestOrder());
-                return true; 
+                if (_isEditAttempt)
+                {
+                    return UpdateTestOrder();
+                }
+                else
+                {
+                    return AddTestOrder();
+                }
             }
 
-            return false; // Indicate failure due to validation errors
+            return false; 
+        }
+
+        private bool AddTestOrder()
+        {
+            if (TestTypeExistsForVisit())
+            {
+                if (ConfirmToAddDuplicateTestType())
+                {
+                    TestOrderDal.CreateTestOrder(CreateTestOrder());
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool UpdateTestOrder()
+        {
+            return TestOrderDal.UpdateTestOrder(CreateTestOrder());
+        }
+
+        private bool ConfirmToAddDuplicateTestType()
+        {
+            var existingTestOrder = TestOrderDal.GetTestOrderByVisitAndTestCode((int)_currentVisit.VisitId, SelectedTest.TestCode);
+
+            string message = $"A test of this type has already been ordered for this visit:\n" +
+                             $"Test: {existingTestOrder.Test.TestName}\n" +
+                             $"Ordered Date: {existingTestOrder.OrderDateTime}\n" +
+                             $"Performed Date: {existingTestOrder.PerformedDateTime}\n" +
+                             $"Result: {existingTestOrder.Result}\n" +
+                             $"Abnormal: {(existingTestOrder.Abnormal == true ? "Yes" : "No")}\n\n" +
+                             "Do you want to add another test of this type?";
+
+            return _dialogService.ShowConfirmationDialog("Confirm Add Test", message);
+        }
+
+        private bool TestTypeExistsForVisit()
+        {
+            if (_currentVisit == null)
+            {
+                return false;
+            }
+            return TestOrderDal.TestTypeExistsForVisit((int)_currentVisit.VisitId, SelectedTest.TestCode);
+        }
+
+        private TestOrder CreateTestOrder()
+        {
+            return CreateTestOrder(null);
+        }
+
+        private TestOrder CreateTestOrder(int? testOrderID)
+        {
+            double? resultValue = null;
+            bool? abnormalValue = null;
+
+            if (!string.IsNullOrWhiteSpace(Result))
+            {
+                if (double.TryParse(Result, out double parsedResult))
+                {
+                    resultValue = parsedResult;
+                    abnormalValue = Abnormal == "Yes";
+                }
+                else
+                {
+                    throw new InvalidOperationException("Invalid Result value. Please enter a valid number.");
+                }
+            }
+            else
+            {
+                abnormalValue = null;
+            }
+
+            return new TestOrder
+            {
+                TestOrderID = testOrderID,
+                VisitId = (int)_currentVisit.VisitId,
+                TestCode = SelectedTest.TestCode,
+                OrderDateTime = DateTime.Now,
+                PerformedDateTime = TestPerformedDate,
+                Result = resultValue,
+                Abnormal = abnormalValue
+            };
         }
 
         // INotifyPropertyChanged implementation
@@ -226,7 +368,13 @@ namespace J_JHealthSolutions.ViewModel
 
         private bool HasErrors()
         {
-            return !ValidateSelectedTest() || !ValidateResult() || !ValidateAbnormal();
+            var result = ValidateSelectedTest();
+            if (IsResultEnabled)
+            {
+                result &= ValidateResult();
+                result &= ValidateAbnormal();
+            }
+            return !result;
         }
 
         private bool ValidateSelectedTest()

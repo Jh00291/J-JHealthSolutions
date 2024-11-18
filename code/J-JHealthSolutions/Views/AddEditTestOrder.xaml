@@ -14,6 +14,7 @@
 
     <Window.Resources>
         <model:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+        <model:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
         <!-- Styles for validation error highlighting -->
         <Style TargetType="TextBox">
@@ -53,10 +54,6 @@
         </Style>
 
     </Window.Resources>
-
-    <Window.DataContext>
-        <viewmodel:AddEditTestOrderViewModel/>
-    </Window.DataContext>
 
     <Grid Margin="10">
         <!-- Define Rows and Columns -->
@@ -118,7 +115,7 @@
 
         <!-- Test Ordered By -->
         <Label Grid.Row="2" Grid.Column="0" Content="Test Ordered By:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox x:Name="testOrderedByTextBox" Grid.Row="2" Grid.Column="1" Margin="5" IsEnabled="False" />
+        <TextBox x:Name="testOrderedByTextBox" Grid.Row="2" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding TestOrderedBy}"/>
 
         <!-- Test Performed DatePicker -->
         <Label Content="Performed Date:" Grid.Row="3" Grid.Column="0" Margin="5" VerticalAlignment="Center"/>
@@ -143,7 +140,9 @@
             </Grid.ColumnDefinitions>
             <TextBox x:Name="resultTextBox" Grid.Column="0" Grid.Row="0" Margin="5"
                      Text="{Binding Result, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                     IsEnabled="{Binding IsResultEnabled}"/>           <Label x:Name="unitTextLabel" Grid.Column="1" Grid.Row="0" Margin="5" IsEnabled="False" Content="{Binding UnitOfMeasurement}"/>
+                     IsEnabled="{Binding IsResultEnabled}"/>
+            <Label x:Name="unitTextLabel" Grid.Column="1" Grid.Row="0" Margin="5" IsEnabled="False"
+                   Content="{Binding Unit, Converter={StaticResource EnumDescriptionConverter}}"/>
             <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Foreground="Red" FontSize="12" 
                        Text="{Binding ElementName=resultTextBox, Path=(Validation.Errors)[0].ErrorContent}"/>
         </Grid>
@@ -163,8 +162,9 @@
         <!-- Buttons in a UniformGrid -->
         <UniformGrid Grid.Row="6" Grid.Column="1" Rows="1" Columns="2" HorizontalAlignment="Right" Margin="5">
             <Button x:Name="saveButton" Content="Save" Margin="5" Padding="2"
-                    Click="SaveButton_Click"/>
-            <Button x:Name="cancelButton" Content="Cancel" Margin="5" Padding="2"/>
+                    Command="{Binding SaveCommand}" />
+            <Button x:Name="cancelButton" Content="Cancel" Margin="5" Padding="2"
+                    Command="{Binding CancelCommand}" />
         </UniformGrid>
 
     </Grid>

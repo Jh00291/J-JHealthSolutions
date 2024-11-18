@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ namespace J_JHealthSolutions.Model
         public int TestCode { get; set; }
         public DateTime OrderDateTime { get; set; }
         public DateTime? PerformedDateTime { get; set; }
-        public int Result { get; set; }
-        public bool Abnormal { get; set; }
+        public double? Result { get; set; }
+        public bool? Abnormal { get; set; }
         public Test Test { get; set; }
 
         public int? TestOrderID
@@ -31,7 +32,17 @@ namespace J_JHealthSolutions.Model
             }
         }
 
-        public TestOrder(int? testOrderID, int visitID, int testCode, DateTime orderDateTime, DateTime? performedDateTime, int result, bool abnormal, Test test)
+        public string ResultWithUnit
+        {
+            get
+            {
+                var converter = new EnumDescriptionConverter();
+                var unitDescription = converter.Convert(Test?.Unit, typeof(string), null, CultureInfo.InvariantCulture) as string;
+                return $"{Result} {unitDescription}";
+            }
+        }
+
+        public TestOrder(int? testOrderID, int visitID, int testCode, DateTime orderDateTime, DateTime? performedDateTime, double? result, bool? abnormal, Test test)
         {
             this.TestOrderID = testOrderID;
             this.VisitId = visitID;

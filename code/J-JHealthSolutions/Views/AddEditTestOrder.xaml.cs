@@ -1,17 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
 using J_JHealthSolutions.ViewModel;
@@ -19,67 +7,54 @@ using J_JHealthSolutions.ViewModel;
 namespace J_JHealthSolutions.Views
 {
     /// <summary>
-    /// Interaction logic for AddEditTest.xaml
+    /// Interaction logic for AddEditTestOrder.xaml
     /// </summary>
     public partial class AddEditTestOrder : Window
     {
-        private TestOrder _selectedTestOrder;
-        private Test _selectedTest;
-        private UnitOfMeasure _selectedTestUnitOfMeasure;
-
         public AddEditTestOrder()
         {
             InitializeComponent();
-            this.DataContext = new AddEditTestOrderViewModel();
+
+            var dialogService = new DialogService();
+            var viewModel = new AddEditTestOrderViewModel(dialogService);
+            this.DataContext = viewModel;
+
+            viewModel.OnTestOrderSaved += ViewModel_OnTestOrderSaved;
         }
 
         public AddEditTestOrder(Visit currentVisit)
         {
             InitializeComponent();
-            testOrderedByTextBox.Text = DoctorDal.GetDoctor(currentVisit.DoctorId).ToString();
-            this.DataContext = new AddEditTestOrderViewModel(currentVisit);
+
+            var dialogService = new DialogService();
+            var viewModel = new AddEditTestOrderViewModel(currentVisit, dialogService);
+            this.DataContext = viewModel;
+
+            viewModel.OnTestOrderSaved += ViewModel_OnTestOrderSaved;
+            viewModel.OnCancelRequested += ViewModel_OnCancelRequested;
         }
 
-        public AddEditTestOrder(TestOrder test, Doctor visitDoctor)
+        private void ViewModel_OnCancelRequested(object? sender, EventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
+        }
+
+        public AddEditTestOrder(TestOrder testOrder, Visit currentVisit)
         {
             InitializeComponent();
-            _selectedTestOrder = test;
-            LoadTest();
-            testOrderedByTextBox.Text = visitDoctor.ToString();
-            this.DataContext = new AddEditTestOrderViewModel();
+            var dialogService = new DialogService();
+            var viewModel = new AddEditTestOrderViewModel(testOrder, currentVisit, dialogService);
+            this.DataContext = viewModel;
+
+            viewModel.OnTestOrderSaved += ViewModel_OnTestOrderSaved;
+            viewModel.OnCancelRequested += ViewModel_OnCancelRequested;
         }
 
-        private void LoadTest()
+        private void ViewModel_OnTestOrderSaved(object sender, EventArgs e)
         {
-            if (_selectedTestOrder != null)
-            {
-                testComboBox.SelectedItem = _selectedTestOrder;
-            }
+            this.DialogResult = true;
+            this.Close();
         }
-
-
-        private void UpdateLabelUOM()
-        {
-            var converter = new EnumDescriptionConverter();
-            this.unitTextLabel.Content = converter.Convert(_selectedTest.Unit, typeof(string), null, CultureInfo.InvariantCulture);
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            var viewModel = DataContext as AddEditTestOrderViewModel;
-            if (viewModel != null)
-            {
-                if (viewModel.Save())
-                {
-                    // Close the window or navigate away
-                    this.Close();
-                }
-                else
-                {
-                    // Errors will be displayed; no need to do anything else
-                }
-            }
-        }
-
     }
 }

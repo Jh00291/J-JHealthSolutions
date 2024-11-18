@@ -127,5 +127,15 @@ namespace J_JHealthSolutions.Views
             PatientsDataGrid.ItemsSource = patients;
         }
 
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            SearchLastName.Text = string.Empty;
+            SearchFirstName.Text = string.Empty;
+
+            SearchDOB.SelectedDate = null;
+
+            LoadPatients();
+        }
+
     }
 }

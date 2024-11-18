@@ -16,7 +16,8 @@ INSERT INTO Employee (user_id, f_name, l_name, dob, gender, address_1, city, sta
 
 -- Insert sample data into Administrator tableadmin_id
 INSERT INTO Administrator (emp_id) VALUES
-(1);
+(1),
+(4);
 
 -- Insert sample data into Doctor table
 INSERT INTO Doctor (emp_id) VALUES

@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:J_JHealthSolutions.Views"
         xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:controls="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
-        Title="Add/Edit Appointment" Height="600" Width="548">
+        Title="Add/Edit Appointment" Height="600" Width="662">
     <Grid>
         <Label x:Name="titleLabel" Content="Schedule or Edit Appointment" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24"/>
 
@@ -16,6 +16,7 @@
                                  ValueMemberPath="PatientFullName"
                                  Populating="PatientAutoCompleteBox_Populating"
                                  SelectionChanged="PatientAutoCompleteBox_SelectionChanged"/>
+        <Label x:Name="patientErrorLabel" Content="Please select a patient." Foreground="Red" Visibility="Collapsed" Margin="470,67,0,0" VerticalAlignment="Top"/>
 
         <!-- Doctor Search Bar -->
         <Label Content="Doctor:" HorizontalAlignment="Left" Margin="144,103,0,0" VerticalAlignment="Top"/>
@@ -25,23 +26,26 @@
                                  ValueMemberPath="EmployeeFullName"
                                  Populating="DoctorAutoCompleteBox_Populating"
                                  SelectionChanged="DoctorAutoCompleteBox_SelectionChanged"/>
+        <Label x:Name="doctorErrorLabel" Content="Please select a doctor." Foreground="Red" Visibility="Collapsed" Margin="470,107,0,0" VerticalAlignment="Top"/>
 
         <!-- Date and Time Selection -->
         <Label Content="Date:" HorizontalAlignment="Left" Margin="144,143,0,0" VerticalAlignment="Top"/>
         <DatePicker x:Name="datePicker" HorizontalAlignment="Left" Margin="258,147,0,0" VerticalAlignment="Top" Width="200"
                     SelectedDateChanged="DatePicker_SelectedDateChanged" IsEnabled="False" Height="22"/>
-
+        <Label x:Name="dateErrorLabel" Content="Please select a date." Foreground="Red" Visibility="Collapsed" Margin="470,147,0,0" VerticalAlignment="Top"/>
         <Label Content="Time:" HorizontalAlignment="Left" Margin="144,183,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="timeComboBox" HorizontalAlignment="Left" Margin="258,187,0,0" VerticalAlignment="Top" Width="200" IsEnabled="False" SelectionChanged="TimeComboBox_SelectionChanged"/>
 
         <!-- Reason for Appointment -->
         <Label Content="Reason:" HorizontalAlignment="Left" Margin="144,223,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="reasonTextBox" HorizontalAlignment="Left" Margin="258,227,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Height="80" AcceptsReturn="True"/>
-
+        <Label x:Name="reasonErrorLabel" Content="Please enter a reason." Foreground="Red" Visibility="Collapsed" Margin="470,227,0,0" VerticalAlignment="Top"/>
+        
         <!-- Status Selection -->
         <Label Content="Status:" HorizontalAlignment="Left" Margin="144,317,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="statusComboBox" HorizontalAlignment="Left" Margin="258,321,0,0" VerticalAlignment="Top" Width="200">
         </ComboBox>
+        <Label x:Name="statusErrorLabel" Content="Please select a status." Foreground="Red" Visibility="Collapsed" Margin="470,321,0,0" VerticalAlignment="Top"/>
 
         <!-- Nurse Selection -->
         <Label x:Name ="nurseLabel" Content="Nurse for Visit" HorizontalAlignment="Left" Margin="146,373,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
@@ -52,6 +56,7 @@
                                   Populating="NurseAutoCompleteBox_OnPopulating"
                                   SelectionChanged="NurseAutoCompleteBox_SelectionChanged"
                                   Visibility="Hidden"/>
+        <Label x:Name="nurseErrorLabel" Content="Please select a nurse for this status." Foreground="Red" Visibility="Collapsed" Margin="470,375,0,0" VerticalAlignment="Top"/>
 
         <!-- Save and Cancel Buttons -->
         <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" Margin="189,442,0,0" VerticalAlignment="Top" Width="86" Height="32" Click="SaveAppointment_Click"/>

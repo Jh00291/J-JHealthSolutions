@@ -3,7 +3,7 @@ USE cs3230f24a;
 SET foreign_key_checks = 0;
 
 -- Drop tables if they already exist (for clean re-runs)
-DROP TABLE IF EXISTS TestOrder, Test, Visit, Appointment, Patient, Doctor, Nurse, Administrator, `User`, Specialty, Employee;
+DROP TABLE IF EXISTS TestOrder, Test, Visit, Appointment, Patient, Doctor, Nurse, Administrator, `User`, Specialty, Employee, DoctorSpecialty;
 
 -- Table for Employee
 CREATE TABLE Employee (

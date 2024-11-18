@@ -64,23 +64,86 @@ namespace J_JHealthSolutions.Views
         /// </summary>
         private void SavePatient_Click(object sender, RoutedEventArgs e)
         {
+            bool hasError = false;
+
+            // Reset all error labels
+            firstNameErrorLabel.Visibility = Visibility.Collapsed;
+            lastNameErrorLabel.Visibility = Visibility.Collapsed;
+            dobErrorLabel.Visibility = Visibility.Collapsed;
+            genderErrorLabel.Visibility = Visibility.Collapsed;
+            stateErrorLabel.Visibility = Visibility.Collapsed;
+            address1ErrorLabel.Visibility = Visibility.Collapsed;
+            cityErrorLabel.Visibility = Visibility.Collapsed;
+            zipcodeErrorLabel.Visibility = Visibility.Collapsed;
+            phoneErrorLabel.Visibility = Visibility.Collapsed;
+
+            // Validate each field and show the respective error label if needed
+            if (string.IsNullOrWhiteSpace(firstNameTextBox.Text))
+            {
+                firstNameErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(lastNameTextBox.Text))
+            {
+                lastNameErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            if (dobDatePicker.SelectedDate == null)
+            {
+                dobErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            if (genderComboBox.SelectedItem == null)
+            {
+                genderErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(stateComboBox.Text))
+            {
+                stateErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(address1TextBox.Text))
+            {
+                address1ErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(cityTextBox.Text))
+            {
+                cityErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(zipcodeTextBox.Text))
+            {
+                zipcodeErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(phoneTextBox.Text))
+            {
+                phoneErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            // If there are errors, stop here
+            if (hasError)
+            {
+                return;
+            }
+
             try
             {
-                // Validate required fields before accessing them
-                if (string.IsNullOrWhiteSpace(firstNameTextBox.Text))
-                    throw new ArgumentException("First name is required.");
-                if (string.IsNullOrWhiteSpace(lastNameTextBox.Text))
-                    throw new ArgumentException("Last name is required.");
-                if (dobDatePicker.SelectedDate == null)
-                    throw new ArgumentException("Date of birth is required. Please select a date.");
-                if (genderComboBox.SelectedItem == null)
-                    throw new ArgumentException("Gender is required. Please select an option.");
-                if (string.IsNullOrWhiteSpace(stateComboBox.Text))
-                    throw new ArgumentException("State is required. Please select a state.");
-
+                // Add or update the patient
                 if (_patient == null || _patient.PatientId == null)
                 {
-                    // If no patient exists, create a new one
+                    // Add new patient
                     var newPatient = new Patient
                     {
                         FName = firstNameTextBox.Text,
@@ -88,7 +151,7 @@ namespace J_JHealthSolutions.Views
                         DOB = dobDatePicker.SelectedDate.Value,
                         Gender = genderComboBox.Text[0],
                         Address1 = address1TextBox.Text,
-                        Address2 = address2TextBox.Text,
+                        Address2 = string.IsNullOrWhiteSpace(address2TextBox.Text) ? null : address2TextBox.Text,
                         City = cityTextBox.Text,
                         State = stateComboBox.Text,
                         Zipcode = zipcodeTextBox.Text,
@@ -96,8 +159,7 @@ namespace J_JHealthSolutions.Views
                         Active = activeCheckBox.IsChecked ?? false
                     };
 
-                    _patientDal.AddPatient(newPatient);
-                    ShowSuccessDialog("Patient added successfully.");
+                    int generatedId = _patientDal.AddPatient(newPatient);
                 }
                 else
                 {
@@ -105,31 +167,33 @@ namespace J_JHealthSolutions.Views
                     _patient.FName = firstNameTextBox.Text;
                     _patient.LName = lastNameTextBox.Text;
                     _patient.DOB = dobDatePicker.SelectedDate.Value;
-                    _patient.Gender = !string.IsNullOrEmpty(genderComboBox.Text) ? genderComboBox.Text[0] : 'U';
+                    _patient.Gender = genderComboBox.Text[0];
                     _patient.Address1 = address1TextBox.Text;
-                    _patient.Address2 = address2TextBox.Text;
+                    _patient.Address2 = string.IsNullOrWhiteSpace(address2TextBox.Text) ? null : address2TextBox.Text;
                     _patient.City = cityTextBox.Text;
                     _patient.State = stateComboBox.Text;
                     _patient.Zipcode = zipcodeTextBox.Text;
                     _patient.Phone = phoneTextBox.Text;
-                    _patient.Active = activeCheckBox.IsChecked.Value;
+                    _patient.Active = activeCheckBox.IsChecked ?? false;
 
-                    _patientDal.UpdatePatient(_patient); 
-                    ShowSuccessDialog("Patient updated successfully.");
+                    bool success = _patientDal.UpdatePatient(_patient);
+                    if (!success)
+                    {
+                        ShowErrorDialog("Error", "Failed to update patient.");
+                    }
                 }
 
+                // Close the window if operation is successful
                 this.DialogResult = true;
                 this.Close();
             }
-            catch (ArgumentException ex)
-            {
-                ShowErrorDialog("Validation Error", ex.Message);
-            }
             catch (Exception ex)
             {
-                ShowErrorDialog("Error", ex.Message);
+                // Show detailed error message
+                ShowErrorDialog("Error Saving Patient", $"An error occurred: {ex.Message}");
             }
         }
+
 
         /// <summary>
         // /// Shows a custom success dialog with a message.

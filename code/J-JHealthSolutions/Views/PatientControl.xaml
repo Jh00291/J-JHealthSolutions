@@ -39,6 +39,9 @@
 
             <!-- Search Button -->
             <Button Content="Search" Width="75" Height="28" VerticalAlignment="Bottom" Click="SearchButton_Click" FontSize="14"/>
+
+            <!-- Clear Button -->
+            <Button Content="Clear" Width="75" Height="28" VerticalAlignment="Bottom" Click="ClearButton_Click" FontSize="14" Margin="10,0,0,0"/>
         </StackPanel>
 
         <!-- DataGrid in the next row -->

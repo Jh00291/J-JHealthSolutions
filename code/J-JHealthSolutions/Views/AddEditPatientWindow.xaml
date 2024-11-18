@@ -5,19 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:J_JHealthSolutions.Views"
         mc:Ignorable="d"
-        Title="AddEditPatientWindow" Height="600" Width="548">
+        Title="AddEditPatientWindow" Height="600" Width="660">
     <Grid>
         <Label x:Name="titleLabel" Content="Register or Edit Patient" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24"/>
         <TextBox x:Name="firstNameTextBox" HorizontalAlignment="Left" Margin="258,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="firstNameErrorLabel" Content="First name is required." Foreground="Red" Visibility="Collapsed" Margin="388,67,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="lastNameTextBox" HorizontalAlignment="Left" Margin="258,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="lastNameErrorLabel" Content="Last name is required." Foreground="Red" Visibility="Collapsed" Margin="388,100,0,0" VerticalAlignment="Top"/>
         <DatePicker x:Name="dobDatePicker" HorizontalAlignment="Left" Margin="258,132,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="dobErrorLabel" Content="Date of birth is required. Example: 01/25/2005" Foreground="Red" Visibility="Collapsed" Margin="388,132,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="genderComboBox" HorizontalAlignment="Left" Margin="258,173,0,0" VerticalAlignment="Top" Width="120" SelectedValuePath="Content">
             <ComboBoxItem Content="M"/>
             <ComboBoxItem Content="F"/>
         </ComboBox>
+        <Label x:Name="genderErrorLabel" Content="Gender is required." Foreground="Red" Visibility="Collapsed" Margin="388,173,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="address1TextBox" HorizontalAlignment="Left" Margin="258,213,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
-        <TextBox x:Name="address2TextBox" HorizontalAlignment="Left" Margin="258,246,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
+        <Label x:Name="address1ErrorLabel" Content="Address1 is required." Foreground="Red" Visibility="Collapsed" Margin="526,209,-268,0" VerticalAlignment="Top" Height="26"/>
+        <TextBox x:Name="address2TextBox" HorizontalAlignment="Left" Margin="258,248,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
         <TextBox x:Name="cityTextBox" HorizontalAlignment="Left" Margin="258,281,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="cityErrorLabel" Content="City is required." Foreground="Red" Visibility="Collapsed" Margin="388,281,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="stateComboBox" HorizontalAlignment="Left" Margin="258,313,0,0" VerticalAlignment="Top" Width="120" SelectedValuePath="Content">
             <ComboBoxItem Content="AL"/>
             <ComboBoxItem Content="AK"/>
@@ -70,8 +76,11 @@
             <ComboBoxItem Content="WI"/>
             <ComboBoxItem Content="WY"/>
         </ComboBox>
+        <Label x:Name="stateErrorLabel" Content="State is required." Foreground="Red" Visibility="Collapsed" Margin="388,313,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="zipcodeTextBox" HorizontalAlignment="Left" Margin="258,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="zipcodeErrorLabel" Content="Zipcode is required. Example: 12345" Foreground="Red" Visibility="Collapsed" Margin="388,350,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="phoneTextBox" HorizontalAlignment="Left" Margin="258,384,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="phoneErrorLabel" Content="Phone is required. Example: 0123456789" Foreground="Red" Visibility="Collapsed" Margin="388,384,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="activeCheckBox" Content="(Checked means active)" HorizontalAlignment="Left" Margin="258,420,0,0" VerticalAlignment="Top" Width="150"/>
         <Label Content="First Name:" HorizontalAlignment="Left" Margin="144,63,0,0" VerticalAlignment="Top"/>
         <Label Content="Last Name:" HorizontalAlignment="Left" Margin="144,96,0,0" VerticalAlignment="Top"/>

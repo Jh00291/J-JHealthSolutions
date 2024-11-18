@@ -190,47 +190,66 @@ namespace J_JHealthSolutions.Views
 
         private void SaveAppointment_Click(object sender, RoutedEventArgs e)
         {
-            ValidatePatientSelection();
-            ValidateDoctorSelection();
-            ValidateNurseSelection();
+            bool hasError = false;
 
+            // Reset all error labels
+            patientErrorLabel.Visibility = Visibility.Collapsed;
+            doctorErrorLabel.Visibility = Visibility.Collapsed;
+            dateErrorLabel.Visibility = Visibility.Collapsed;
+            reasonErrorLabel.Visibility = Visibility.Collapsed;
+            statusErrorLabel.Visibility = Visibility.Collapsed;
+            nurseErrorLabel.Visibility = Visibility.Collapsed;
+
+            // Validate patient selection
             if (selectedPatient == null)
             {
-                MessageBox.Show("Please select a patient.");
-                return;
+                patientErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
 
+            // Validate doctor selection
             if (selectedDoctor == null)
             {
-                MessageBox.Show("Please select a doctor.");
-                return;
+                doctorErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
 
+            // Validate date selection
             if (datePicker.SelectedDate == null)
             {
-                MessageBox.Show("Please select a date.");
-                return;
+                dateErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
 
+            // Validate reason field
             if (string.IsNullOrWhiteSpace(reasonTextBox.Text))
             {
-                MessageBox.Show("Please enter a reason for the appointment.");
-                return;
+                reasonErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
 
-            var statusString = statusComboBox.SelectedItem.ToString();
+            // Validate status selection
+            var statusString = statusComboBox.SelectedItem?.ToString();
             if (!Enum.TryParse(statusString, out Status appointmentStatus))
             {
-                MessageBox.Show("Invalid status selected.");
-                return;
+                statusErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
             }
 
+            // Validate nurse selection if necessary
             if ((appointmentStatus == Status.InProgress || appointmentStatus == Status.Completed) && selectedNurse == null)
             {
-                MessageBox.Show("Please select a nurse for the appointment.");
+                nurseErrorLabel.Visibility = Visibility.Visible;
+                hasError = true;
+            }
+
+            // If there are errors, stop here
+            if (hasError)
+            {
                 return;
             }
 
+            // If validation passed, proceed with saving the appointment
             var appointment = new Appointment
             {
                 PatientId = selectedPatient.PatientId.Value,
@@ -259,44 +278,27 @@ namespace J_JHealthSolutions.Views
                     appointment.AppointmentId = newAppointmentId;
                 }
 
-                if (selectedNurse != null)
-                {
-                    VisitDal visitDal = new VisitDal();
-                    var existingVisit = visitDal.GetVisitByAppointmentId(appointment.AppointmentId.Value);
-
-                    if (existingVisit == null)
-                    {
-                        Visit newVisit = new Visit
-                        {
-                            AppointmentId = appointment.AppointmentId.Value,
-                            PatientId = appointment.PatientId,
-                            DoctorId = appointment.DoctorId,
-                            NurseId = selectedNurse.NurseId,
-                            VisitDateTime = appointment.DateTime,
-                            VisitStatus = "InProgress",
-                            BloodPressureDiastolic = 0,
-                            BloodPressureSystolic = 0,
-                            Height = 0,
-                            Weight = 0,
-                            Pulse = 0,
-                            Temperature = 0,
-                            Symptoms = string.Empty,
-                            InitialDiagnosis = string.Empty,
-                            FinalDiagnosis = string.Empty
-                        };
-
-                        visitDal.AddVisit(newVisit);
-                    }
-                }
-
                 MessageBox.Show("Appointment saved successfully.");
                 this.DialogResult = true;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving appointment: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorDialog("Error", $"Error saving appointment: {ex.Message}");
             }
+        }
+
+        private void ShowErrorDialog(string title, string message)
+        {
+            var errorDialog = new Window
+            {
+                Title = title,
+                Content = new TextBlock { Text = message, Margin = new Thickness(10) },
+                Width = 300,
+                Height = 150,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            errorDialog.ShowDialog();
         }
 
 

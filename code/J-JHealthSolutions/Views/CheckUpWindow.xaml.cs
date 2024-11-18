@@ -4,38 +4,63 @@ using J_JHealthSolutions.Model;
 
 namespace J_JHealthSolutions.Views
 {
-    public partial class CheckUpWindow : Window {
-
-    /// <summary>
-    /// Interaction logic for CheckupWindow.xaml
-    /// </summary>
-    private Visit _visit;
-    private VisitDal _visitDal = new VisitDal();
-
-    /// <summary>
-    /// Initializes a new instance of CheckUpWindow with the selected visit details.
-    /// </summary>
-    /// <param name="visit">The visit to be displayed in the check-up window</param>
-    public CheckUpWindow(Visit visit)
+    public partial class CheckUpWindow : Window
     {
-        InitializeComponent();
-        _visit = visit;
-        PopulateCheckUpData();
-    }
 
-    /// <summary>
-    /// Populates the check-up fields with the existing visit data.
-    /// </summary>
-    private void PopulateCheckUpData()
-    {
-        weightTextBox.Text = _visit.Weight?.ToString();
-        heightTextBox.Text = _visit.Height?.ToString();
-        bpSystolicTextBox.Text = _visit.BloodPressureSystolic?.ToString();
-        bpDiastolicTextBox.Text = _visit.BloodPressureDiastolic?.ToString();
-        temperatureTextBox.Text = _visit.Temperature?.ToString();
-        pulseTextBox.Text = _visit.Pulse?.ToString();
-        symptomsTextBox.Text = _visit.Symptoms;
-    }
+        /// <summary>
+        /// Interaction logic for CheckupWindow.xaml
+        /// </summary>
+        private Visit _visit;
+        private VisitDal _visitDal = new VisitDal();
+
+        /// <summary>
+        /// Initializes a new instance of CheckUpWindow with the selected visit details.
+        /// </summary>
+        /// <param name="visit">The visit to be displayed in the check-up window</param>
+        public CheckUpWindow(Visit visit)
+        {
+            InitializeComponent();
+            _visit = visit;
+            PopulateCheckUpData();
+
+            // Set read-only mode based on status or final diagnosis
+            IsReadOnly = visit.VisitStatus == "Completed" || !string.IsNullOrWhiteSpace(visit.FinalDiagnosis);
+
+        }
+
+
+
+        /// <summary>
+        /// Populates the check-up fields with the existing visit data.
+        /// </summary>
+        private void PopulateCheckUpData()
+        {
+            weightTextBox.Text = _visit.Weight?.ToString();
+            heightTextBox.Text = _visit.Height?.ToString();
+            bpSystolicTextBox.Text = _visit.BloodPressureSystolic?.ToString();
+            bpDiastolicTextBox.Text = _visit.BloodPressureDiastolic?.ToString();
+            temperatureTextBox.Text = _visit.Temperature?.ToString();
+            pulseTextBox.Text = _visit.Pulse?.ToString();
+            symptomsTextBox.Text = _visit.Symptoms;
+        }
+
+        private bool _isReadOnly;
+        public bool IsReadOnly
+        {
+            get => _isReadOnly;
+            set
+            {
+                _isReadOnly = value;
+                // Update UI bindings
+                weightTextBox.IsReadOnly = value;
+                heightTextBox.IsReadOnly = value;
+                bpSystolicTextBox.IsReadOnly = value;
+                bpDiastolicTextBox.IsReadOnly = value;
+                temperatureTextBox.IsReadOnly = value;
+                pulseTextBox.IsReadOnly = value;
+                symptomsTextBox.IsReadOnly = value;
+            }
+        }
 
         /// <summary>
         /// Saves the check-up data back to the visit.
@@ -158,6 +183,8 @@ namespace J_JHealthSolutions.Views
                 // Save the updated visit to the database
                 _visitDal.UpdateVisit(_visit);
 
+                IsReadOnly = _visit.VisitStatus == "Completed" || !string.IsNullOrWhiteSpace(_visit.FinalDiagnosis);
+
                 MessageBox.Show("Check-up data saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;
                 this.Close();
@@ -173,9 +200,9 @@ namespace J_JHealthSolutions.Views
         /// Closes the window when the cancel button is clicked.
         /// </summary>
         private void Cancel_Click(object sender, RoutedEventArgs e)
-    {
-        this.DialogResult = false;
-        this.Close();
+        {
+            this.DialogResult = false;
+            this.Close();
+        }
     }
-}
 }

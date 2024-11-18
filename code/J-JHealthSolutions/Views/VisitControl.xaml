@@ -38,16 +38,16 @@
                     <TextBox Width="200" Text="{Binding SearchPatientName, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
-                <!-- Date of Birth Search -->
-                <StackPanel Orientation="Vertical" Margin="0,0,20,0">
-                    <TextBlock Text="Patient DOB:" FontWeight="Bold" />
-                    <DatePicker Width="200" SelectedDate="{Binding SearchDOB, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
-
                 <!-- Doctor Name Search -->
                 <StackPanel Orientation="Vertical" Margin="0,0,20,0">
                     <TextBlock Text="Doctor Name:" FontWeight="Bold" />
                     <TextBox Width="200" Text="{Binding SearchDoctorName, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <!-- Date of Birth Search -->
+                <StackPanel Orientation="Vertical" Margin="0,0,20,0">
+                    <TextBlock Text="Patient DOB:" FontWeight="Bold" />
+                    <DatePicker Width="200" SelectedDate="{Binding SearchDOB, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
                 <!-- Visit Date Search -->

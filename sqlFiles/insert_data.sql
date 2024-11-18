@@ -4,13 +4,15 @@ USE cs3230f24a;
 INSERT INTO `User` (username, `password`, `role`) VALUES 
 ('admin1', 'password123', 'Administrator'),
 ('doc1', 'password123', 'Doctor'),
+('doc2', 'password123', 'Doctor'),
 ('nurse1', 'password123', 'Nurse');
 
 -- Insert sample data into Employee table
 INSERT INTO Employee (user_id, f_name, l_name, dob, gender, address_1, city, state, zipcode, personal_phone) VALUES
-(1, 'John', 'Doe', '1980-01-15', 'M', '123 Main St', 'New York', 'NY', '10001', '555-1234'),
-(2, 'Jane', 'Smith', '1985-02-20', 'F', '456 Oak St', 'Los Angeles', 'CA', '90001', '555-5678'),
-(3, 'Alice', 'Johnson', '1990-03-30', 'F', '789 Pine St', 'Chicago', 'IL', '60601', '555-9012');
+(1, 'John', 'Doe', '1980-01-15', 'M', '123 Main St', 'New York', 'NY', '10001', '6785551234'),
+(2, 'Jane', 'Smith', '1985-02-20', 'F', '456 Oak St', 'Los Angeles', 'CA', '90001', '6785555678'),
+(3, 'Jason', 'Nunez', '1982-06-25', 'M', '321 Elm St', 'San Francisco', 'CA', '94101', '6785553333'),
+(4, 'Alice', 'Johnson', '1990-03-30', 'F', '789 Pine St', 'Chicago', 'IL', '60601', '6785559012');
 
 -- Insert sample data into Administrator tableadmin_id
 INSERT INTO Administrator (emp_id) VALUES
@@ -18,16 +20,17 @@ INSERT INTO Administrator (emp_id) VALUES
 
 -- Insert sample data into Doctor table
 INSERT INTO Doctor (emp_id) VALUES
-(2);
+(2),
+(3);
 
 -- Insert sample data into Nurse table
 INSERT INTO Nurse (emp_id) VALUES
-(3);
+(4);
 
 -- Insert sample data into Patient table
 INSERT INTO Patient (f_name, l_name, dob, gender, address_1, city, state, zipcode, phone, `active`) VALUES
-('Emily', 'Brown', '1995-04-10', 'F', '234 Maple St', 'Boston', 'MA', '02101', '555-1111', 1),
-('Michael', 'Green', '2000-05-15', 'M', '567 Birch St', 'Seattle', 'WA', '98101', '555-2222', 1);
+('Emily', 'Brown', '1995-04-10', 'F', '234 Maple St', 'Boston', 'MA', '02101', '6785551111', 1),
+('Michael', 'Green', '2000-05-15', 'M', '567 Birch St', 'Seattle', 'WA', '98101', '6785552222', 1);
 
 -- Insert sample data into Appointment table
 INSERT INTO Appointment (patient_id, doctor_id, `datetime`, reason, `status`) VALUES

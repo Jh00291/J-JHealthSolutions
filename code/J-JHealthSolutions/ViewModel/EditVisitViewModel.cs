@@ -25,7 +25,7 @@ namespace J_JHealthSolutions.ViewModels
             FinalDiagnosis = _visit.FinalDiagnosis;
             SelectedStatus = _visit.VisitStatus;
 
-            IsReadOnlyMode = _visit.VisitStatus == "Completed" || !string.IsNullOrWhiteSpace(_visit.FinalDiagnosis);
+            IsReadOnlyMode = _visit.VisitStatus == "Completed";
 
             Statuses = new ObservableCollection<string> { "Completed", "InProgress", "Pending" };
 
@@ -130,20 +130,30 @@ namespace J_JHealthSolutions.ViewModels
             if (!ValidateStatus())
                 return;
 
-            if (SelectedStatus == "Completed" || !string.IsNullOrWhiteSpace(FinalDiagnosis))
+            if (SelectedStatus == "Completed")
             {
+                if (!AreAllTestsPerformed())
+                {
+                    _dialogService.ShowMessage(
+                        "Cannot close the visit. Not all tests have been performed.",
+                        "Incomplete Tests");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(FinalDiagnosis))
+                {
+                    _dialogService.ShowMessage(
+                        "Please enter a final diagnosis before closing the visit.",
+                        "Final Diagnosis Required");
+                    return;
+                }
+
                 bool confirmation = _dialogService.ShowConfirmation(
-                    "Setting the status to 'Completed' or providing a final diagnosis will make the visit information permanent. Are you sure you want to save these changes?",
+                    "Setting the status to 'Completed' will make the visit information permanent. Are you sure you want to save these changes?",
                     "Confirm Save");
 
-                if (confirmation)
+                if (!confirmation)
                 {
-                    // Set status to "Completed" if user confirms
-                    SelectedStatus = "Completed";
-                }
-                else
-                {
-                    // If user cancels, stop the save process
                     return;
                 }
             }
@@ -156,7 +166,7 @@ namespace J_JHealthSolutions.ViewModels
                 _visit.VisitStatus = this.SelectedStatus;
                 visitDal.UpdateVisit(_visit);
 
-                if (!string.IsNullOrWhiteSpace(FinalDiagnosis))
+                if (SelectedStatus == Status.Completed.ToString())
                 {
                     IsReadOnlyMode = true;
                 }
@@ -167,18 +177,25 @@ namespace J_JHealthSolutions.ViewModels
             }
             catch (Exception ex)
             {
-                _dialogService.ShowConfirmation($"Error saving visit: {ex.Message}", "Error");
+                _dialogService.ShowMessage($"Error saving visit: {ex.Message}", "Error");
             }
         }
 
         private bool CanSave(object parameter)
         {
-            return !IsReadOnlyMode && !string.IsNullOrEmpty(SelectedStatus);
+            return !IsReadOnlyMode;
         }
 
         private void Cancel(object parameter)
         {
             CloseWindow();
+        }
+
+        private bool AreAllTestsPerformed()
+        {
+            var allTestOrders = TestOrderDal.GetTestOrdersFromVisit((int)_visit.VisitId);
+
+            return allTestOrders.All(to => to.PerformedDateTime.HasValue && to.Result.HasValue);
         }
 
         private void EditTestOrder(object parameter)

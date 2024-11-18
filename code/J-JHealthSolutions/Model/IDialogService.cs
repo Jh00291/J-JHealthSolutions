@@ -10,6 +10,7 @@ namespace J_JHealthSolutions.Model
     {
         bool ShowConfirmation(string message, string caption);
         bool ShowConfirmationDialog(string title, string message);
+        void ShowMessage(string message, string caption);
     }
 
 }

@@ -56,32 +56,35 @@
 
         <!-- DataGrid for displaying visits -->
         <DataGrid ItemsSource="{Binding Visits}"
-                  SelectedItem="{Binding SelectedVisit, Mode=TwoWay}"
-                  AutoGenerateColumns="False"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  IsReadOnly="True"
-                  Margin="0,0,0,10"
-                  Grid.Row="1"
-                  ColumnWidth="Auto">
+          SelectedItem="{Binding SelectedVisit, Mode=TwoWay}"
+          AutoGenerateColumns="False"
+          SelectionMode="Single"
+          SelectionUnit="FullRow"
+          IsReadOnly="True"
+          Margin="0,0,0,10"
+          Grid.Row="1"
+          ColumnWidth="*"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Visit ID" Binding="{Binding VisitId}" />
-                <DataGridTextColumn Header="Appointment ID" Binding="{Binding AppointmentId}" />
-                <DataGridTextColumn Header="Patient ID" Binding="{Binding PatientId}" />
-                <DataGridTextColumn Header="Patient Full Name" Binding="{Binding PatientFullName}" />
-                <DataGridTextColumn Header="Patient DOB" Binding="{Binding PatientDOB, StringFormat={}{0:MM/dd/yyyy}}" />
-                <DataGridTextColumn Header="Nurse Full Name" Binding="{Binding NurseFullName}" />
-                <DataGridTextColumn Header="Doctor ID" Binding="{Binding DoctorId}" />
-                <DataGridTextColumn Header="Doctor Full Name" Binding="{Binding DoctorFullName}" />
-                <DataGridTextColumn Header="# of Tests" Binding="{Binding NumberOfTests}" />
-                <DataGridTextColumn Header="# of Abnormal Tests" Binding="{Binding NumberOfAbnormalTests}" />
-                <DataGridTextColumn Header="Visit DateTime" Binding="{Binding VisitDateTime, StringFormat={}{0:MM/dd/yyyy HH:mm}}" />
-                <DataGridTextColumn Header="Initial Diagnosis" Binding="{Binding InitialDiagnosis}" />
-                <DataGridTextColumn Header="Final Diagnosis" Binding="{Binding FinalDiagnosis}" />
-                <DataGridTextColumn Header="Status" Binding="{Binding VisitStatus}" />
+                <!-- Fixed Width Columns -->
+                <DataGridTextColumn Header="Visit ID" Binding="{Binding VisitId}" Width="60" />
+
+                <!-- Flexible Width Columns -->
+                <DataGridTextColumn Header="Patient Name" Binding="{Binding PatientFullName}" Width="2*" />
+                <DataGridTextColumn Header="Patient DOB" Binding="{Binding PatientDOB, StringFormat={}{0:MM/dd/yyyy}}" Width="120" />
+                <DataGridTextColumn Header="Nurse Name" Binding="{Binding NurseFullName}" Width="1.5*" />
+                <DataGridTextColumn Header="Doctor ID" Binding="{Binding DoctorId}" Width="60" />
+                <DataGridTextColumn Header="Doctor Name" Binding="{Binding DoctorFullName}" Width="1.5*" />
+                <DataGridTextColumn Header="# of Abnormal Tests" Binding="{Binding NumberOfAbnormalTests}" Width="130" />
+                <DataGridTextColumn Header="Visit DateTime" Binding="{Binding VisitDateTime, StringFormat={}{0:MM/dd/yyyy HH:mm}}" Width="150" />
+                <DataGridTextColumn Header="Initial Diagnosis" Binding="{Binding InitialDiagnosis}" Width="2*" />
+                <DataGridTextColumn Header="Final Diagnosis" Binding="{Binding FinalDiagnosis}" Width="2*" />
+                <DataGridTextColumn Header="Status" Binding="{Binding VisitStatus}" Width="100" />
             </DataGrid.Columns>
         </DataGrid>
+
 
         <!-- Buttons for Edit and Check Up Information -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">

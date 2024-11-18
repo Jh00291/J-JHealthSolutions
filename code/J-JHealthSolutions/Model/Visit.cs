@@ -148,6 +148,30 @@ namespace J_JHealthSolutions.Model
             }
         }
 
+        private int? _numberOfTests;
+        public int? NumberOfTests
+        {
+            get => _numberOfTests;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Number of tests cannot be negative.");
+                _numberOfTests = value;
+            }
+        }
+
+        private int? _numberOfAbnormalTests;
+        public int? NumberOfAbnormalTests
+        {
+            get => _numberOfAbnormalTests;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Number of abnormal tests cannot be negative.");
+                _numberOfAbnormalTests = value;
+            }
+        }
+
         /// <summary>
         /// Default constructor for the Visit class.
         /// </summary>

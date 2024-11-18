@@ -280,5 +280,55 @@ namespace J_JHealthSolutions.DAL
             return affectedRows > 0;
         }
 
+        /// <summary>
+        /// Retrieves the total number of tests for a given VisitID.
+        /// </summary>
+        /// <param name="visitID">The ID of the visit.</param>
+        /// <returns>The total number of tests.</returns>
+        public static int GetNumberOfTestsForVisit(int visitID)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+                SELECT COUNT(*) 
+                FROM TestOrder 
+                WHERE visit_id = @VisitID;
+            ";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@VisitID", visitID);
+
+            int count = connection.ExecuteScalar<int>(query, parameters);
+            connection.Close();
+
+            return count;
+        }
+
+        /// <summary>
+        /// Retrieves the number of abnormal tests for a given VisitID.
+        /// </summary>
+        /// <param name="visitID">The ID of the visit.</param>
+        /// <returns>The number of abnormal tests.</returns>
+        public static int GetNumberOfAbnormalTestsForVisit(int visitID)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+                SELECT COUNT(*) 
+                FROM TestOrder 
+                WHERE visit_id = @VisitID AND abnormal = 1;
+            ";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@VisitID", visitID);
+
+            int abnormalCount = connection.ExecuteScalar<int>(query, parameters);
+            connection.Close();
+
+            return abnormalCount;
+        }
+
     }
 }

@@ -98,7 +98,16 @@ namespace J_JHealthSolutions.ViewModel
         private void LoadVisits()
         {
             var visits = _visitDal.GetVisits();
-            Visits = new ObservableCollection<Visit>(visits);
+            var visitsWithCounts = new ObservableCollection<Visit>();
+
+            foreach (var visit in visits)
+            {
+                visit.NumberOfTests = TestOrderDal.GetNumberOfTestsForVisit((int)visit.VisitId);
+                visit.NumberOfAbnormalTests = TestOrderDal.GetNumberOfAbnormalTestsForVisit((int)visit.VisitId);
+                visitsWithCounts.Add(visit);
+            }
+
+            Visits = visitsWithCounts;
         }
 
         private void ExecuteSearch(object parameter)

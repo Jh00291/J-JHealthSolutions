@@ -4,25 +4,32 @@
         Title="Check-Up" Height="400" Width="400">
     <Grid>
         <Label Content="Weight (kg):" HorizontalAlignment="Left" Margin="27,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="weightTextBox" HorizontalAlignment="Left" Margin="175,14,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="weightTextBox" HorizontalAlignment="Left" Margin="175,14,0,0" 
+         VerticalAlignment="Top" Width="120" IsReadOnly="{Binding IsReadOnly}"/>
 
         <Label Content="Height (cm):" HorizontalAlignment="Left" Margin="30,50,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="heightTextBox" HorizontalAlignment="Left" Margin="175,54,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="heightTextBox" HorizontalAlignment="Left" Margin="175,54,0,0" 
+         VerticalAlignment="Top" Width="120" IsReadOnly="{Binding IsReadOnly}"/>
 
         <Label Content="Blood Pressure (Systolic):" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="bpSystolicTextBox" HorizontalAlignment="Left" Margin="175,94,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="bpSystolicTextBox" HorizontalAlignment="Left" Margin="175,94,0,0" 
+         VerticalAlignment="Top" Width="120" IsReadOnly="{Binding IsReadOnly}"/>
 
         <Label Content="Blood Pressure (Diastolic):" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="bpDiastolicTextBox" HorizontalAlignment="Left" Margin="175,134,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="bpDiastolicTextBox" HorizontalAlignment="Left" Margin="175,134,0,0" 
+         VerticalAlignment="Top" Width="120" IsReadOnly="{Binding IsReadOnly}"/>
 
         <Label Content="Temperature (°C):" HorizontalAlignment="Left" Margin="24,170,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="temperatureTextBox" HorizontalAlignment="Left" Margin="175,174,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="temperatureTextBox" HorizontalAlignment="Left" Margin="175,174,0,0" 
+         VerticalAlignment="Top" Width="120" IsReadOnly="{Binding IsReadOnly}"/>
 
         <Label Content="Pulse:" HorizontalAlignment="Left" Margin="47,210,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="pulseTextBox" HorizontalAlignment="Left" Margin="175,214,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="pulseTextBox" HorizontalAlignment="Left" Margin="175,214,0,0" 
+         VerticalAlignment="Top" Width="120" IsReadOnly="{Binding IsReadOnly}"/>
 
         <Label Content="Symptoms:" HorizontalAlignment="Left" Margin="30,249,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="symptomsTextBox" HorizontalAlignment="Left" Margin="150,250,0,0" VerticalAlignment="Top" Width="200" Height="50"/>
+        <TextBox x:Name="symptomsTextBox" HorizontalAlignment="Left" Margin="150,250,0,0" 
+         VerticalAlignment="Top" Width="200" Height="50" IsReadOnly="{Binding IsReadOnly}"/>
 
         <Button Content="Save" HorizontalAlignment="Left" Margin="80,320,0,0" VerticalAlignment="Top" Width="100" Click="SaveCheckUp_Click"/>
         <Button Content="Cancel" HorizontalAlignment="Right" Margin="0,320,80,0" VerticalAlignment="Top" Width="100" Click="Cancel_Click"/>

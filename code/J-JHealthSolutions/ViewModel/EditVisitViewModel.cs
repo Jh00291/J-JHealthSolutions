@@ -136,8 +136,14 @@ namespace J_JHealthSolutions.ViewModels
                     "Setting the status to 'Completed' or providing a final diagnosis will make the visit information permanent. Are you sure you want to save these changes?",
                     "Confirm Save");
 
-                if (!confirmation)
+                if (confirmation)
                 {
+                    // Set status to "Completed" if user confirms
+                    SelectedStatus = "Completed";
+                }
+                else
+                {
+                    // If user cancels, stop the save process
                     return;
                 }
             }

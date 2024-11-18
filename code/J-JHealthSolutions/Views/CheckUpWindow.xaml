@@ -31,7 +31,7 @@
         <TextBox x:Name="symptomsTextBox" HorizontalAlignment="Left" Margin="150,250,0,0" 
          VerticalAlignment="Top" Width="200" Height="50" IsReadOnly="{Binding IsReadOnly}"/>
 
-        <Button Content="Save" HorizontalAlignment="Left" Margin="80,320,0,0" VerticalAlignment="Top" Width="100" Click="SaveCheckUp_Click"/>
+        <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" Margin="80,320,0,0" VerticalAlignment="Top" Width="100" Click="SaveCheckUp_Click" IsEnabled="{Binding IsSaveEnabled}"/>
         <Button Content="Cancel" HorizontalAlignment="Right" Margin="0,320,80,0" VerticalAlignment="Top" Width="100" Click="Cancel_Click"/>
     </Grid>
 </Window>

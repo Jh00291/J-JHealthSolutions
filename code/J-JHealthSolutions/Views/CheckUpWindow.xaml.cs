@@ -26,6 +26,8 @@ namespace J_JHealthSolutions.Views
             // Set read-only mode based on status or final diagnosis
             IsReadOnly = visit.VisitStatus == "Completed" || !string.IsNullOrWhiteSpace(visit.FinalDiagnosis);
 
+            saveButton.IsEnabled = !IsReadOnly;
+
         }
 
 
@@ -59,6 +61,7 @@ namespace J_JHealthSolutions.Views
                 temperatureTextBox.IsReadOnly = value;
                 pulseTextBox.IsReadOnly = value;
                 symptomsTextBox.IsReadOnly = value;
+                saveButton.IsEnabled = !value;
             }
         }
 

@@ -200,6 +200,9 @@ namespace J_JHealthSolutions.Views
             statusErrorLabel.Visibility = Visibility.Collapsed;
             nurseErrorLabel.Visibility = Visibility.Collapsed;
 
+            // Reset default error messages
+            dateErrorLabel.Content = "Please select a date.";
+
             // Validate patient selection
             if (selectedPatient == null)
             {
@@ -243,7 +246,36 @@ namespace J_JHealthSolutions.Views
                 hasError = true;
             }
 
-            // If there are errors, stop here
+            // If initial validations have errors, stop here
+            if (hasError)
+            {
+                return;
+            }
+
+            // Proceed with additional date validations
+            DateTime selectedDate = datePicker.SelectedDate.Value;
+
+            if (!isEdit) // Adding a new appointment
+            {
+                if (selectedDate.Date < DateTime.Today)
+                {
+                    dateErrorLabel.Content = "The date cannot be in the past.";
+                    dateErrorLabel.Visibility = Visibility.Visible;
+                    hasError = true;
+                }
+            }
+
+            if (appointmentStatus == Status.InProgress)
+            {
+                if (selectedDate.Date > DateTime.Today)
+                {
+                    dateErrorLabel.Content = "The date cannot be in the future for an appointment in progress.";
+                    dateErrorLabel.Visibility = Visibility.Visible;
+                    hasError = true;
+                }
+            }
+
+            // If there are errors after date validations, stop here
             if (hasError)
             {
                 return;
@@ -262,6 +294,7 @@ namespace J_JHealthSolutions.Views
             SaveAppointment(appointment);
             this.Close();
         }
+
 
         private void SaveAppointment(Appointment appointment)
         {

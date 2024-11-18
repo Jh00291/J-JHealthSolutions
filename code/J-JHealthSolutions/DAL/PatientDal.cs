@@ -11,40 +11,45 @@ namespace J_JHealthSolutions.DAL
     public class PatientDal
     {
         /// <summary>
-        /// Adds a new patient to the database.
+        /// Adds a new patient to the database using the InsertPatient stored procedure.
         /// </summary>
         /// <param name="patient">The Patient object to add.</param>
-        /// <returns>The Patient object with the generated PatientId.</returns>
+        /// <returns>The generated PatientId for the new patient.</returns>
         public int AddPatient(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            var query = @"
-                INSERT INTO Patient (f_name, l_name, dob, gender, address_1, address_2, city, state, zipcode, phone, active)
-                VALUES (@FName, @LName, @DOB, @Gender, @Address1, @Address2, @City, @State, @Zipcode, @Phone, @Active);
-                SELECT LAST_INSERT_ID();
-            ";
+            var parameters = new DynamicParameters();
+            parameters.Add("p_f_name", patient.FName);
+            parameters.Add("p_l_name", patient.LName);
+            parameters.Add("p_dob", patient.DOB);
+            parameters.Add("p_gender", patient.Gender);
+            parameters.Add("p_address_1", patient.Address1);
+            parameters.Add("p_address_2", string.IsNullOrWhiteSpace(patient.Address2) ? null : patient.Address2);
+            parameters.Add("p_city", patient.City);
+            parameters.Add("p_state", patient.State);
+            parameters.Add("p_zipcode", patient.Zipcode);
+            parameters.Add("p_phone", patient.Phone);
+            parameters.Add("p_active", patient.Active);
 
-            var parameters = new
+            try
             {
-                patient.FName,
-                patient.LName,
-                patient.DOB,
-                patient.Gender,
-                patient.Address1,
-                Address2 = patient.Address2 ?? (object)DBNull.Value,
-                patient.City,
-                patient.State,
-                patient.Zipcode,
-                patient.Phone,
-                patient.Active
-            };
+                // Call the stored procedure and return the generated PatientId
+                var generatedId = connection.QuerySingle<int>(
+                    "InsertPatient", // Stored procedure name
+                    parameters,
+                    commandType: CommandType.StoredProcedure
+                );
 
-            var generatedId = connection.ExecuteScalar<int>(query, parameters);
-            patient.PatientId = generatedId;
-
-            return generatedId;
+                patient.PatientId = generatedId;
+                return generatedId;
+            }
+            catch (Exception ex)
+            {
+                // Log the error or throw an appropriate exception
+                throw new Exception("Error occurred while adding a patient: " + ex.Message, ex);
+            }
         }
 
         /// <summary>

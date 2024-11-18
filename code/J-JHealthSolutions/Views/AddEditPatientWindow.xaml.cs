@@ -138,49 +138,60 @@ namespace J_JHealthSolutions.Views
                 return;
             }
 
-            // Proceed with saving the patient data
-            if (_patient == null || _patient.PatientId == null)
+            try
             {
-                // Add new patient
-                var newPatient = new Patient
+                // Add or update the patient
+                if (_patient == null || _patient.PatientId == null)
                 {
-                    FName = firstNameTextBox.Text,
-                    LName = lastNameTextBox.Text,
-                    DOB = dobDatePicker.SelectedDate.Value,
-                    Gender = genderComboBox.Text[0],
-                    Address1 = address1TextBox.Text,
-                    Address2 = address2TextBox.Text,
-                    City = cityTextBox.Text,
-                    State = stateComboBox.Text,
-                    Zipcode = zipcodeTextBox.Text,
-                    Phone = phoneTextBox.Text,
-                    Active = activeCheckBox.IsChecked ?? false
-                };
+                    // Add new patient
+                    var newPatient = new Patient
+                    {
+                        FName = firstNameTextBox.Text,
+                        LName = lastNameTextBox.Text,
+                        DOB = dobDatePicker.SelectedDate.Value,
+                        Gender = genderComboBox.Text[0],
+                        Address1 = address1TextBox.Text,
+                        Address2 = string.IsNullOrWhiteSpace(address2TextBox.Text) ? null : address2TextBox.Text,
+                        City = cityTextBox.Text,
+                        State = stateComboBox.Text,
+                        Zipcode = zipcodeTextBox.Text,
+                        Phone = phoneTextBox.Text,
+                        Active = activeCheckBox.IsChecked ?? false
+                    };
 
-                _patientDal.AddPatient(newPatient);
-                ShowSuccessDialog("Patient added successfully.");
+                    int generatedId = _patientDal.AddPatient(newPatient);
+                }
+                else
+                {
+                    // Update existing patient
+                    _patient.FName = firstNameTextBox.Text;
+                    _patient.LName = lastNameTextBox.Text;
+                    _patient.DOB = dobDatePicker.SelectedDate.Value;
+                    _patient.Gender = genderComboBox.Text[0];
+                    _patient.Address1 = address1TextBox.Text;
+                    _patient.Address2 = string.IsNullOrWhiteSpace(address2TextBox.Text) ? null : address2TextBox.Text;
+                    _patient.City = cityTextBox.Text;
+                    _patient.State = stateComboBox.Text;
+                    _patient.Zipcode = zipcodeTextBox.Text;
+                    _patient.Phone = phoneTextBox.Text;
+                    _patient.Active = activeCheckBox.IsChecked ?? false;
+
+                    bool success = _patientDal.UpdatePatient(_patient);
+                    if (!success)
+                    {
+                        ShowErrorDialog("Error", "Failed to update patient.");
+                    }
+                }
+
+                // Close the window if operation is successful
+                this.DialogResult = true;
+                this.Close();
             }
-            else
+            catch (Exception ex)
             {
-                // Update existing patient
-                _patient.FName = firstNameTextBox.Text;
-                _patient.LName = lastNameTextBox.Text;
-                _patient.DOB = dobDatePicker.SelectedDate.Value;
-                _patient.Gender = !string.IsNullOrEmpty(genderComboBox.Text) ? genderComboBox.Text[0] : 'U';
-                _patient.Address1 = address1TextBox.Text;
-                _patient.Address2 = address2TextBox.Text;
-                _patient.City = cityTextBox.Text;
-                _patient.State = stateComboBox.Text;
-                _patient.Zipcode = zipcodeTextBox.Text;
-                _patient.Phone = phoneTextBox.Text;
-                _patient.Active = activeCheckBox.IsChecked.Value;
-
-                _patientDal.UpdatePatient(_patient);
-                ShowSuccessDialog("Patient updated successfully.");
+                // Show detailed error message
+                ShowErrorDialog("Error Saving Patient", $"An error occurred: {ex.Message}");
             }
-
-            this.DialogResult = true;
-            this.Close();
         }
 
 

@@ -10,11 +10,14 @@ INSERT INTO `User` (username, `password`, `role`) VALUES
 INSERT INTO Employee (user_id, f_name, l_name, dob, gender, address_1, city, state, zipcode, personal_phone) VALUES
 (1, 'John', 'Doe', '1980-01-15', 'M', '123 Main St', 'New York', 'NY', '10001', '7705551234'),
 (2, 'Jane', 'Smith', '1985-02-20', 'F', '456 Oak St', 'Los Angeles', 'CA', '90001', '2565555678'),
-(3, 'Alice', 'Johnson', '1990-03-30', 'F', '789 Pine St', 'Chicago', 'IL', '60601', '4705559012');
+(3, 'Alice', 'Johnson', '1990-03-30', 'F', '789 Pine St', 'Chicago', 'IL', '60601', '4705559012'),
+(4, 'Vitor', 'Desantos', '1998-03-30', 'M', '530 Sour St', 'Carrollton', 'GA', '30117', '4704702266');
+
 
 -- Insert sample data into Administrator tableadmin_id
 INSERT INTO Administrator (emp_id) VALUES
-(1);
+(1),
+(4);
 
 -- Insert sample data into Doctor table
 INSERT INTO Doctor (emp_id) VALUES
@@ -28,6 +31,7 @@ INSERT INTO Nurse (emp_id) VALUES
 INSERT INTO Patient (f_name, l_name, dob, gender, address_1, city, state, zipcode, phone, `active`) VALUES
 ('Emily', 'Brown', '1995-04-10', 'F', '234 Maple St', 'Boston', 'MA', '02101', '2565551111', 1),
 ('Michael', 'Green', '2000-05-15', 'M', '567 Birch St', 'Seattle', 'WA', '98101', '7705552222', 1);
+
 
 -- Insert sample data into Appointment table
 INSERT INTO Appointment (patient_id, doctor_id, `datetime`, reason, `status`) VALUES

@@ -1,6 +1,8 @@
-﻿using System;
+﻿// EditVisitViewModel.cs
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using J_JHealthSolutions.DAL;
@@ -12,7 +14,6 @@ namespace J_JHealthSolutions.ViewModels
     public class EditVisitViewModel : INotifyPropertyChanged
     {
         private Visit _visit;
-
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly IDialogService _dialogService;
 
@@ -31,15 +32,32 @@ namespace J_JHealthSolutions.ViewModels
 
             TestOrders = new ObservableCollection<TestOrder>(TestOrderDal.GetTestOrdersFromVisit((int)visit.VisitId));
 
+            // Initialize Check-Up Properties
+            Weight = _visit.Weight;
+            Height = _visit.Height;
+            BloodPressureSystolic = _visit.BloodPressureSystolic;
+            BloodPressureDiastolic = _visit.BloodPressureDiastolic;
+            Temperature = _visit.Temperature;
+            Pulse = _visit.Pulse;
+            Symptoms = _visit.Symptoms;
+
+            // Initialize Commands
             SaveCommand = new RelayCommand(Save, CanSave);
             CancelCommand = new RelayCommand(Cancel);
             EditTestOrderCommand = new RelayCommand(EditTestOrder, CanEditOrDeleteTestOrder);
             DeleteTestOrderCommand = new RelayCommand(DeleteTestOrder, CanEditOrDeleteTestOrder);
             AddTestOrderCommand = new RelayCommand(AddTestOrder, CanSave);
-            _dialogService=dialogService;
+
+            // Initialize Error Visibility Flags
+            IsWeightErrorVisible = false;
+            IsHeightErrorVisible = false;
+            IsBPSystolicErrorVisible = false;
+            IsBPDiastolicErrorVisible = false;
+            IsTemperatureErrorVisible = false;
+            IsPulseErrorVisible = false;
         }
 
-        #region Properties
+        #region Main Visit Properties
 
         private string _initialDiagnosis;
         public string InitialDiagnosis
@@ -52,7 +70,7 @@ namespace J_JHealthSolutions.ViewModels
             }
         }
 
-        public bool IsStatusEnabled => !_isReadOnlyMode;
+        public bool IsStatusEnabled => !IsReadOnlyMode;
         private bool _isReadOnlyMode;
         public bool IsReadOnlyMode
         {
@@ -112,6 +130,219 @@ namespace J_JHealthSolutions.ViewModels
 
         #endregion
 
+        #region Check-Up Properties
+
+        private decimal? _weight;
+        public decimal? Weight
+        {
+            get => _weight;
+            set
+            {
+                _weight = value;
+                OnPropertyChanged(nameof(Weight));
+            }
+        }
+
+        private string _weightError;
+        public string WeightError
+        {
+            get => _weightError;
+            set
+            {
+                _weightError = value;
+                OnPropertyChanged(nameof(WeightError));
+            }
+        }
+
+        private bool _isWeightErrorVisible;
+        public bool IsWeightErrorVisible
+        {
+            get => _isWeightErrorVisible;
+            set
+            {
+                _isWeightErrorVisible = value;
+                OnPropertyChanged(nameof(IsWeightErrorVisible));
+            }
+        }
+
+        private decimal? _height;
+        public decimal? Height
+        {
+            get => _height;
+            set
+            {
+                _height = value;
+                OnPropertyChanged(nameof(Height));
+            }
+        }
+
+        private string _heightError;
+        public string HeightError
+        {
+            get => _heightError;
+            set
+            {
+                _heightError = value;
+                OnPropertyChanged(nameof(HeightError));
+            }
+        }
+
+        private bool _isHeightErrorVisible;
+        public bool IsHeightErrorVisible
+        {
+            get => _isHeightErrorVisible;
+            set
+            {
+                _isHeightErrorVisible = value;
+                OnPropertyChanged(nameof(IsHeightErrorVisible));
+            }
+        }
+
+        private int? _bloodPressureSystolic;
+        public int? BloodPressureSystolic
+        {
+            get => _bloodPressureSystolic;
+            set
+            {
+                _bloodPressureSystolic = value;
+                OnPropertyChanged(nameof(BloodPressureSystolic));
+            }
+        }
+
+        private string _bpsystolicError;
+        public string BPSystolicError
+        {
+            get => _bpsystolicError;
+            set
+            {
+                _bpsystolicError = value;
+                OnPropertyChanged(nameof(BPSystolicError));
+            }
+        }
+
+        private bool _isBPSystolicErrorVisible;
+        public bool IsBPSystolicErrorVisible
+        {
+            get => _isBPSystolicErrorVisible;
+            set
+            {
+                _isBPSystolicErrorVisible = value;
+                OnPropertyChanged(nameof(IsBPSystolicErrorVisible));
+            }
+        }
+
+        private int? _bloodPressureDiastolic;
+        public int? BloodPressureDiastolic
+        {
+            get => _bloodPressureDiastolic;
+            set
+            {
+                _bloodPressureDiastolic = value;
+                OnPropertyChanged(nameof(BloodPressureDiastolic));
+            }
+        }
+
+        private string _bpdiastolicError;
+        public string BPDiastolicError
+        {
+            get => _bpdiastolicError;
+            set
+            {
+                _bpdiastolicError = value;
+                OnPropertyChanged(nameof(BPDiastolicError));
+            }
+        }
+
+        private bool _isBPDiastolicErrorVisible;
+        public bool IsBPDiastolicErrorVisible
+        {
+            get => _isBPDiastolicErrorVisible;
+            set
+            {
+                _isBPDiastolicErrorVisible = value;
+                OnPropertyChanged(nameof(IsBPDiastolicErrorVisible));
+            }
+        }
+
+        private decimal? _temperature;
+        public decimal? Temperature
+        {
+            get => _temperature;
+            set
+            {
+                _temperature = value;
+                OnPropertyChanged(nameof(Temperature));
+            }
+        }
+
+        private string _temperatureError;
+        public string TemperatureError
+        {
+            get => _temperatureError;
+            set
+            {
+                _temperatureError = value;
+                OnPropertyChanged(nameof(TemperatureError));
+            }
+        }
+
+        private bool _isTemperatureErrorVisible;
+        public bool IsTemperatureErrorVisible
+        {
+            get => _isTemperatureErrorVisible;
+            set
+            {
+                _isTemperatureErrorVisible = value;
+                OnPropertyChanged(nameof(IsTemperatureErrorVisible));
+            }
+        }
+
+        private int? _pulse;
+        public int? Pulse
+        {
+            get => _pulse;
+            set
+            {
+                _pulse = value;
+                OnPropertyChanged(nameof(Pulse));
+            }
+        }
+
+        private string _pulseError;
+        public string PulseError
+        {
+            get => _pulseError;
+            set
+            {
+                _pulseError = value;
+                OnPropertyChanged(nameof(PulseError));
+            }
+        }
+
+        private bool _isPulseErrorVisible;
+        public bool IsPulseErrorVisible
+        {
+            get => _isPulseErrorVisible;
+            set
+            {
+                _isPulseErrorVisible = value;
+                OnPropertyChanged(nameof(IsPulseErrorVisible));
+            }
+        }
+
+        private string _symptoms;
+        public string Symptoms
+        {
+            get => _symptoms;
+            set
+            {
+                _symptoms = value;
+                OnPropertyChanged(nameof(Symptoms));
+            }
+        }
+
+        #endregion
+
         #region Commands
 
         public ICommand SaveCommand { get; }
@@ -125,6 +356,7 @@ namespace J_JHealthSolutions.ViewModels
         #region Command Methods
 
         public event EventHandler VisitUpdated;
+
         private void Save(object parameter)
         {
             if (!ValidateStatus())
@@ -158,15 +390,29 @@ namespace J_JHealthSolutions.ViewModels
                 }
             }
 
+            // Validate Check-Up Information
+            if (!ValidateCheckUpInformation())
+                return;
+
             try
             {
                 var visitDal = new VisitDal();
                 _visit.InitialDiagnosis = this.InitialDiagnosis;
                 _visit.FinalDiagnosis = this.FinalDiagnosis;
                 _visit.VisitStatus = this.SelectedStatus;
+
+                // Assign Check-Up Data
+                _visit.Weight = this.Weight;
+                _visit.Height = this.Height;
+                _visit.BloodPressureSystolic = this.BloodPressureSystolic;
+                _visit.BloodPressureDiastolic = this.BloodPressureDiastolic;
+                _visit.Temperature = this.Temperature;
+                _visit.Pulse = this.Pulse;
+                _visit.Symptoms = this.Symptoms;
+
                 visitDal.UpdateVisit(_visit);
 
-                if (SelectedStatus == Status.Completed.ToString())
+                if (SelectedStatus == "Completed")
                 {
                     IsReadOnlyMode = true;
                     AppointmentDal.CompleteAppointment((int)_visit.VisitId);
@@ -195,8 +441,7 @@ namespace J_JHealthSolutions.ViewModels
         private bool AreAllTestsPerformed()
         {
             var allTestOrders = TestOrderDal.GetTestOrdersFromVisit((int)_visit.VisitId);
-
-            return allTestOrders.All(to => to.PerformedDateTime.HasValue && to.Result.HasValue);
+            return allTestOrders.All(to => to.PerformedDateTime.HasValue && !string.IsNullOrWhiteSpace(to.ResultWithUnit));
         }
 
         private void EditTestOrder(object parameter)
@@ -230,26 +475,25 @@ namespace J_JHealthSolutions.ViewModels
                     }
                     else
                     {
-                        _dialogService.ShowConfirmation("Failed to delete the test order from the database.", "Error");
+                        _dialogService.ShowMessage("Failed to delete the test order from the database.", "Error");
                     }
                 }
                 catch (Exception ex)
                 {
-                    _dialogService.ShowConfirmation($"Error deleting test order: {ex.Message}", "Error");
+                    _dialogService.ShowMessage($"Error deleting test order: {ex.Message}", "Error");
                 }
             }
         }
 
         private void AddTestOrder(object parameter)
         {
-           bool? dialogResult = new AddEditTestOrder(_visit).ShowDialog();
-           if (dialogResult == true)
-           {
-               TestOrders = new ObservableCollection<TestOrder>(TestOrderDal.GetTestOrdersFromVisit((int)_visit.VisitId));
-               OnPropertyChanged(nameof(TestOrders));
+            bool? dialogResult = new AddEditTestOrder(_visit).ShowDialog();
+            if (dialogResult == true)
+            {
+                TestOrders = new ObservableCollection<TestOrder>(TestOrderDal.GetTestOrdersFromVisit((int)_visit.VisitId));
+                OnPropertyChanged(nameof(TestOrders));
             }
         }
-
 
         private bool CanEditOrDeleteTestOrder(object parameter)
         {
@@ -264,10 +508,125 @@ namespace J_JHealthSolutions.ViewModels
         {
             if (string.IsNullOrEmpty(SelectedStatus))
             {
-                _dialogService.ShowConfirmation("Please select a status for the visit.", "Error");
+                _dialogService.ShowMessage("Please select a status for the visit.", "Error");
                 return false;
             }
             return true;
+        }
+
+        private bool ValidateCheckUpInformation()
+        {
+            bool hasError = false;
+
+            // Validate Weight
+            if (!Weight.HasValue)
+            {
+                WeightError = "Weight is required.";
+                IsWeightErrorVisible = true;
+                hasError = true;
+            }
+            else if (Weight <= 0)
+            {
+                WeightError = "Weight must be a positive number.";
+                IsWeightErrorVisible = true;
+                hasError = true;
+            }
+            else
+            {
+                IsWeightErrorVisible = false;
+            }
+
+            // Validate Height
+            if (!Height.HasValue)
+            {
+                HeightError = "Height is required.";
+                IsHeightErrorVisible = true;
+                hasError = true;
+            }
+            else if (Height <= 0)
+            {
+                HeightError = "Height must be a positive number.";
+                IsHeightErrorVisible = true;
+                hasError = true;
+            }
+            else
+            {
+                IsHeightErrorVisible = false;
+            }
+
+            // Validate Blood Pressure Systolic
+            if (!BloodPressureSystolic.HasValue)
+            {
+                BPSystolicError = "Systolic blood pressure is required.";
+                IsBPSystolicErrorVisible = true;
+                hasError = true;
+            }
+            else if (BloodPressureSystolic <= 0)
+            {
+                BPSystolicError = "Systolic blood pressure must be a positive number.";
+                IsBPSystolicErrorVisible = true;
+                hasError = true;
+            }
+            else
+            {
+                IsBPSystolicErrorVisible = false;
+            }
+
+            // Validate Blood Pressure Diastolic
+            if (!BloodPressureDiastolic.HasValue)
+            {
+                BPDiastolicError = "Diastolic blood pressure is required.";
+                IsBPDiastolicErrorVisible = true;
+                hasError = true;
+            }
+            else if (BloodPressureDiastolic <= 0)
+            {
+                BPDiastolicError = "Diastolic blood pressure must be a positive number.";
+                IsBPDiastolicErrorVisible = true;
+                hasError = true;
+            }
+            else
+            {
+                IsBPDiastolicErrorVisible = false;
+            }
+
+            // Validate Temperature
+            if (!Temperature.HasValue)
+            {
+                TemperatureError = "Temperature is required.";
+                IsTemperatureErrorVisible = true;
+                hasError = true;
+            }
+            else if (Temperature <= 0)
+            {
+                TemperatureError = "Temperature must be a positive number.";
+                IsTemperatureErrorVisible = true;
+                hasError = true;
+            }
+            else
+            {
+                IsTemperatureErrorVisible = false;
+            }
+
+            // Validate Pulse
+            if (!Pulse.HasValue)
+            {
+                PulseError = "Pulse is required.";
+                IsPulseErrorVisible = true;
+                hasError = true;
+            }
+            else if (Pulse <= 0)
+            {
+                PulseError = "Pulse must be a positive number.";
+                IsPulseErrorVisible = true;
+                hasError = true;
+            }
+            else
+            {
+                IsPulseErrorVisible = false;
+            }
+
+            return !hasError;
         }
 
         private void CloseWindow()

@@ -175,7 +175,11 @@ namespace J_JHealthSolutions.DAL
                     nurseEmp.f_name AS NurseFirstName,
                     nurseEmp.l_name AS NurseLastName,
                     p.f_name AS PatientFirstName,
-                    p.l_name AS PatientLastName
+                    p.l_name AS PatientLastName,
+                    p.dob AS PatientDOB,
+                    CONCAT(docEmp.f_name, ' ', docEmp.l_name) AS DoctorFullName,
+                    CONCAT(nurseEmp.f_name, ' ', nurseEmp.l_name) AS NurseFullName,
+                    CONCAT(p.f_name, ' ', p.l_name) AS PatientFullName
                 FROM Visit v
                 INNER JOIN Patient p ON v.patient_id = p.patient_id
                 INNER JOIN Doctor d ON v.doctor_id = d.doctor_id
@@ -224,6 +228,50 @@ namespace J_JHealthSolutions.DAL
             var visit = connection.QuerySingleOrDefault<Visit>(query, new { AppointmentId = appointmentId });
 
             return visit;
+        }
+
+        /// <summary>
+        /// Searches the visits.
+        /// </summary>
+        /// <param name="patientName">Name of the patient.</param>
+        /// <param name="dob">The dob.</param>
+        /// <returns></returns>
+        public List<Visit> SearchVisits(string patientName, DateTime? dob)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+        SELECT 
+            v.visit_id AS VisitId,
+            v.appointment_id AS AppointmentId,
+            v.blood_pressure_diastolic AS BloodPressureDiastolic,
+            v.blood_pressure_systolic AS BloodPressureSystolic,
+            v.doctor_id AS DoctorId,
+            v.final_diagnosis AS FinalDiagnosis,
+            v.height AS Height,
+            v.initial_diagnosis AS InitialDiagnosis,
+            v.nurse_id AS NurseId,
+            v.patient_id AS PatientId,
+            v.pulse AS Pulse,
+            v.symptoms AS Symptoms,
+            v.temperature AS Temperature,
+            v.visit_datetime AS VisitDateTime,
+            v.visit_status AS VisitStatus,
+            v.weight AS Weight,
+            CONCAT(p.f_name, ' ', p.l_name) AS PatientFullName,
+            p.dob AS PatientDOB
+        FROM Visit v
+        INNER JOIN Patient p ON v.patient_id = p.patient_id
+        WHERE (@PatientName IS NULL OR CONCAT(p.f_name, ' ', p.l_name) LIKE CONCAT('%', @PatientName, '%'))
+          AND (@DOB IS NULL OR p.dob = @DOB);";
+
+            var visits = connection.Query<Visit>(
+                query,
+                new { PatientName = patientName, DOB = dob }
+            ).AsList();
+
+            return visits;
         }
 
         /// <summary>

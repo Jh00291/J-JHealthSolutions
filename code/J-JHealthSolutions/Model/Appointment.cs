@@ -80,6 +80,22 @@ namespace J_JHealthSolutions.Model
         public string DoctorFullName => $"{DoctorFirstName} {DoctorLastName}";
 
         /// <summary>
+        /// Gets or sets the full name of the nurse.
+        /// </summary>
+        /// <value>
+        /// The full name of the nurse.
+        /// </value>
+        public string NurseFullName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the patient dob.
+        /// </summary>
+        /// <value>
+        /// The patient dob.
+        /// </value>
+        public DateTime PatientDOB { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of the appointment.
         /// </summary>
         /// <value>

@@ -278,6 +278,35 @@ namespace J_JHealthSolutions.Views
                     appointment.AppointmentId = newAppointmentId;
                 }
 
+                if (selectedNurse != null)
+                {
+                    VisitDal visitDal = new VisitDal();
+                    var existingVisit = visitDal.GetVisitByAppointmentId(appointment.AppointmentId.Value);
+
+                    if (existingVisit == null)
+                    {
+                        Visit newVisit = new Visit
+                        {
+                            AppointmentId = appointment.AppointmentId.Value,
+                            PatientId = appointment.PatientId,
+                            DoctorId = appointment.DoctorId,
+                            NurseId = selectedNurse.NurseId,
+                            VisitDateTime = appointment.DateTime,
+                            VisitStatus = "InProgress",
+                            BloodPressureDiastolic = 0,
+                            BloodPressureSystolic = 0,
+                            Height = 0,
+                            Weight = 0,
+                            Pulse = 0,
+                            Temperature = 0,
+                            Symptoms = string.Empty,
+                            InitialDiagnosis = string.Empty,
+                            FinalDiagnosis = string.Empty
+                        };
+
+                        visitDal.AddVisit(newVisit);
+                    }
+                }
                 MessageBox.Show("Appointment saved successfully.");
                 this.DialogResult = true;
                 this.Close();

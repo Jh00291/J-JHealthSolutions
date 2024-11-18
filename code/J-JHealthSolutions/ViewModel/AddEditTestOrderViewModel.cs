@@ -99,6 +99,7 @@ namespace J_JHealthSolutions.ViewModel
             {
                 _selectedTest = value;
                 OnPropertyChanged(nameof(SelectedTest));
+                OnPropertyChanged(nameof(IsAbnormalVisible));
 
                 Unit = (UnitOfMeasure)_selectedTest?.Unit;
             }
@@ -116,6 +117,7 @@ namespace J_JHealthSolutions.ViewModel
             {
                 _result = value;
                 OnPropertyChanged(nameof(Result));
+                OnPropertyChanged(nameof(IsAbnormalVisible));
             }
         }
 
@@ -134,12 +136,10 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     if (value.Value.Date < DateTime.Today)
                     {
-                        // Cannot be in the past
                         throw new ArgumentException("Test Performed Date cannot be in the past.");
                     }
                     if (value.Value.Date > DateTime.Today)
                     {
-                        // Cannot be in the future
                         throw new ArgumentException("Test Performed Date cannot be in the future.");
                     }
                 }
@@ -185,22 +185,18 @@ namespace J_JHealthSolutions.ViewModel
             }
         }
 
-        // Abnormal Options
         private static readonly List<string> _abnormalOptions = new List<string> { "Yes", "No" };
-
 
         public IEnumerable<string> AbnormalOptions => _abnormalOptions;
 
-        // Visibility of Abnormal ComboBox
         public bool IsAbnormalVisible
         {
             get
             {
                 if (SelectedTest != null && !string.IsNullOrWhiteSpace(Result))
                 {
-                    // Check if LowValue and HighValue are null
-                    bool lowHighValuesAreNull = SelectedTest.LowValue == null && SelectedTest.HighValue == null;
-                    return lowHighValuesAreNull;
+                    bool lowOrHighValueIsNull = SelectedTest.LowValue == null || SelectedTest.HighValue == null;
+                    return lowOrHighValueIsNull;
                 }
                 return false;
             }
@@ -208,7 +204,6 @@ namespace J_JHealthSolutions.ViewModel
 
         public IEnumerable<UnitOfMeasure> UnitsOfMeasures { get; } = Enum.GetValues(typeof(UnitOfMeasure)).Cast<UnitOfMeasure>();
 
-        // IDataErrorInfo implementation
         public string this[string columnName]
         {
             get
@@ -280,7 +275,9 @@ namespace J_JHealthSolutions.ViewModel
                     TestOrderDal.CreateTestOrder(CreateTestOrder());
                     return true;
                 }
-
+            }
+            else
+            {
                 TestOrderDal.CreateTestOrder(CreateTestOrder());
                 return true;
             }

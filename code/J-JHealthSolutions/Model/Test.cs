@@ -10,8 +10,8 @@ namespace J_JHealthSolutions.Model
     {
         public int TestCode { get; set; }
         public string TestName { get; set; }
-        public int LowValue { get; set; }
-        public int HighValue { get; set; }
+        public int? LowValue { get; set; }
+        public int? HighValue { get; set; }
         public UnitOfMeasure Unit { get; set; }
 
         public override string ToString()

@@ -165,16 +165,21 @@ namespace J_JHealthSolutions.DAL
                     a.patient_id AS PatientId,
                     p.f_name AS PatientFirstName,
                     p.l_name AS PatientLastName,
+                    p.dob AS PatientDOB,
                     a.doctor_id AS DoctorId,
                     e.f_name AS DoctorFirstName,
                     e.l_name AS DoctorLastName,
+                    CONCAT(ne.f_name, ' ', ne.l_name) AS NurseFullName,
                     a.`datetime` AS DateTime,
                     a.reason AS Reason,
                     a.`status` AS Status
                 FROM Appointment a
                 INNER JOIN Patient p ON a.patient_id = p.patient_id
                 INNER JOIN Doctor d ON a.doctor_id = d.doctor_id
-                INNER JOIN Employee e ON d.emp_id = e.employee_id;";
+                INNER JOIN Employee e ON d.emp_id = e.employee_id
+                LEFT JOIN Visit v ON v.appointment_id = a.appointment_id
+                LEFT JOIN Nurse n ON v.nurse_id = n.nurse_id
+                LEFT JOIN Employee ne ON n.emp_id = ne.employee_id;";
 
             var appointments = connection.Query<Appointment>(
                 query

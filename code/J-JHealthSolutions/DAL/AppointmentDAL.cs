@@ -5,14 +5,14 @@ using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
 {
-    public class AppointmentDal
+    public static class AppointmentDal
     {
         /// <summary>
         /// Adds a new appointment to the database after validating PatientId and DoctorId.
         /// </summary>
         /// <param name="appointment">The Appointment object to add.</param>
         /// <returns>The generated appointment_id.</returns>
-        public int AddAppointment(Appointment appointment)
+        public static int AddAppointment(Appointment appointment)
         {
             using IDbConnection connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -80,7 +80,7 @@ namespace J_JHealthSolutions.DAL
         /// </summary>
         /// <param name="appointment">The Appointment object with updated information.</param>
         /// <returns>True if the update was successful; otherwise, false.</returns>
-        public bool UpdateAppointment(Appointment appointment)
+        public static bool UpdateAppointment(Appointment appointment)
         {
             if (appointment.AppointmentId == null)
                 throw new ArgumentException("AppointmentId cannot be null for update operation.");
@@ -154,7 +154,7 @@ namespace J_JHealthSolutions.DAL
         /// Retrieves all appointments from the database, including patient and doctor names.
         /// </summary>
         /// <returns>A list of Appointment objects.</returns>
-        public List<Appointment> GetAppointments()
+        public static List<Appointment> GetAppointments()
         {
             using IDbConnection connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -202,7 +202,7 @@ namespace J_JHealthSolutions.DAL
         /// <param name="doctorId">The ID of the doctor.</param>
         /// <param name="dateTime">The desired appointment date and time.</param>
         /// <returns>True if the time slot is available; otherwise, false.</returns>
-        public bool IsTimeSlotAvailable(int doctorId, DateTime dateTime)
+        public static bool IsTimeSlotAvailable(int doctorId, DateTime dateTime)
         {
             using IDbConnection connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -225,6 +225,66 @@ namespace J_JHealthSolutions.DAL
             );
 
             return count == 0;
+        }
+
+        /// <summary>
+        /// Marks an appointment as Completed based on the provided VisitID.
+        /// </summary>
+        /// <param name="visitId">The VisitID associated with the appointment to complete.</param>
+        /// <returns>True if the operation was successful; otherwise, false.</returns>
+        public static bool CompleteAppointment(int visitId)
+        {
+            using IDbConnection connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            using IDbTransaction transaction = connection.BeginTransaction();
+
+            try
+            {
+                // Retrieve the AppointmentId associated with the VisitId
+                const string getAppointmentIdQuery = @"
+                    SELECT a.appointment_id
+                    FROM Visit v
+                    INNER JOIN Appointment a ON v.appointment_id = a.appointment_id
+                    WHERE v.visit_id = @VisitId;";
+
+                int? appointmentId = connection.ExecuteScalar<int?>(
+                    getAppointmentIdQuery,
+                    new { VisitId = visitId },
+                    transaction
+                );
+
+                if (!appointmentId.HasValue)
+                    throw new Exception($"No appointment found for VisitId {visitId}.");
+
+                // Update the status to Completed
+                const string updateStatusQuery = @"
+                    UPDATE Appointment
+                    SET `status` = @Status
+                    WHERE appointment_id = @AppointmentId;";
+
+                int affectedRows = connection.Execute(
+                    updateStatusQuery,
+                    new
+                    {
+                        Status = Status.Completed.ToString(),
+                        AppointmentId = appointmentId.Value
+                    },
+                    transaction
+                );
+
+                if (affectedRows == 0)
+                    throw new Exception($"Failed to update status for AppointmentId {appointmentId.Value}.");
+
+                transaction.Commit();
+
+                return true;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }

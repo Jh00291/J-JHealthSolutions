@@ -169,6 +169,7 @@ namespace J_JHealthSolutions.ViewModels
                 if (SelectedStatus == Status.Completed.ToString())
                 {
                     IsReadOnlyMode = true;
+                    AppointmentDal.CompleteAppointment((int)_visit.VisitId);
                 }
 
                 VisitUpdated?.Invoke(this, EventArgs.Empty);

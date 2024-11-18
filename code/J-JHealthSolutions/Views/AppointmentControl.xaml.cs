@@ -9,13 +9,11 @@ namespace J_JHealthSolutions.Views
 {
     public partial class AppointmentControl : UserControl
     {
-        private readonly AppointmentDal _appointmentDal;
         private List<Appointment> _appointments;
 
         public AppointmentControl()
         {
             InitializeComponent();
-            _appointmentDal = new AppointmentDal();
             LoadAppointments();
         }
 
@@ -26,7 +24,7 @@ namespace J_JHealthSolutions.Views
         {
             try
             {
-                _appointments = _appointmentDal.GetAppointments();
+                _appointments = AppointmentDal.GetAppointments();
                 AppointmentsDataGrid.ItemsSource = _appointments;
             }
             catch (Exception ex)

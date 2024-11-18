@@ -147,13 +147,12 @@ namespace J_JHealthSolutions.Views
 
                 timeComboBox.Items.Clear();
 
-                var appointmentDal = new AppointmentDal();
 
                 for (TimeSpan time = startTime; time < endTime; time += interval)
                 {
                     DateTime appointmentDateTime = selectedDate.Date + time;
 
-                    bool isAvailable = appointmentDal.IsTimeSlotAvailable(selectedDoctorId, appointmentDateTime);
+                    bool isAvailable = AppointmentDal.IsTimeSlotAvailable(selectedDoctorId, appointmentDateTime);
                     if (isAvailable)
                     {
                         timeComboBox.Items.Add(appointmentDateTime.ToString("hh:mm tt"));
@@ -249,15 +248,14 @@ namespace J_JHealthSolutions.Views
         {
             try
             {
-                var appointmentDal = new AppointmentDal();
                 if (_appointment != null)
                 {
                     appointment.AppointmentId = _appointment.AppointmentId;
-                    appointmentDal.UpdateAppointment(appointment);
+                    AppointmentDal.UpdateAppointment(appointment);
                 }
                 else
                 {
-                    int newAppointmentId = appointmentDal.AddAppointment(appointment);
+                    int newAppointmentId = AppointmentDal.AddAppointment(appointment);
                     appointment.AppointmentId = newAppointmentId;
                 }
 

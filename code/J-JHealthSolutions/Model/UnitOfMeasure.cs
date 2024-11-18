@@ -52,4 +52,13 @@ public enum UnitOfMeasure
     [Description("mEq/L")]
     MilliequivalentsPerLiter,
 
+    [Description("kg")]
+    Kilograms,
+
+    [Description("breaths/min")]
+    BreathsPerMinute,
+
+    [Description("°F")]
+    Fahrenheit
+
 }

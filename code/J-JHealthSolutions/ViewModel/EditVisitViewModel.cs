@@ -105,7 +105,6 @@ namespace J_JHealthSolutions.ViewModels
             {
                 _selectedTestOrder = value;
                 OnPropertyChanged(nameof(SelectedTestOrder));
-                // Notify that CanExecute for commands might have changed
                 (EditTestOrderCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (DeleteTestOrderCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
@@ -185,6 +184,11 @@ namespace J_JHealthSolutions.ViewModels
         private void EditTestOrder(object parameter)
         {
             bool? dialogResult = new AddEditTestOrder(SelectedTestOrder, _visit).ShowDialog();
+            if (dialogResult == true)
+            {
+                TestOrders = new ObservableCollection<TestOrder>(TestOrderDal.GetTestOrdersFromVisit((int)_visit.VisitId));
+                OnPropertyChanged(nameof(TestOrders));
+            }
         }
 
         private void DeleteTestOrder(object parameter)
@@ -224,7 +228,8 @@ namespace J_JHealthSolutions.ViewModels
            if (dialogResult == true)
            {
                TestOrders = new ObservableCollection<TestOrder>(TestOrderDal.GetTestOrdersFromVisit((int)_visit.VisitId));
-           }
+               OnPropertyChanged(nameof(TestOrders));
+            }
         }
 
 

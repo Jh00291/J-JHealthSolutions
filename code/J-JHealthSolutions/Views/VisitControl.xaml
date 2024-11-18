@@ -96,12 +96,8 @@
 
         <!-- Buttons for Edit and Check Up Information -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Edit" Width="97" Height="28" Margin="0,0,10,0"
+            <Button Content="Visit Health Records" Width="115" Height="28" Margin="0,0,10,0"
                     Command="{Binding EditCommand}" 
-                    IsEnabled="{Binding SelectedVisit, Converter={StaticResource NullToBoolConverter}}" />
-            <Button Content="Check Up Information" Width="150" Height="28"
-                    Command="{Binding CheckUpCommand}" 
-                    IsEnabled="{Binding SelectedVisit, Converter={StaticResource NullToBoolConverter}}" />
-        </StackPanel>
+                    IsEnabled="{Binding SelectedVisit, Converter={StaticResource NullToBoolConverter}}" /></StackPanel>
     </Grid>
 </UserControl>

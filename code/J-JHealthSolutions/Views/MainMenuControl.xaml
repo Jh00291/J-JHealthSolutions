@@ -19,11 +19,9 @@
                 Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ManageVisitsClick"/>
         <Button Grid.Row="1" Content="Manage Appointments" Command="{Binding ManageAppointmentsCommand}" IsEnabled="True"
                 Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ManageAppointmentsClick"/>
-        <Button Grid.Row="2" Content="Manage Tests" Command="{Binding ManageTestsCommand}" IsEnabled="False"
-                Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <Button Grid.Row="3" Content="Manage Patients" Command="{Binding ManagePatientsCommand}"
+        <Button Grid.Row="2" Content="Manage Patients" Command="{Binding ManagePatientsCommand}"
                 Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ManagePatientsClick"/>
-        <Button Grid.Row="4" x:Name="ManageEmployeesButton" Content="Manage Employees" Command="{Binding ManageEmployeesCommand}"
+        <Button Grid.Row="3" x:Name="ManageEmployeesButton" Content="Manage Employees" Command="{Binding ManageEmployeesCommand}"
                 Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         <Button Grid.Row="5" Content="Log Out" Command="{Binding LogOutCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>

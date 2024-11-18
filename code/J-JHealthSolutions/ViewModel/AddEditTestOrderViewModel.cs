@@ -280,6 +280,9 @@ namespace J_JHealthSolutions.ViewModel
                     TestOrderDal.CreateTestOrder(CreateTestOrder());
                     return true;
                 }
+
+                TestOrderDal.CreateTestOrder(CreateTestOrder());
+                return true;
             }
 
             return false;
@@ -358,12 +361,6 @@ namespace J_JHealthSolutions.ViewModel
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        // Placeholder method to get available tests
-        private IEnumerable<Test> GetAvailableTests()
-        {
-            return TestDal.GetTests();
         }
 
         private bool HasErrors()

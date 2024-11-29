@@ -4,19 +4,77 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using J_JHealthSolutions.DAL;
+using System.Windows.Input;
+using J_JHealthSolutions.Model;
+using System.Windows;
+using System.ComponentModel;
 
 namespace J_JHealthSolutions.ViewModel
 {
-    public class AdminViewModel
+    public class AdminViewModel : INotifyPropertyChanged
     {
 
-        public string SqlQuery { get; set; }
-        public ObservableCollection<object> QueryResults { get; set; }
-        public ObservableCollection<TableSchema> DatabaseSchemaTree { get; set; }
+        private string _sqlQuery;
+        private ObservableCollection<object> _queryResults;
+        private ObservableCollection<TableSchema> _databaseSchemaTree;
+
+        public string SqlQuery
+        {
+            get => _sqlQuery;
+            set
+            {
+                _sqlQuery = value;
+                OnPropertyChanged(nameof(SqlQuery));
+            }
+        }
+
+        public ObservableCollection<object> QueryResults
+        {
+            get => _queryResults;
+            set
+            {
+                _queryResults = value;
+                OnPropertyChanged(nameof(QueryResults));
+            }
+        }
+
+        public ObservableCollection<TableSchema> DatabaseSchemaTree
+        {
+            get => _databaseSchemaTree;
+            set
+            {
+                _databaseSchemaTree = value;
+                OnPropertyChanged(nameof(DatabaseSchemaTree));
+            }
+        }
+
+        public ICommand ExecuteQueryCommand { get; }
+
+        private readonly AdminDal _adminDal;
 
         public AdminViewModel()
         {
+            _adminDal = new AdminDal();
+            ExecuteQueryCommand = new RelayCommand(ExecuteQuery);
+
             LoadDatabaseSchema();
+        }
+
+        private void ExecuteQuery(object obj)
+        {
+            try
+            {
+                DataTable results = _adminDal.ExecuteQuery(SqlQuery);
+                QueryResults = new ObservableCollection<object>(results.DefaultView.Cast<object>());
+
+                // Reload schema after executing query
+                LoadDatabaseSchema();
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (log or display error message)
+                MessageBox.Show($"Error: {ex.Message}", "Query Execution Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoadDatabaseSchema()
@@ -46,6 +104,14 @@ namespace J_JHealthSolutions.ViewModel
                 }
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
     }
 
         public class TableSchema

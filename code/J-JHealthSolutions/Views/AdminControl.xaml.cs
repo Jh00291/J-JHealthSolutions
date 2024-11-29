@@ -26,9 +26,34 @@ namespace J_JHealthSolutions.Views
     {
         private CompletionWindow _completionWindow;
 
+        // ViewModel reference
+        private readonly AdminViewModel _viewModel;
+
         public AdminControl()
         {
             InitializeComponent();
+
+            // Initialize the ViewModel
+            _viewModel = new AdminViewModel();
+            DataContext = _viewModel;
+        }
+
+        // Optionally handle UI interactions directly (if required)
+        private void ExecuteQueryButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Trigger query execution via ViewModel command
+                if (_viewModel.ExecuteQueryCommand.CanExecute(null))
+                {
+                    _viewModel.ExecuteQueryCommand.Execute(null);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Show error message
+                MessageBox.Show($"Query execution failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
     }

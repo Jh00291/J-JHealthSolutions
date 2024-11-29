@@ -17,6 +17,7 @@ namespace J_JHealthSolutions.ViewModel
         private string _sqlQuery;
         private ObservableCollection<object> _queryResults;
         private ObservableCollection<TableSchema> _databaseSchemaTree;
+        public ICommand ClearQueryCommand { get; }
 
         public string SqlQuery
         {
@@ -56,6 +57,7 @@ namespace J_JHealthSolutions.ViewModel
         {
             _adminDal = new AdminDal();
             ExecuteQueryCommand = new RelayCommand(ExecuteQuery);
+            ClearQueryCommand = new RelayCommand(ClearQuery);
 
             LoadDatabaseSchema();
         }
@@ -75,6 +77,12 @@ namespace J_JHealthSolutions.ViewModel
                 // Handle exceptions (log or display error message)
                 MessageBox.Show($"Error: {ex.Message}", "Query Execution Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void ClearQuery(object obj)
+        {
+            SqlQuery = string.Empty; // Clear SQL Query input
+            QueryResults = new ObservableCollection<object>(); // Clear query results
         }
 
         private void LoadDatabaseSchema()

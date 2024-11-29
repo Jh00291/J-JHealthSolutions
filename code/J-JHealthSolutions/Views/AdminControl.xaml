@@ -64,6 +64,8 @@
                                      AcceptsReturn="True" Height="100" VerticalScrollBarVisibility="Auto"/>
                             <Button Content="Execute Query" Width="120" Height="30" Margin="0,5,0,0"
                                     Command="{Binding ExecuteQueryCommand}"/>
+                            <Button Content="Clear" Width="120" Height="30" Margin="0,10,0,0"
+                                    Command="{Binding ClearQueryCommand}"/>
                         </StackPanel>
 
                         <!-- Query Results -->

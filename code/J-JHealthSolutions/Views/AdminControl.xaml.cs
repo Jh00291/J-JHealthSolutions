@@ -29,6 +29,9 @@ namespace J_JHealthSolutions.Views
         // ViewModel reference
         private readonly AdminViewModel _viewModel;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdminControl"/> class.
+        /// </summary>
         public AdminControl()
         {
             InitializeComponent();

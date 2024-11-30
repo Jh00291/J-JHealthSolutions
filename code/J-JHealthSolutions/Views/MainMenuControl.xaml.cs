@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using J_JHealthSolutions.Model;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace J_JHealthSolutions.Views
 {
@@ -22,9 +12,9 @@ namespace J_JHealthSolutions.Views
     {
 
         public event EventHandler ManageVisitSelected;
-        public event EventHandler ManageEmployeesSelected;
         public event EventHandler ManagePatientsSelected;
         public event EventHandler ManageAppointmentsSelected;
+        public event EventHandler AdminDashboardSelected;
 
         /// <summary>
         /// Initializes a new instance of the MainMenuControl class.
@@ -39,14 +29,15 @@ namespace J_JHealthSolutions.Views
         /// Dependency property for the UserRole, which controls the visibility of certain menu options.
         /// </summary>
         public static readonly DependencyProperty UserRoleProperty =
-            DependencyProperty.Register("UserRole", typeof(string), typeof(MainMenuControl), new PropertyMetadata(string.Empty, OnUserRoleChanged));
+            DependencyProperty.Register(
+                "UserRole",
+                typeof(UserRole),
+                typeof(MainMenuControl),
+                new PropertyMetadata(UserRole.Other, OnUserRoleChanged));
 
-        /// <summary>
-        /// The role of the current user, which determines what menu options are available.
-        /// </summary>
-        public string UserRole
+        public UserRole UserRole
         {
-            get { return (string)GetValue(UserRoleProperty); }
+            get { return (UserRole)GetValue(UserRoleProperty); }
             set { SetValue(UserRoleProperty, value); }
         }
 
@@ -59,17 +50,19 @@ namespace J_JHealthSolutions.Views
         private static void OnUserRoleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as MainMenuControl;
-            control.UpdateManageEmployeesVisibility();
+            control?.UpdateAdminDashboardVisibility();
         }
 
-        /// <summary>
-        /// Updates the visibility of the Manage Employees button based on the user's role.
-        /// </summary>
-        private void UpdateManageEmployeesVisibility()
+        private void UpdateAdminDashboardVisibility()
         {
-            //Todo add the admin role
-            ManageEmployeesButton.Visibility = UserRole == "ToDo" ? Visibility.Visible : Visibility.Collapsed;
+            if (AdminDashboardButton != null)
+            {
+                AdminDashboardButton.Visibility = UserRole == UserRole.Administrator
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
         }
+
 
         /// <summary>
         /// Dependency property for the LogOutCommand, which handles the logout action.
@@ -86,11 +79,6 @@ namespace J_JHealthSolutions.Views
             set { SetValue(LogOutCommandProperty, value); }
         }
 
-        private void ManageEmployeeClick(object sender, RoutedEventArgs e)
-        {
-            ManageEmployeesSelected?.Invoke(this, EventArgs.Empty);
-        }
-
         private void ManagePatientsClick(object sender, RoutedEventArgs e)
         {
             ManagePatientsSelected?.Invoke(this, EventArgs.Empty);
@@ -104,6 +92,11 @@ namespace J_JHealthSolutions.Views
         private void ManageAppointmentsClick(object sender, RoutedEventArgs e)
         {
             ManageAppointmentsSelected?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void AdminDashboardButton_Click(object sender, RoutedEventArgs e)
+        {
+            AdminDashboardSelected?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Input;
-using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
 
 namespace J_JHealthSolutions.Views
@@ -31,14 +27,14 @@ namespace J_JHealthSolutions.Views
 
             InitializeComponent();
 
-            CurrentUser = new User(123, "hello", UserRole.Administrator, "Jason", "Nunez");
+            CurrentUser = new User(123, "hello", UserRole.Nurse, "Jason", "Nunez");
 
             // Set user information in UserInfoControl
             userInfoControl.UserId = CurrentUser.UserId.ToString();
             userInfoControl.FullName = $"{CurrentUser.Fname} {CurrentUser.Lname}";
 
             // Pass the UserRole to MainMenuControl
-            mainMenuControl.UserRole = CurrentUser.Role.ToString();
+            mainMenuControl.UserRole = CurrentUser.Role;
 
             InitializeCommands();
 
@@ -52,6 +48,7 @@ namespace J_JHealthSolutions.Views
             mainMenuControl.ManageVisitSelected += MainMenuControl_ManageVisitSelected;
             mainMenuControl.ManagePatientsSelected += MainMenuControl_ManagePatientsSelected;
             mainMenuControl.ManageAppointmentsSelected += MainContentControl_ManageAppointmentSelected;
+            mainMenuControl.AdminDashboardSelected += MainContentControl_AdminDashboardSelected;
         }
 
         private void MainContentControl_ManageAppointmentSelected(object? sender, EventArgs e)
@@ -67,6 +64,11 @@ namespace J_JHealthSolutions.Views
         private void MainMenuControl_ManageVisitSelected(object? sender, EventArgs e)
         {
             MainContentControl.Content = new VisitControl();
+        }
+
+        private void MainContentControl_AdminDashboardSelected(object? sender, EventArgs e)
+        {
+            MainContentControl.Content = new AdminDashboardControl();
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace J_JHealthSolutions.Views
             userInfoControl.FullName = $"{CurrentUser.Fname} {CurrentUser.Lname}";
 
             // Pass the UserRole to MainMenuControl
-            mainMenuControl.UserRole = CurrentUser.Role.ToString();
+            mainMenuControl.UserRole = CurrentUser.Role;
 
             InitializeCommands();
             SubscribeToEvents();

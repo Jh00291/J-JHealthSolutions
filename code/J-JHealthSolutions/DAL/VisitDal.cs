@@ -7,14 +7,14 @@ using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
 {
-    public class VisitDal
+    public static class VisitDal
     {
         /// <summary>
         /// Adds a new visit to the database after validating foreign keys.
         /// </summary>
         /// <param name="visit">The Visit object to add.</param>
         /// <returns>The generated visit_id.</returns>
-        public int AddVisit(Visit visit)
+        public static int AddVisit(Visit visit)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -89,7 +89,7 @@ namespace J_JHealthSolutions.DAL
         /// </summary>
         /// <param name="visit">The Visit object with updated information.</param>
         /// <returns>True if the update was successful; otherwise, false.</returns>
-        public bool UpdateVisit(Visit visit)
+        public static bool UpdateVisit(Visit visit)
         {
             if (visit.VisitId == null)
                 throw new ArgumentException("VisitId cannot be null for update operation.");
@@ -147,7 +147,7 @@ namespace J_JHealthSolutions.DAL
         /// Retrieves all visits from the database, including patient, doctor, and nurse names.
         /// </summary>
         /// <returns>A list of Visit objects.</returns>
-        public List<Visit> GetVisits()
+        public static List<Visit> GetVisits()
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -198,7 +198,7 @@ namespace J_JHealthSolutions.DAL
         /// </summary>
         /// <param name="appointmentId">The appointment ID to search for.</param>
         /// <returns>The corresponding Visit object, or null if not found.</returns>
-        public Visit GetVisitByAppointmentId(int appointmentId)
+        public static Visit GetVisitByAppointmentId(int appointmentId)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -236,7 +236,7 @@ namespace J_JHealthSolutions.DAL
         /// <param name="patientName">Name of the patient.</param>
         /// <param name="dob">The dob.</param>
         /// <returns></returns>
-        public List<Visit> SearchVisits(string patientName, DateTime? dob)
+        public static List<Visit> SearchVisits(string patientName, DateTime? dob)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -280,7 +280,7 @@ namespace J_JHealthSolutions.DAL
         /// <param name="connection">The open MySqlConnection.</param>
         /// <param name="transaction">The active transaction.</param>
         /// <param name="visit">The Visit object to validate.</param>
-        private void ValidateForeignKeys(MySqlConnection connection, IDbTransaction transaction, Visit visit)
+        private static void ValidateForeignKeys(MySqlConnection connection, IDbTransaction transaction, Visit visit)
         {
             // Validate patient_id
             var patientExistsQuery = "SELECT COUNT(1) FROM Patient WHERE patient_id = @PatientId;";
@@ -325,6 +325,49 @@ namespace J_JHealthSolutions.DAL
 
             if (!appointmentExists)
                 throw new Exception($"AppointmentId {visit.AppointmentId} does not exist.");
+        }
+
+        /// <summary>
+        /// Retrieves visit reports within a specified date range.
+        /// </summary>
+        /// <param name="startDate">The start date of the range.</param>
+        /// <param name="endDate">The end date of the range.</param>
+        /// <returns>A list of VisitReport objects.</returns>
+        public static List<VisitReport> GetVisitReports(DateTime startDate, DateTime endDate)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+                SELECT 
+                    v.visit_datetime AS VisitDate,
+                    p.patient_id AS PatientId,
+                    CONCAT(p.f_name, ' ', p.l_name) AS PatientName,
+                    CONCAT(docEmp.f_name, ' ', docEmp.l_name) AS DoctorName,
+                    CONCAT(nurseEmp.f_name, ' ', nurseEmp.l_name) AS NurseName,
+                    t.test_name AS TestOrdered,
+                    o.performed_datetime AS TestPerformDate,
+                    o.abnormal AS TestResultAbnormality,
+                    v.final_diagnosis AS Diagnosis,
+                    p.l_name AS PatientLastName
+                FROM Visit v
+                INNER JOIN Patient p ON v.patient_id = p.patient_id
+                INNER JOIN Doctor d ON v.doctor_id = d.doctor_id
+                INNER JOIN Employee docEmp ON d.emp_id = docEmp.employee_id
+                INNER JOIN Nurse n ON v.nurse_id = n.nurse_id
+                INNER JOIN Employee nurseEmp ON n.emp_id = nurseEmp.employee_id
+                LEFT JOIN TestOrder o ON v.visit_id = o.visit_id
+                LEFT JOIN Test t ON o.test_code = t.test_code
+                WHERE v.visit_datetime BETWEEN @StartDate AND @EndDate AND visit_status = 'Completed'
+                ORDER BY v.visit_datetime, p.l_name;
+            ";
+
+            var visitReports = connection.Query<VisitReport>(
+                query,
+                new { StartDate = startDate, EndDate = endDate }
+            ).AsList();
+
+            return visitReports;
         }
     }
 }

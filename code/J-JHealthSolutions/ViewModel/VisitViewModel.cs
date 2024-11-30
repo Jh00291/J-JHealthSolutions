@@ -12,7 +12,6 @@ namespace J_JHealthSolutions.ViewModel
 {
     public class VisitViewModel : INotifyPropertyChanged
     {
-        private readonly VisitDal _visitDal;
 
         // Event required by INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -135,7 +134,6 @@ namespace J_JHealthSolutions.ViewModel
         // Constructor
         public VisitViewModel()
         {
-            _visitDal = new VisitDal();
             ClearCommand = new RelayCommand(ExecuteClearSearch);
             EditCommand = new RelayCommand(ExecuteEdit, CanExecuteEditOrCheckUp);
             CheckUpCommand = new RelayCommand(ExecuteCheckUp, CanExecuteEditOrCheckUp);
@@ -153,7 +151,7 @@ namespace J_JHealthSolutions.ViewModel
         {
             try
             {
-                var visitsFromDb = _visitDal.GetVisits();
+                var visitsFromDb = VisitDal.GetVisits();
                 var visitsWithCounts = new ObservableCollection<Visit>();
 
                 foreach (var visit in visitsFromDb)

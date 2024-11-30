@@ -39,6 +39,29 @@ namespace J_JHealthSolutions.ViewModel
             }
         }
 
+        private DateTime? _startDate;
+        public DateTime? StartDate
+        {
+            get => _startDate;
+            set { _startDate = value; OnPropertyChanged(nameof(StartDate)); }
+        }
+
+        private DateTime? _endDate;
+        public DateTime? EndDate
+        {
+            get => _endDate;
+            set { _endDate = value; OnPropertyChanged(nameof(EndDate)); }
+        }
+
+        private ObservableCollection<VisitReport> _visitReports;
+        public ObservableCollection<VisitReport> VisitReports
+        {
+            get => _visitReports;
+            set { _visitReports = value; OnPropertyChanged(nameof(VisitReports)); }
+        }
+
+        public ICommand GenerateReportCommand { get; }
+
         public ObservableCollection<TableSchema> DatabaseSchemaTree
         {
             get => _databaseSchemaTree;
@@ -58,8 +81,27 @@ namespace J_JHealthSolutions.ViewModel
             _adminDal = new AdminDal();
             ExecuteQueryCommand = new RelayCommand(ExecuteQuery);
             ClearQueryCommand = new RelayCommand(ClearQuery);
+            GenerateReportCommand = new RelayCommand(GenerateReport, CanGenerateReport);
 
             LoadDatabaseSchema();
+        }
+
+        private bool CanGenerateReport(object parameter)
+        {
+            return StartDate != null && EndDate != null;
+        }
+
+        private void GenerateReport(object parameter)
+        {
+            try
+            {
+                var reports = VisitDal.GetVisitReports(StartDate.Value, EndDate.Value);
+                VisitReports = new ObservableCollection<VisitReport>(reports);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., show a message to the user)
+            }
         }
 
         private void ExecuteQuery(object obj)

@@ -11,7 +11,6 @@ namespace J_JHealthSolutions.Views
         /// Interaction logic for CheckupWindow.xaml
         /// </summary>
         private Visit _visit;
-        private VisitDal _visitDal = new VisitDal();
 
         /// <summary>
         /// Initializes a new instance of CheckUpWindow with the selected visit details.
@@ -200,7 +199,7 @@ namespace J_JHealthSolutions.Views
             // Save the updated visit to the database
             try
             {
-                _visitDal.UpdateVisit(_visit);
+                VisitDal.UpdateVisit(_visit);
 
                 IsReadOnly = _visit.VisitStatus == "Completed" || !string.IsNullOrWhiteSpace(_visit.FinalDiagnosis);
 

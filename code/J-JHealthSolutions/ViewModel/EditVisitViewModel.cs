@@ -396,7 +396,6 @@ namespace J_JHealthSolutions.ViewModels
 
             try
             {
-                var visitDal = new VisitDal();
                 _visit.InitialDiagnosis = this.InitialDiagnosis;
                 _visit.FinalDiagnosis = this.FinalDiagnosis;
                 _visit.VisitStatus = this.SelectedStatus;
@@ -410,7 +409,7 @@ namespace J_JHealthSolutions.ViewModels
                 _visit.Pulse = this.Pulse;
                 _visit.Symptoms = this.Symptoms;
 
-                visitDal.UpdateVisit(_visit);
+                VisitDal.UpdateVisit(_visit);
 
                 if (SelectedStatus == "Completed")
                 {

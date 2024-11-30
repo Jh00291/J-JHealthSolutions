@@ -313,8 +313,7 @@ namespace J_JHealthSolutions.Views
 
                 if (selectedNurse != null)
                 {
-                    VisitDal visitDal = new VisitDal();
-                    var existingVisit = visitDal.GetVisitByAppointmentId(appointment.AppointmentId.Value);
+                    var existingVisit = VisitDal.GetVisitByAppointmentId(appointment.AppointmentId.Value);
 
                     if (existingVisit == null)
                     {
@@ -337,7 +336,7 @@ namespace J_JHealthSolutions.Views
                             FinalDiagnosis = string.Empty
                         };
 
-                        visitDal.AddVisit(newVisit);
+                        VisitDal.AddVisit(newVisit);
                     }
                 }
                 MessageBox.Show("Appointment saved successfully.");

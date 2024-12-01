@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace J_JHealthSolutions.Model
+namespace J_JHealthSolutions.Model.Other
 {
     /// <summary>
     /// Represents the possible statuses of an appointment.

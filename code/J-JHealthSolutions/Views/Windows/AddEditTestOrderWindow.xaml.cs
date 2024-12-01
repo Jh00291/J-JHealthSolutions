@@ -2,6 +2,7 @@
 using System.Windows;
 using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
+using J_JHealthSolutions.Model.Domain;
 using J_JHealthSolutions.ViewModel;
 
 namespace J_JHealthSolutions.Views

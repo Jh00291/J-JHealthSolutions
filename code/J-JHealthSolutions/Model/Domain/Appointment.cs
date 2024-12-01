@@ -1,6 +1,7 @@
 ﻿using System;
+using J_JHealthSolutions.Model.Other;
 
-namespace J_JHealthSolutions.Model
+namespace J_JHealthSolutions.Model.Domain
 {
     /// <summary>
     /// Represents an appointment between a patient and a doctor.

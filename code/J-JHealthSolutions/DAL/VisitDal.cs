@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Dapper;
-using J_JHealthSolutions.Model;
+using J_JHealthSolutions.Model.Domain;
 using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL

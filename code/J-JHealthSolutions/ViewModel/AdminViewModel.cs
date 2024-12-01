@@ -6,6 +6,7 @@ using System.Windows.Input;
 using J_JHealthSolutions.Model;
 using System.Windows;
 using System.ComponentModel;
+using J_JHealthSolutions.Model.Domain;
 
 namespace J_JHealthSolutions.ViewModel
 {

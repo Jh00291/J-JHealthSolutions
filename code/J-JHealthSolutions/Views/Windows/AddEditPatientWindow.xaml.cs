@@ -1,9 +1,9 @@
 ﻿using J_JHealthSolutions.DAL;
-using J_JHealthSolutions.Model;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using J_JHealthSolutions.ViewModels;
+using J_JHealthSolutions.Model.Domain;
 
 namespace J_JHealthSolutions.Views
 {

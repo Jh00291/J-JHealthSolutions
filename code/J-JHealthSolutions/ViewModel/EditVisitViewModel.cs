@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
+using J_JHealthSolutions.Model.Domain;
 using J_JHealthSolutions.Views;
 
 namespace J_JHealthSolutions.ViewModels

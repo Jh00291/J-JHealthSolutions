@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using System.Windows.Data;
+using J_JHealthSolutions.Model.Domain;
 
 namespace J_JHealthSolutions.ViewModel
 {

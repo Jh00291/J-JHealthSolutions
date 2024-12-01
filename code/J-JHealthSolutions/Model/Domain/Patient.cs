@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace J_JHealthSolutions.Model
+namespace J_JHealthSolutions.Model.Domain
 {
     /// <summary>
     /// Represents a patient in the healthcare system with personal, contact, and status details.

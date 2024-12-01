@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace J_JHealthSolutions.Model;
+namespace J_JHealthSolutions.Model.Other;
 
 /// <summary>
 /// Represents the unit of measure for various hospital tests.

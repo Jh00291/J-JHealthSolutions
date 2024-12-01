@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using J_JHealthSolutions.Model;
 using J_JHealthSolutions.DAL;
+using J_JHealthSolutions.Model.Domain;
+using J_JHealthSolutions.Model.Other;
 
 namespace J_JHealthSolutions.Views
 {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using J_JHealthSolutions.Model.Other;
 
-namespace J_JHealthSolutions.Model
+namespace J_JHealthSolutions.Model.Domain
 {
     public class Test
     {

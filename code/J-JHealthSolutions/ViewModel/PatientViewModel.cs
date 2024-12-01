@@ -1,5 +1,6 @@
 ﻿using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
+using J_JHealthSolutions.Model.Domain;
 using J_JHealthSolutions.Views;
 using System;
 using System.Collections.ObjectModel;

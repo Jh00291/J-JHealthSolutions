@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace J_JHealthSolutions.Model
+namespace J_JHealthSolutions.Model.Domain
 {
     /// <summary>
     /// Represents a nurse, inheriting from the <see cref="Employee"/> class.

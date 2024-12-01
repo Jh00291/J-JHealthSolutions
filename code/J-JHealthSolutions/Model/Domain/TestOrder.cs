@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace J_JHealthSolutions.Model
+namespace J_JHealthSolutions.Model.Domain
 {
     public class TestOrder
     {
@@ -25,7 +25,7 @@ namespace J_JHealthSolutions.Model
             set
             {
 
-            
+
                 if (value <= 0)
                     throw new ArgumentException("Test Order ID must be a positive integer greater than zero.");
                 _testOrderID = value;
@@ -44,13 +44,13 @@ namespace J_JHealthSolutions.Model
 
         public TestOrder(int? testOrderID, int visitID, int testCode, DateTime orderDateTime, DateTime? performedDateTime, double? result, bool? abnormal, Test test)
         {
-            this.TestOrderID = testOrderID;
-            this.VisitId = visitID;
-            this.TestCode = testCode;
-            this.OrderDateTime = orderDateTime;
-            this.PerformedDateTime = performedDateTime;
-            this.Result = result;
-            this.Abnormal = abnormal;
+            TestOrderID = testOrderID;
+            VisitId = visitID;
+            TestCode = testCode;
+            OrderDateTime = orderDateTime;
+            PerformedDateTime = performedDateTime;
+            Result = result;
+            Abnormal = abnormal;
             Test = test;
         }
 

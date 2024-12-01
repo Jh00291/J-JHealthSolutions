@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Google.Protobuf.WellKnownTypes;
 using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
+using J_JHealthSolutions.Model.Domain;
 using Org.BouncyCastle.Asn1.Cms;
 
 namespace J_JHealthSolutions.ViewModels

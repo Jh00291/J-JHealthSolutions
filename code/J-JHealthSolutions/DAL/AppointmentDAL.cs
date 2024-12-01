@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Dapper;
-using J_JHealthSolutions.Model;
+using J_JHealthSolutions.Model.Domain;
+using J_JHealthSolutions.Model.Other;
 using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL

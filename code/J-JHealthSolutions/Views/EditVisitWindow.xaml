@@ -1,5 +1,5 @@
 ﻿<!-- EditVisit.xaml -->
-<Window x:Class="J_JHealthSolutions.Views.EditVisit"
+<Window x:Class="J_JHealthSolutions.Views.EditVisitWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -106,15 +106,18 @@
 
                 <!-- Weight -->
                 <Label Grid.Row="0" Grid.Column="0" Content="Weight (kg):" VerticalAlignment="Center" Margin="5"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Weight, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="5"
+                         Text="{Binding WeightString, UpdateSourceTrigger=PropertyChanged}"
                          IsReadOnly="{Binding IsReadOnlyMode}"/>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding WeightError}" Foreground="Red" Visibility="{Binding IsWeightErrorVisible, Converter={StaticResource BoolToVisibilityConverter}}" Margin="5"/>
 
                 <!-- Height -->
                 <Label Grid.Row="1" Grid.Column="0" Content="Height (cm):" VerticalAlignment="Center" Margin="5"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="5"
+                         Text="{Binding HeightString, UpdateSourceTrigger=PropertyChanged}"
                          IsReadOnly="{Binding IsReadOnlyMode}"/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HeightError}" Foreground="Red" Visibility="{Binding IsHeightErrorVisible, Converter={StaticResource BoolToVisibilityConverter}}" Margin="5"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HeightError}" Foreground="Red" 
+                           Visibility="{Binding IsHeightErrorVisible, Converter={StaticResource BoolToVisibilityConverter}}" Margin="5"/>
 
                 <!-- Blood Pressure Systolic -->
                 <Label Grid.Row="2" Grid.Column="0" Content="BP Systolic:" VerticalAlignment="Center" Margin="5"/>
@@ -130,9 +133,11 @@
 
                 <!-- Temperature -->
                 <Label Grid.Row="4" Grid.Column="0" Content="Temperature (°C):" VerticalAlignment="Center" Margin="5"/>
-                <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding Temperature, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Grid.Row="4" Grid.Column="1" Margin="5"
+                         Text="{Binding TemperatureString, UpdateSourceTrigger=PropertyChanged}"
                          IsReadOnly="{Binding IsReadOnlyMode}"/>
-                <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding TemperatureError}" Foreground="Red" Visibility="{Binding IsTemperatureErrorVisible, Converter={StaticResource BoolToVisibilityConverter}}" Margin="5"/>
+                <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding TemperatureError}" Foreground="Red" 
+                           Visibility="{Binding IsTemperatureErrorVisible, Converter={StaticResource BoolToVisibilityConverter}}" Margin="5"/>
 
                 <!-- Pulse -->
                 <Label Grid.Row="5" Grid.Column="0" Content="Pulse:" VerticalAlignment="Center" Margin="5"/>

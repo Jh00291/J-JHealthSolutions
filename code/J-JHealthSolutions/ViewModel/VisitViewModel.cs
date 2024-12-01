@@ -223,7 +223,7 @@ namespace J_JHealthSolutions.ViewModel
             if (SelectedVisit == null)
                 return;
 
-            var editVisitWindow = new EditVisit(SelectedVisit);
+            var editVisitWindow = new EditVisitWindow(SelectedVisit);
             if (editVisitWindow.ShowDialog() == true)
             {
                 LoadVisits();

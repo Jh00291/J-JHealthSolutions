@@ -1,9 +1,5 @@
-﻿// EditVisitViewModel.cs
-using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
@@ -40,6 +36,10 @@ namespace J_JHealthSolutions.ViewModels
             Temperature = _visit.Temperature;
             Pulse = _visit.Pulse;
             Symptoms = _visit.Symptoms;
+            HeightString = Height?.ToString() ?? string.Empty;
+            TemperatureString = Temperature?.ToString() ?? string.Empty;
+            WeightString = Weight?.ToString() ?? string.Empty;
+
 
             // Initialize Commands
             SaveCommand = new RelayCommand(Save, CanSave);
@@ -82,6 +82,52 @@ namespace J_JHealthSolutions.ViewModels
                 OnPropertyChanged(nameof(IsStatusEnabled));
             }
         }
+
+        private string _heightString;
+        public string HeightString
+        {
+            get => _heightString;
+            set
+            {
+                _heightString = value;
+                OnPropertyChanged(nameof(HeightString));
+
+                if (decimal.TryParse(value, out var parsedHeight))
+                {
+                    Height = parsedHeight;
+                    IsHeightErrorVisible = false;
+                }
+                else
+                {
+                    IsHeightErrorVisible = !string.IsNullOrWhiteSpace(value);
+                    HeightError = "Invalid height. Please enter a valid decimal number.";
+                }
+            }
+        }
+
+        private string _temperatureString;
+        public string TemperatureString
+        {
+            get => _temperatureString;
+            set
+            {
+                _temperatureString = value;
+                OnPropertyChanged(nameof(TemperatureString));
+
+                if (decimal.TryParse(value, out var parsedTemperature))
+                {
+                    Temperature = parsedTemperature;
+                    IsTemperatureErrorVisible = false;
+                }
+                else
+                {
+                    IsTemperatureErrorVisible = !string.IsNullOrWhiteSpace(value);
+                    TemperatureError = "Invalid temperature. Please enter a valid decimal number.";
+                }
+            }
+        }
+
+
 
         private string _finalDiagnosis;
         public string FinalDiagnosis
@@ -197,6 +243,29 @@ namespace J_JHealthSolutions.ViewModels
                 OnPropertyChanged(nameof(IsHeightErrorVisible));
             }
         }
+
+        private string _weightString;
+        public string WeightString
+        {
+            get => _weightString;
+            set
+            {
+                _weightString = value;
+                OnPropertyChanged(nameof(WeightString));
+
+                if (decimal.TryParse(value, out var parsedWeight))
+                {
+                    Weight = parsedWeight;
+                    IsWeightErrorVisible = false;
+                }
+                else
+                {
+                    IsWeightErrorVisible = !string.IsNullOrWhiteSpace(value);
+                    WeightError = "Invalid weight. Please enter a valid decimal number.";
+                }
+            }
+        }
+
 
         private int? _bloodPressureSystolic;
         public int? BloodPressureSystolic

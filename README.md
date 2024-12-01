@@ -303,7 +303,6 @@ The final sprint focuses on the administrative side of the system, allowing admi
   - View all visit records
   - Query visits within a date range
 
----
 
 ## Technologies Used
 - **Database**: MySQL DBMS
@@ -312,11 +311,67 @@ The final sprint focuses on the administrative side of the system, allowing admi
 
 ---
 
+### Sprint 5: Administrative Features
+The final sprint enhances the system's administrative functionality, enabling administrators to perform advanced queries, view reports, and refine application architecture for improved user experience and security.
+
+#### **Tasks:**
+
+**Style Each View**  
+- **Estimated Time:** 5 hours  
+- **Actual Time:** 4 hours  
+- **Assigned to:** Jason  
+- Enhance the appearance and layout of each view for a more polished user interface.  
+
+**Alter Menu to Include Admin Button for Logged-In Admin**  
+- **Estimated Time:** 1 hour  
+- **Actual Time:** 2 hours  
+- **Assigned to:** Jason  
+- Update the menu to display an "Admin" button when an administrator is logged in.  
+
+**Create Admin View with Query Interface**  
+- **Estimated Time:** 2 hours  
+- **Actual Time:** 2 hours  
+- **Assigned to:** Jason  
+- Develop a dedicated admin view featuring an interface for running advanced queries.  
+
+**Refactor Views to Use ViewModels**  
+- **Estimated Time:** 2.5 hours  
+- **Actual Time:** 3 hours  
+- **Assigned to:** Jason  
+- Refactor the views to utilize the MVVM design pattern for better separation of concerns and maintainability.  
+
+**Implement Query Functionality**  
+- **Estimated Time:** 4 hours  
+- **Actual Time:** 4 hours  
+- **Assigned to:** Jacob  
+- Develop backend logic to execute complex queries based on admin inputs.  
+
+**Create Files for Iteration Submission**  
+- **Estimated Time:** 2 hours  
+- **Actual Time:** 3 hours  
+- **Assigned to:** Jacob  
+- Prepare and organize all files and documentation required for project submission.  
+
+**Alter Passwords to Use Hashing**  
+- **Estimated Time:** 4 hours  
+- **Actual Time:** 4 hours  
+- **Assigned to:** Jacob  
+- Replace plain text password storage with secure hashing to enhance system security.  
+
+---
+
 ## Getting Started
 
-### Prerequisites
+### Prerequisites and Packages Required
 - C#
 - MySQL DBMS for the database.
+
+Packages Needed:
+- AvalonEdit
+- Dapper
+- DotNetProjects.WpfToolkit.Input
+- Extedned.Wpf.Toolkit
+- MySql.Data
 
 ### Setup Instructions
 1. Clone the repository to your local machine:
@@ -324,4 +379,63 @@ The final sprint focuses on the administrative side of the system, allowing admi
    git clone https://github.com/your-repo/healthcare-system.git
    ```
 2. Set up the database schema and tables (instructions are provided in the `schema.sql` file).
-3. Run the application using your preferred IDE or command line.
+3. Install necessary packages using preferred IDE.
+4. Run the application using your preferred IDE or command line.
+
+---
+
+### Usernames and Passwords
+
+The following table contains the sample data for usernames, passwords, and their roles as per the database:
+
+#### **Administrators**
+- **Username:** admin1  
+  **Password:** password123  
+  **Role:** Administrator  
+- **Username:** admin2  
+  **Password:** password2  
+  **Role:** Administrator  
+- **Username:** admin3  
+  **Password:** password3  
+  **Role:** Administrator  
+- **Username:** admin4  
+  **Password:** password4  
+  **Role:** Administrator  
+- **Username:** admin5  
+  **Password:** password5  
+  **Role:** Administrator  
+
+#### **Doctors**
+- **Username:** doc1  
+  **Password:** password123  
+  **Role:** Doctor  
+- **Username:** doc2  
+  **Password:** password2  
+  **Role:** Doctor  
+- **Username:** doc3  
+  **Password:** password3  
+  **Role:** Doctor  
+- **Username:** doc4  
+  **Password:** password4  
+  **Role:** Doctor  
+- **Username:** doc5  
+  **Password:** password5  
+  **Role:** Doctor  
+
+#### **Nurses**
+- **Username:** nurse1  
+  **Password:** password123  
+  **Role:** Nurse  
+- **Username:** nurse2  
+  **Password:** password2  
+  **Role:** Nurse  
+- **Username:** nurse3  
+  **Password:** password3  
+  **Role:** Nurse  
+- **Username:** nurse4  
+  **Password:** password4  
+  **Role:** Nurse  
+- **Username:** nurse5  
+  **Password:** password5  
+  **Role:** Nurse  
+

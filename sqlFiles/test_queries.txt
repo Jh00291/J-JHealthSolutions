@@ -1,0 +1,44 @@
+SELECT 
+    p.patient_id,
+    CONCAT(p.f_name, ' ', p.l_name) AS patient_name,
+    v.visit_datetime,
+    CONCAT(ne.f_name, ' ', ne.l_name) AS nurse_name,
+    n.nurse_id,
+    CONCAT(de.f_name, ' ', de.l_name) AS doctor_name,
+    d.doctor_id,
+    t.test_name,
+    t_order.result AS test_result,
+    v.initial_diagnosis,
+    v.final_diagnosis
+FROM 
+    Patient p
+JOIN Visit v ON p.patient_id = v.patient_id
+JOIN Nurse n ON v.nurse_id = n.nurse_id
+JOIN Employee ne ON n.emp_id = ne.employee_id
+JOIN Doctor d ON v.doctor_id = d.doctor_id
+JOIN Employee de ON d.emp_id = de.employee_id
+LEFT JOIN TestOrder t_order ON v.visit_id = t_order.visit_id
+LEFT JOIN Test t ON t_order.test_code = t.test_code
+WHERE 
+    p.f_name = 'Emily' AND p.l_name = 'Brown'
+ORDER BY 
+    v.visit_datetime;
+
+SELECT 
+    p.patient_id,
+    CONCAT(p.f_name, ' ', p.l_name) AS patient_name,
+    DATE(t_order.ordered_datetime) AS test_date,
+    COUNT(t_order.test_order_id) AS total_tests
+FROM 
+    Patient p
+JOIN Visit v ON p.patient_id = v.patient_id
+JOIN TestOrder t_order ON v.visit_id = t_order.visit_id
+GROUP BY 
+    p.patient_id, DATE(t_order.ordered_datetime)
+HAVING 
+    COUNT(t_order.test_order_id) >= 2
+ORDER BY 
+    p.patient_id, test_date;
+
+
+

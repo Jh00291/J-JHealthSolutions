@@ -3,28 +3,47 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:J_JHealthSolutions.Views"
+        xmlns:model="clr-namespace:J_JHealthSolutions.Model"
         mc:Ignorable="d"
-        Title="AddEditPatientWindow" Height="600" Width="660">
+        Title="AddEditPatientWindow" Height="600" Width="800">
+    <Window.Resources>
+        <model:StringToVisibilityConverter x:Key="StringToVisConverter" />
+    </Window.Resources>
     <Grid>
-        <Label x:Name="titleLabel" Content="Register or Edit Patient" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24"/>
-        <TextBox x:Name="firstNameTextBox" HorizontalAlignment="Left" Margin="258,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="firstNameErrorLabel" Content="First name is required." Foreground="Red" Visibility="Collapsed" Margin="388,67,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="lastNameTextBox" HorizontalAlignment="Left" Margin="258,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="lastNameErrorLabel" Content="Last name is required." Foreground="Red" Visibility="Collapsed" Margin="388,100,0,0" VerticalAlignment="Top"/>
-        <DatePicker x:Name="dobDatePicker" HorizontalAlignment="Left" Margin="258,132,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="dobErrorLabel" Content="Date of birth is required. Example: 01/25/2005" Foreground="Red" Visibility="Collapsed" Margin="388,132,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="genderComboBox" HorizontalAlignment="Left" Margin="258,173,0,0" VerticalAlignment="Top" Width="120" SelectedValuePath="Content">
+        <Label Content="{Binding Title}" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24"/>
+
+        <!-- First Name -->
+        <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="258,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="{Binding FirstNameErrorMessage}" Foreground="Red" Visibility="{Binding FirstNameErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="388,67,0,0" VerticalAlignment="Top"/>
+
+        <!-- Last Name -->
+        <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="258,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="{Binding LastNameErrorMessage}" Foreground="Red" Visibility="{Binding LastNameErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="388,100,0,0" VerticalAlignment="Top"/>
+
+        <!-- DOB -->
+        <DatePicker SelectedDate="{Binding DOB, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="258,132,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="{Binding DOBErrorMessage}" Foreground="Red" Visibility="{Binding DOBErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="388,132,0,0" VerticalAlignment="Top"/>
+
+        <!-- Gender -->
+        <ComboBox SelectedValue="{Binding Gender, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content" HorizontalAlignment="Left" Margin="258,173,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="M"/>
             <ComboBoxItem Content="F"/>
         </ComboBox>
-        <Label x:Name="genderErrorLabel" Content="Gender is required." Foreground="Red" Visibility="Collapsed" Margin="388,173,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="address1TextBox" HorizontalAlignment="Left" Margin="258,213,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
-        <Label x:Name="address1ErrorLabel" Content="Address1 is required." Foreground="Red" Visibility="Collapsed" Margin="526,209,-268,0" VerticalAlignment="Top" Height="26"/>
-        <TextBox x:Name="address2TextBox" HorizontalAlignment="Left" Margin="258,248,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
-        <TextBox x:Name="cityTextBox" HorizontalAlignment="Left" Margin="258,281,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="cityErrorLabel" Content="City is required." Foreground="Red" Visibility="Collapsed" Margin="388,281,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="stateComboBox" HorizontalAlignment="Left" Margin="258,313,0,0" VerticalAlignment="Top" Width="120" SelectedValuePath="Content">
+        <Label Content="{Binding GenderErrorMessage}" Foreground="Red" Visibility="{Binding GenderErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="388,173,0,0" VerticalAlignment="Top"/>
+
+        <!-- Address1 -->
+        <TextBox Text="{Binding Address1, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="258,213,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
+        <Label Content="{Binding Address1ErrorMessage}" Foreground="Red" Visibility="{Binding Address1ErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="526,209,-268,0" VerticalAlignment="Top" Height="26"/>
+
+        <!-- Address2 -->
+        <TextBox Text="{Binding Address2, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="258,248,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="263"/>
+
+        <!-- City -->
+        <TextBox Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="258,281,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="{Binding CityErrorMessage}" Foreground="Red" Visibility="{Binding CityErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="388,281,0,0" VerticalAlignment="Top"/>
+
+        <!-- State -->
+        <ComboBox SelectedValue="{Binding State, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content" HorizontalAlignment="Left" Margin="258,313,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="AL"/>
             <ComboBoxItem Content="AK"/>
             <ComboBoxItem Content="AZ"/>
@@ -76,12 +95,20 @@
             <ComboBoxItem Content="WI"/>
             <ComboBoxItem Content="WY"/>
         </ComboBox>
-        <Label x:Name="stateErrorLabel" Content="State is required." Foreground="Red" Visibility="Collapsed" Margin="388,313,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="zipcodeTextBox" HorizontalAlignment="Left" Margin="258,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="zipcodeErrorLabel" Content="Zipcode is required. Example: 12345" Foreground="Red" Visibility="Collapsed" Margin="388,350,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="phoneTextBox" HorizontalAlignment="Left" Margin="258,384,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="phoneErrorLabel" Content="Phone is required. Example: 0123456789" Foreground="Red" Visibility="Collapsed" Margin="388,384,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="activeCheckBox" Content="(Checked means active)" HorizontalAlignment="Left" Margin="258,420,0,0" VerticalAlignment="Top" Width="150"/>
+        <Label Content="{Binding StateErrorMessage}" Foreground="Red" Visibility="{Binding StateErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="388,313,0,0" VerticalAlignment="Top"/>
+
+        <!-- Zipcode -->
+        <TextBox Text="{Binding Zipcode, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="258,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="{Binding ZipcodeErrorMessage}" Foreground="Red" Visibility="{Binding ZipcodeErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="388,350,0,0" VerticalAlignment="Top"/>
+
+        <!-- Phone -->
+        <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="258,384,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="{Binding PhoneErrorMessage}" Foreground="Red" Visibility="{Binding PhoneErrorMessage, Converter={StaticResource StringToVisConverter}}" Margin="388,384,0,0" VerticalAlignment="Top"/>
+
+        <!-- Active -->
+        <CheckBox IsChecked="{Binding Active}" Content="(Checked means active)" HorizontalAlignment="Left" Margin="258,420,0,0" VerticalAlignment="Top" Width="150"/>
+
+        <!-- Labels -->
         <Label Content="First Name:" HorizontalAlignment="Left" Margin="144,63,0,0" VerticalAlignment="Top"/>
         <Label Content="Last Name:" HorizontalAlignment="Left" Margin="144,96,0,0" VerticalAlignment="Top"/>
         <Label Content="DOB:" HorizontalAlignment="Left" Margin="144,131,0,0" VerticalAlignment="Top"/>
@@ -93,7 +120,11 @@
         <Label Content="Zipcode:" HorizontalAlignment="Left" Margin="144,350,0,0" VerticalAlignment="Top"/>
         <Label Content="Phone:" HorizontalAlignment="Left" Margin="143,380,0,0" VerticalAlignment="Top"/>
         <Label Content="Active:" HorizontalAlignment="Left" Margin="144,411,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" Margin="166,473,0,0" VerticalAlignment="Top" Width="86" Height="32" Click="SavePatient_Click"/>
-        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="290,473,0,0" VerticalAlignment="Top" Width="86" Height="32" Click="Cancel_Click"/>
+
+        <!-- Buttons -->
+        <Button Content="Save" HorizontalAlignment="Left" Margin="166,473,0,0" VerticalAlignment="Top" Width="86" Height="32" 
+                Command="{Binding SaveCommand}"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="290,473,0,0" VerticalAlignment="Top" Width="86" Height="32" 
+                Command="{Binding CancelCommand}"/>
     </Grid>
 </Window>

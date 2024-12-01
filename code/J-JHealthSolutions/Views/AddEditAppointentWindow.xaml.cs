@@ -103,8 +103,7 @@ namespace J_JHealthSolutions.Views
 
         private void LoadAllPatients()
         {
-            PatientDal patientDal = new PatientDal();
-            allPatients = patientDal.GetPatients();
+            PatientDal.GetPatients();
         }
 
         private void LoadAllDoctors()

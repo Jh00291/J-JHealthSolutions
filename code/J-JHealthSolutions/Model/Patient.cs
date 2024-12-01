@@ -72,7 +72,7 @@ namespace J_JHealthSolutions.Model
             get => _dob;
             set
             {
-                if (value >= DateTime.Today)
+                if (value > DateTime.Today)
                     throw new ArgumentException("Date of birth must be in the past. Please enter a valid date in the format MM/dd/yyyy.");
                 _dob = value;
             }

@@ -18,11 +18,10 @@ namespace J_JHealthSolutions.DAL
             using IDbConnection connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            using IDbTransaction transaction = connection.BeginTransaction();
+            using IDbTransaction transaction = connection.BeginTransaction(); // Transaction needed
 
             try
             {
-                // Validate PatientId
                 const string patientExistsQuery = "SELECT COUNT(1) FROM Patient WHERE patient_id = @PatientId;";
                 bool patientExists = connection.ExecuteScalar<int>(
                     patientExistsQuery,
@@ -33,7 +32,6 @@ namespace J_JHealthSolutions.DAL
                 if (!patientExists)
                     throw new Exception($"PatientId {appointment.PatientId} does not exist.");
 
-                // Validate DoctorId
                 const string doctorExistsQuery = "SELECT COUNT(1) FROM Doctor WHERE doctor_id = @DoctorId;";
                 bool doctorExists = connection.ExecuteScalar<int>(
                     doctorExistsQuery,
@@ -44,7 +42,6 @@ namespace J_JHealthSolutions.DAL
                 if (!doctorExists)
                     throw new Exception($"DoctorId {appointment.DoctorId} does not exist.");
 
-                // Insert Appointment
                 const string insertQuery = @"
                     INSERT INTO Appointment (patient_id, doctor_id, `datetime`, reason, `status`)
                     VALUES (@PatientId, @DoctorId, @DateTime, @Reason, @Status);
@@ -89,7 +86,7 @@ namespace J_JHealthSolutions.DAL
             using IDbConnection connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            using IDbTransaction transaction = connection.BeginTransaction();
+            using IDbTransaction transaction = connection.BeginTransaction(); // Transaction needed
 
             try
             {
@@ -243,7 +240,7 @@ namespace J_JHealthSolutions.DAL
             using IDbConnection connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            using IDbTransaction transaction = connection.BeginTransaction();
+            using IDbTransaction transaction = connection.BeginTransaction(); // Transaction needed
 
             try
             {

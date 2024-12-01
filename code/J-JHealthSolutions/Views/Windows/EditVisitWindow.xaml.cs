@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using J_JHealthSolutions.Model;
+using J_JHealthSolutions.Model.Domain;
 using J_JHealthSolutions.ViewModels;
 
 namespace J_JHealthSolutions.Views

@@ -1,33 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using Dapper;
 using J_JHealthSolutions.Model.Domain;
 using MySql.Data.MySqlClient;
 
-namespace J_JHealthSolutions.DAL
+namespace J_JHealthSolutions.DAL;
+
+public static class VisitDal
 {
-    public static class VisitDal
+    /// <summary>
+    ///     Adds a new visit to the database after validating foreign keys.
+    /// </summary>
+    /// <param name="visit">The Visit object to add.</param>
+    /// <returns>The generated visit_id.</returns>
+    public static int AddVisit(Visit visit)
     {
-        /// <summary>
-        /// Adds a new visit to the database after validating foreign keys.
-        /// </summary>
-        /// <param name="visit">The Visit object to add.</param>
-        /// <returns>The generated visit_id.</returns>
-        public static int AddVisit(Visit visit)
+        using var connection = new MySqlConnection(Connection.ConnectionString());
+        connection.Open();
+
+        using var transaction = connection.BeginTransaction();
+
+        try
         {
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-            connection.Open();
+            // Validate foreign keys
+            ValidateForeignKeys(connection, transaction, visit);
 
-            using var transaction = connection.BeginTransaction();
-
-            try
-            {
-                // Validate foreign keys
-                ValidateForeignKeys(connection, transaction, visit);
-
-                // Insert into Visit table
-                var insertQuery = @"
+            // Insert into Visit table
+            var insertQuery = @"
                     INSERT INTO Visit (
                         appointment_id,
                         blood_pressure_diastolic,
@@ -65,47 +63,47 @@ namespace J_JHealthSolutions.DAL
                     SELECT LAST_INSERT_ID();
                 ";
 
-                var generatedId = connection.ExecuteScalar<int>(
-                    insertQuery,
-                    visit,
-                    transaction
-                );
+            var generatedId = connection.ExecuteScalar<int>(
+                insertQuery,
+                visit,
+                transaction
+            );
 
-                visit.VisitId = generatedId;
+            visit.VisitId = generatedId;
 
-                transaction.Commit();
+            transaction.Commit();
 
-                return generatedId;
-            }
-            catch
-            {
-                transaction.Rollback();
-                throw;
-            }
+            return generatedId;
         }
-
-        /// <summary>
-        /// Updates an existing visit in the database.
-        /// </summary>
-        /// <param name="visit">The Visit object with updated information.</param>
-        /// <returns>True if the update was successful; otherwise, false.</returns>
-        public static bool UpdateVisit(Visit visit)
+        catch
         {
-            if (visit.VisitId == null)
-                throw new ArgumentException("VisitId cannot be null for update operation.");
+            transaction.Rollback();
+            throw;
+        }
+    }
 
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-            connection.Open();
+    /// <summary>
+    ///     Updates an existing visit in the database.
+    /// </summary>
+    /// <param name="visit">The Visit object with updated information.</param>
+    /// <returns>True if the update was successful; otherwise, false.</returns>
+    public static bool UpdateVisit(Visit visit)
+    {
+        if (visit.VisitId == null)
+            throw new ArgumentException("VisitId cannot be null for update operation.");
 
-            using var transaction = connection.BeginTransaction();
+        using var connection = new MySqlConnection(Connection.ConnectionString());
+        connection.Open();
 
-            try
-            {
-                // Validate foreign keys
-                ValidateForeignKeys(connection, transaction, visit);
+        using var transaction = connection.BeginTransaction();
 
-                // Update Visit table
-                var updateQuery = @"
+        try
+        {
+            // Validate foreign keys
+            ValidateForeignKeys(connection, transaction, visit);
+
+            // Update Visit table
+            var updateQuery = @"
                     UPDATE Visit
                     SET
                         appointment_id = @AppointmentId,
@@ -126,33 +124,33 @@ namespace J_JHealthSolutions.DAL
                     WHERE visit_id = @VisitId;
                 ";
 
-                var affectedRows = connection.Execute(
-                    updateQuery,
-                    visit,
-                    transaction
-                );
+            var affectedRows = connection.Execute(
+                updateQuery,
+                visit,
+                transaction
+            );
 
-                transaction.Commit();
+            transaction.Commit();
 
-                return affectedRows > 0;
-            }
-            catch
-            {
-                transaction.Rollback();
-                throw;
-            }
+            return affectedRows > 0;
         }
-
-        /// <summary>
-        /// Retrieves all visits from the database, including patient, doctor, and nurse names.
-        /// </summary>
-        /// <returns>A list of Visit objects.</returns>
-        public static List<Visit> GetVisits()
+        catch
         {
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-            connection.Open();
+            transaction.Rollback();
+            throw;
+        }
+    }
 
-            var query = @"
+    /// <summary>
+    ///     Retrieves all visits from the database, including patient, doctor, and nurse names.
+    /// </summary>
+    /// <returns>A list of Visit objects.</returns>
+    public static List<Visit> GetVisits()
+    {
+        using var connection = new MySqlConnection(Connection.ConnectionString());
+        connection.Open();
+
+        var query = @"
                 SELECT 
                     v.visit_id AS VisitId,
                     v.appointment_id AS AppointmentId,
@@ -188,22 +186,22 @@ namespace J_JHealthSolutions.DAL
                 INNER JOIN Employee nurseEmp ON n.emp_id = nurseEmp.employee_id;
             ";
 
-            var visits = connection.Query<Visit>(query).AsList();
+        var visits = connection.Query<Visit>(query).AsList();
 
-            return visits;
-        }
+        return visits;
+    }
 
-        /// <summary>
-        /// Retrieves a visit by its associated appointment ID.
-        /// </summary>
-        /// <param name="appointmentId">The appointment ID to search for.</param>
-        /// <returns>The corresponding Visit object, or null if not found.</returns>
-        public static Visit GetVisitByAppointmentId(int appointmentId)
-        {
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-            connection.Open();
+    /// <summary>
+    ///     Retrieves a visit by its associated appointment ID.
+    /// </summary>
+    /// <param name="appointmentId">The appointment ID to search for.</param>
+    /// <returns>The corresponding Visit object, or null if not found.</returns>
+    public static Visit GetVisitByAppointmentId(int appointmentId)
+    {
+        using var connection = new MySqlConnection(Connection.ConnectionString());
+        connection.Open();
 
-            var query = @"
+        var query = @"
                 SELECT 
                     visit_id AS VisitId,
                     appointment_id AS AppointmentId,
@@ -225,23 +223,23 @@ namespace J_JHealthSolutions.DAL
                 WHERE appointment_id = @AppointmentId;
             ";
 
-            var visit = connection.QuerySingleOrDefault<Visit>(query, new { AppointmentId = appointmentId });
+        var visit = connection.QuerySingleOrDefault<Visit>(query, new { AppointmentId = appointmentId });
 
-            return visit;
-        }
+        return visit;
+    }
 
-        /// <summary>
-        /// Searches the visits.
-        /// </summary>
-        /// <param name="patientName">Name of the patient.</param>
-        /// <param name="dob">The dob.</param>
-        /// <returns></returns>
-        public static List<Visit> SearchVisits(string patientName, DateTime? dob)
-        {
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-            connection.Open();
+    /// <summary>
+    ///     Searches the visits.
+    /// </summary>
+    /// <param name="patientName">Name of the patient.</param>
+    /// <param name="dob">The dob.</param>
+    /// <returns></returns>
+    public static List<Visit> SearchVisits(string patientName, DateTime? dob)
+    {
+        using var connection = new MySqlConnection(Connection.ConnectionString());
+        connection.Open();
 
-            var query = @"
+        var query = @"
         SELECT 
             v.visit_id AS VisitId,
             v.appointment_id AS AppointmentId,
@@ -266,79 +264,79 @@ namespace J_JHealthSolutions.DAL
         WHERE (@PatientName IS NULL OR CONCAT(p.f_name, ' ', p.l_name) LIKE CONCAT('%', @PatientName, '%'))
           AND (@DOB IS NULL OR p.dob = @DOB);";
 
-            var visits = connection.Query<Visit>(
-                query,
-                new { PatientName = patientName, DOB = dob }
-            ).AsList();
+        var visits = connection.Query<Visit>(
+            query,
+            new { PatientName = patientName, DOB = dob }
+        ).AsList();
 
-            return visits;
-        }
+        return visits;
+    }
 
-        /// <summary>
-        /// Validates the foreign keys of a Visit object.
-        /// </summary>
-        /// <param name="connection">The open MySqlConnection.</param>
-        /// <param name="transaction">The active transaction.</param>
-        /// <param name="visit">The Visit object to validate.</param>
-        private static void ValidateForeignKeys(MySqlConnection connection, IDbTransaction transaction, Visit visit)
-        {
-            // Validate patient_id
-            var patientExistsQuery = "SELECT COUNT(1) FROM Patient WHERE patient_id = @PatientId;";
-            var patientExists = connection.ExecuteScalar<int>(
-                patientExistsQuery,
-                new { visit.PatientId },
-                transaction
-            ) > 0;
+    /// <summary>
+    ///     Validates the foreign keys of a Visit object.
+    /// </summary>
+    /// <param name="connection">The open MySqlConnection.</param>
+    /// <param name="transaction">The active transaction.</param>
+    /// <param name="visit">The Visit object to validate.</param>
+    private static void ValidateForeignKeys(MySqlConnection connection, IDbTransaction transaction, Visit visit)
+    {
+        // Validate patient_id
+        var patientExistsQuery = "SELECT COUNT(1) FROM Patient WHERE patient_id = @PatientId;";
+        var patientExists = connection.ExecuteScalar<int>(
+            patientExistsQuery,
+            new { visit.PatientId },
+            transaction
+        ) > 0;
 
-            if (!patientExists)
-                throw new Exception($"PatientId {visit.PatientId} does not exist.");
+        if (!patientExists)
+            throw new Exception($"PatientId {visit.PatientId} does not exist.");
 
-            // Validate doctor_id
-            var doctorExistsQuery = "SELECT COUNT(1) FROM Doctor WHERE doctor_id = @DoctorId;";
-            var doctorExists = connection.ExecuteScalar<int>(
-                doctorExistsQuery,
-                new { visit.DoctorId },
-                transaction
-            ) > 0;
+        // Validate doctor_id
+        var doctorExistsQuery = "SELECT COUNT(1) FROM Doctor WHERE doctor_id = @DoctorId;";
+        var doctorExists = connection.ExecuteScalar<int>(
+            doctorExistsQuery,
+            new { visit.DoctorId },
+            transaction
+        ) > 0;
 
-            if (!doctorExists)
-                throw new Exception($"DoctorId {visit.DoctorId} does not exist.");
+        if (!doctorExists)
+            throw new Exception($"DoctorId {visit.DoctorId} does not exist.");
 
-            // Validate nurse_id
-            var nurseExistsQuery = "SELECT COUNT(1) FROM Nurse WHERE nurse_id = @NurseId;";
-            var nurseExists = connection.ExecuteScalar<int>(
-                nurseExistsQuery,
-                new { visit.NurseId },
-                transaction
-            ) > 0;
+        // Validate nurse_id
+        var nurseExistsQuery = "SELECT COUNT(1) FROM Nurse WHERE nurse_id = @NurseId;";
+        var nurseExists = connection.ExecuteScalar<int>(
+            nurseExistsQuery,
+            new { visit.NurseId },
+            transaction
+        ) > 0;
 
-            if (!nurseExists)
-                throw new Exception($"NurseId {visit.NurseId} does not exist.");
+        if (!nurseExists)
+            throw new Exception($"NurseId {visit.NurseId} does not exist.");
 
-            // Validate appointment_id
-            var appointmentExistsQuery = "SELECT COUNT(1) FROM Appointment WHERE appointment_id = @AppointmentId;";
-            var appointmentExists = connection.ExecuteScalar<int>(
-                appointmentExistsQuery,
-                new { visit.AppointmentId },
-                transaction
-            ) > 0;
+        // Validate appointment_id
+        var appointmentExistsQuery = "SELECT COUNT(1) FROM Appointment WHERE appointment_id = @AppointmentId;";
+        var appointmentExists = connection.ExecuteScalar<int>(
+            appointmentExistsQuery,
+            new { visit.AppointmentId },
+            transaction
+        ) > 0;
 
-            if (!appointmentExists)
-                throw new Exception($"AppointmentId {visit.AppointmentId} does not exist.");
-        }
+        if (!appointmentExists)
+            throw new Exception($"AppointmentId {visit.AppointmentId} does not exist.");
+    }
 
-        /// <summary>
-        /// Retrieves visit reports within a specified date range.
-        /// </summary>
-        /// <param name="startDate">The start date of the range.</param>
-        /// <param name="endDate">The end date of the range.</param>
-        /// <returns>A list of VisitReport objects.</returns>
-        public static List<VisitReport> GetVisitReports(DateTime startDate, DateTime endDate)
-        {
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-            connection.Open();
+    /// <summary>
+    ///     Retrieves visit reports within a specified date range.
+    /// </summary>
+    /// <param name="startDate">The start date of the range.</param>
+    /// <param name="endDate">The end date of the range.</param>
+    /// <returns>A list of VisitReport objects.</returns>
+    public static List<VisitReport> GetVisitReports(DateTime startDate, DateTime endDate)
+    {
+        using var connection = new MySqlConnection(Connection.ConnectionString());
+        connection.Open();
 
-            var query = @"
+        var query = @"
                 SELECT 
                     v.visit_datetime AS VisitDate,
                     p.patient_id AS PatientId,
@@ -362,12 +360,11 @@ namespace J_JHealthSolutions.DAL
                 ORDER BY v.visit_datetime, p.l_name;
             ";
 
-            var visitReports = connection.Query<VisitReport>(
-                query,
-                new { StartDate = startDate, EndDate = endDate }
-            ).AsList();
+        var visitReports = connection.Query<VisitReport>(
+            query,
+            new { StartDate = startDate, EndDate = endDate }
+        ).AsList();
 
-            return visitReports;
-        }
+        return visitReports;
     }
 }

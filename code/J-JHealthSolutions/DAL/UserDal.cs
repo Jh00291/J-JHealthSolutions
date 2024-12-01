@@ -9,7 +9,11 @@ namespace J_JHealthSolutions.DAL
 {
     public class UserDal
     {
-        // Hashes a password using SHA256
+        /// <summary>
+        /// Hashes a plain-text password using SHA256.
+        /// </summary>
+        /// <param name="password">The plain-text password to hash.</param>
+        /// <returns>The hashed password as a Base64-encoded string.</returns>
         private string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
@@ -17,7 +21,12 @@ namespace J_JHealthSolutions.DAL
             return Convert.ToBase64String(hashedBytes);
         }
 
-        // Login method: Verifies username and hashed password
+        /// <summary>
+        /// Logs in a user by verifying the username and hashed password.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="plainTextPassword">The plain-text password to verify.</param>
+        /// <returns>The user object if login is successful; otherwise, null.</returns>
         public User Login(string username, string plainTextPassword)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -43,7 +52,11 @@ namespace J_JHealthSolutions.DAL
             return connection.QuerySingleOrDefault<User>(query, parameters);
         }
 
-        // Adds a new user with hashed password
+        /// <summary>
+        /// Adds a new user to the database with a hashed password.
+        /// </summary>
+        /// <param name="user">The user object containing username and role.</param>
+        /// <param name="plainTextPassword">The plain-text password to hash and store.</param>
         public void AddUser(User user, string plainTextPassword)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -66,7 +79,9 @@ namespace J_JHealthSolutions.DAL
             connection.Execute(query, parameters);
         }
 
-        // Migrates existing plaintext passwords to hashed passwords
+        /// <summary>
+        /// Migrates existing plaintext passwords in the database to hashed passwords.
+        /// </summary>
         public void MigratePasswords()
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());

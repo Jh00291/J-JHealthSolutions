@@ -364,7 +364,6 @@ namespace J_JHealthSolutions.ViewModel
             };
         }
 
-        // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {

@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using J_JHealthSolutions.Model;
 using J_JHealthSolutions.DAL;
-using Mysqlx.Crud;
 
 namespace J_JHealthSolutions.Views
 {
@@ -191,7 +190,6 @@ namespace J_JHealthSolutions.Views
         {
             bool hasError = false;
 
-            // Reset all error labels
             patientErrorLabel.Visibility = Visibility.Collapsed;
             doctorErrorLabel.Visibility = Visibility.Collapsed;
             dateErrorLabel.Visibility = Visibility.Collapsed;
@@ -199,38 +197,32 @@ namespace J_JHealthSolutions.Views
             statusErrorLabel.Visibility = Visibility.Collapsed;
             nurseErrorLabel.Visibility = Visibility.Collapsed;
 
-            // Reset default error messages
             dateErrorLabel.Content = "Please select a date.";
 
-            // Validate patient selection
             if (selectedPatient == null)
             {
                 patientErrorLabel.Visibility = Visibility.Visible;
                 hasError = true;
             }
 
-            // Validate doctor selection
             if (selectedDoctor == null)
             {
                 doctorErrorLabel.Visibility = Visibility.Visible;
                 hasError = true;
             }
 
-            // Validate date selection
             if (datePicker.SelectedDate == null)
             {
                 dateErrorLabel.Visibility = Visibility.Visible;
                 hasError = true;
             }
 
-            // Validate reason field
             if (string.IsNullOrWhiteSpace(reasonTextBox.Text))
             {
                 reasonErrorLabel.Visibility = Visibility.Visible;
                 hasError = true;
             }
 
-            // Validate status selection
             var statusString = statusComboBox.SelectedItem?.ToString();
             if (!Enum.TryParse(statusString, out Status appointmentStatus))
             {
@@ -238,23 +230,20 @@ namespace J_JHealthSolutions.Views
                 hasError = true;
             }
 
-            // Validate nurse selection if necessary
             if ((appointmentStatus == Status.InProgress || appointmentStatus == Status.Completed) && selectedNurse == null)
             {
                 nurseErrorLabel.Visibility = Visibility.Visible;
                 hasError = true;
             }
 
-            // If initial validations have errors, stop here
             if (hasError)
             {
                 return;
             }
 
-            // Proceed with additional date validations
             DateTime selectedDate = datePicker.SelectedDate.Value;
 
-            if (!isEdit) // Adding a new appointment
+            if (!isEdit)
             {
                 if (selectedDate.Date < DateTime.Today)
                 {
@@ -274,13 +263,11 @@ namespace J_JHealthSolutions.Views
                 }
             }
 
-            // If there are errors after date validations, stop here
             if (hasError)
             {
                 return;
             }
 
-            // If validation passed, proceed with saving the appointment
             var appointment = new Appointment
             {
                 PatientId = selectedPatient.PatientId.Value,
@@ -379,99 +366,28 @@ namespace J_JHealthSolutions.Views
             }
         }
 
-        private void ValidatePatientSelection()
-        {
-            string inputText = patientAutoCompleteBox.Text.Trim();
-            if (string.IsNullOrEmpty(inputText))
-            {
-                selectedPatient = null;
-                return;
-            }
-
-            var matchingPatient = allPatients.FirstOrDefault(p => p.PatientFullName.Equals(inputText, StringComparison.OrdinalIgnoreCase));
-            if (matchingPatient != null)
-            {
-                selectedPatient = matchingPatient;
-            }
-            else
-            {
-                selectedPatient = null;
-                MessageBox.Show("The patient you entered does not exist. Please select a valid patient from the list.", "Invalid Patient", MessageBoxButton.OK, MessageBoxImage.Warning);
-                patientAutoCompleteBox.Text = string.Empty;
-            }
-        }
-
-        private void ValidateDoctorSelection()
-        {
-            string inputText = doctorComboBox.Text.Trim();
-            if (string.IsNullOrEmpty(inputText))
-            {
-                selectedDoctor = null;
-                return;
-            }
-
-            var matchingDoctor = allDoctors.FirstOrDefault(d => d.EmployeeFullName.Equals(inputText, StringComparison.OrdinalIgnoreCase));
-            if (matchingDoctor != null)
-            {
-                selectedDoctor = matchingDoctor;
-            }
-            else
-            {
-                selectedDoctor = null;
-                MessageBox.Show("The doctor you entered does not exist. Please select a valid doctor from the list.", "Invalid Doctor", MessageBoxButton.OK, MessageBoxImage.Warning);
-                doctorComboBox.Text = string.Empty;
-            }
-        }
-
-        private void ValidateNurseSelection()
-        {
-            string inputText = nurseAutoCompleteBox.Text.Trim();
-            if (string.IsNullOrEmpty(inputText))
-            {
-                selectedNurse = null;
-                return;
-            }
-
-            var matchingNurse = allNurses.FirstOrDefault(n => n.EmployeeFullName.Equals(inputText, StringComparison.OrdinalIgnoreCase));
-            if (matchingNurse != null)
-            {
-                selectedNurse = matchingNurse;
-            }
-            else
-            {
-                selectedNurse = null;
-                MessageBox.Show("The nurse you entered does not exist. Please select a valid nurse from the list.", "Invalid Nurse", MessageBoxButton.OK, MessageBoxImage.Warning);
-                nurseAutoCompleteBox.Text = string.Empty;
-            }
-        }
-
-
         private void UpdateStatusComboBox(Status? currentStatus = null)
         {
             List<string> statuses;
 
             if (isEdit)
             {
-                // Editing an existing appointment: allow "Scheduled" and the other statuses.
-                statuses = new List<string> { "Scheduled", "Completed", "InProgress", "NoShow", "Cancelled" };
+              statuses = new List<string> { "Scheduled", "Completed", "InProgress", "NoShow", "Cancelled" };
             }
             else
             {
-                // Adding a new appointment: only allow "Scheduled", "InProgress"
-                statuses = new List<string> { "Scheduled", "InProgress" };
+              statuses = new List<string> { "Scheduled", "InProgress" };
             }
 
             statusComboBox.ItemsSource = statuses;
 
-            // Set the current status if provided and it exists in the list
             if (currentStatus != null && statuses.Contains(currentStatus.ToString()))
             {
                 statusComboBox.SelectedItem = currentStatus.ToString();
             }
             else if (statuses.Count > 0)
             {
-                // Default to the first item if no current status is provided or if it's not in the allowed list
-                statusComboBox.SelectedIndex = 0;
+              statusComboBox.SelectedIndex = 0;
             }
 
             UpdateNurseAutoCompleteBox();

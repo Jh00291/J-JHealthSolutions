@@ -1,6 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using J_JHealthSolutions.DAL;
@@ -100,7 +98,6 @@ namespace J_JHealthSolutions.ViewModel
             }
             catch (Exception ex)
             {
-                // Handle exceptions (e.g., show a message to the user)
             }
         }
 
@@ -111,20 +108,18 @@ namespace J_JHealthSolutions.ViewModel
                 DataTable results = _adminDal.ExecuteQuery(SqlQuery);
                 QueryResults = new ObservableCollection<object>(results.DefaultView.Cast<object>());
 
-                // Reload schema after executing query
                 LoadDatabaseSchema();
             }
             catch (Exception ex)
             {
-                // Handle exceptions (log or display error message)
                 MessageBox.Show($"Error: {ex.Message}", "Query Execution Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void ClearQuery(object obj)
         {
-            SqlQuery = string.Empty; // Clear SQL Query input
-            QueryResults = new ObservableCollection<object>(); // Clear query results
+            SqlQuery = string.Empty;
+            QueryResults = new ObservableCollection<object>();
         }
 
         private void LoadDatabaseSchema()

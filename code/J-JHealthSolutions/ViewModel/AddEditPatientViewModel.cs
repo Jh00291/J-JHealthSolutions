@@ -12,19 +12,14 @@ namespace J_JHealthSolutions.ViewModels
 {
     public class AddEditPatientViewModel : INotifyPropertyChanged
     {
-        // Event for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-
-        // Method to raise PropertyChanged event
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        // Patient Model
         private Patient _patient;
 
-        // Properties bound to UI elements
         private string _firstName;
         public string FirstName
         {
@@ -102,7 +97,6 @@ namespace J_JHealthSolutions.ViewModels
             set { _active = value; OnPropertyChanged(nameof(Active)); }
         }
 
-        // Error message properties
         private string _firstNameErrorMessage;
         public string FirstNameErrorMessage
         {
@@ -166,14 +160,11 @@ namespace J_JHealthSolutions.ViewModels
             set { _phoneErrorMessage = value; OnPropertyChanged(nameof(PhoneErrorMessage)); }
         }
 
-        // Commands
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
-        // Action to close the window
         public Action<bool?> CloseAction { get; set; }
 
-        // Constructor for Adding a new Patient
         public AddEditPatientViewModel()
         {
             _patient = new Patient();
@@ -181,12 +172,10 @@ namespace J_JHealthSolutions.ViewModels
             CancelCommand = new RelayCommand(Cancel);
         }
 
-        // Constructor for Editing an existing Patient
         public AddEditPatientViewModel(Patient patient)
         {
             _patient = patient;
 
-            // Populate properties with existing patient data
             FirstName = _patient.FName;
             LastName = _patient.LName;
             DOB = _patient.DOB;
@@ -203,12 +192,10 @@ namespace J_JHealthSolutions.ViewModels
             CancelCommand = new RelayCommand(Cancel);
         }
 
-        // Method to save patient data
         private void SavePatient(object parameter)
         {
             bool hasError = false;
 
-            // Reset all error messages
             FirstNameErrorMessage = string.Empty;
             LastNameErrorMessage = string.Empty;
             DOBErrorMessage = string.Empty;
@@ -219,7 +206,6 @@ namespace J_JHealthSolutions.ViewModels
             ZipcodeErrorMessage = string.Empty;
             PhoneErrorMessage = string.Empty;
 
-            // Validate each field and set the respective error message if needed
             if (string.IsNullOrWhiteSpace(FirstName))
             {
                 FirstNameErrorMessage = "First name is required.";
@@ -293,7 +279,6 @@ namespace J_JHealthSolutions.ViewModels
 
             try
             {
-                // Populate the patient model
                 _patient.FName = FirstName;
                 _patient.LName = LastName;
                 _patient.DOB = DOB.Value;
@@ -306,15 +291,12 @@ namespace J_JHealthSolutions.ViewModels
                 _patient.Phone = Phone;
                 _patient.Active = Active;
 
-                // Add or update the patient
                 if (_patient.PatientId == null)
                 {
-                    // Add new patient
                     int generatedId = PatientDal.AddPatient(_patient);
                 }
                 else
                 {
-                    // Update existing patient
                     bool success = PatientDal.UpdatePatient(_patient);
                     if (!success)
                     {
@@ -322,24 +304,17 @@ namespace J_JHealthSolutions.ViewModels
                         return;
                     }
                 }
-
-                // Close the window if operation is successful
                 CloseAction?.Invoke(true);
             }
             catch (Exception ex)
             {
-                // Show detailed error message
                 ShowErrorDialog("Error Saving Patient", $"An error occurred: {ex.Message}");
             }
         }
-
-        // Method to cancel the operation
         private void Cancel(object parameter)
         {
             CloseAction?.Invoke(false);
         }
-
-        // Method to show error dialog
         private void ShowErrorDialog(string title, string message)
         {
             var errorDialog = new Window

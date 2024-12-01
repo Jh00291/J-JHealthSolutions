@@ -9,9 +9,9 @@ namespace J_JHealthSolutions.Views
     /// <summary>
     /// Interaction logic for AddEditTestOrder.xaml
     /// </summary>
-    public partial class AddEditTestOrder : Window
+    public partial class AddEditTestOrderWindow : Window
     {
-        public AddEditTestOrder()
+        public AddEditTestOrderWindow()
         {
             InitializeComponent();
 
@@ -22,7 +22,7 @@ namespace J_JHealthSolutions.Views
             viewModel.OnTestOrderSaved += ViewModel_OnTestOrderSaved;
         }
 
-        public AddEditTestOrder(Visit currentVisit)
+        public AddEditTestOrderWindow(Visit currentVisit)
         {
             InitializeComponent();
 
@@ -40,7 +40,7 @@ namespace J_JHealthSolutions.Views
             this.Close();
         }
 
-        public AddEditTestOrder(TestOrder testOrder, Visit currentVisit)
+        public AddEditTestOrderWindow(TestOrder testOrder, Visit currentVisit)
         {
             InitializeComponent();
             var dialogService = new DialogService();

@@ -59,7 +59,6 @@ namespace J_JHealthSolutions.ViewModel
                     OnPropertyChanged(nameof(SelectedVisit));
                     // Notify that EditCommand and CheckUpCommand's CanExecute might have changed
                     ((RelayCommand)EditCommand).RaiseCanExecuteChanged();
-                    ((RelayCommand)CheckUpCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -136,7 +135,6 @@ namespace J_JHealthSolutions.ViewModel
         {
             ClearCommand = new RelayCommand(ExecuteClearSearch);
             EditCommand = new RelayCommand(ExecuteEdit, CanExecuteEditOrCheckUp);
-            CheckUpCommand = new RelayCommand(ExecuteCheckUp, CanExecuteEditOrCheckUp);
             LoadVisits();
 
             // Initialize the CollectionView for filtering
@@ -230,18 +228,6 @@ namespace J_JHealthSolutions.ViewModel
             {
                 LoadVisits();
             }
-        }
-
-        /// <summary>
-        /// Executes the CheckUp command to open the CheckUpWindow for the selected visit.
-        /// </summary>
-        private void ExecuteCheckUp(object parameter)
-        {
-            if (SelectedVisit == null)
-                return;
-
-            var checkUpWindow = new CheckUpWindow(SelectedVisit);
-            checkUpWindow.ShowDialog();
         }
 
         /// <summary>

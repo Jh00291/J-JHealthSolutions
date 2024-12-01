@@ -445,7 +445,7 @@ namespace J_JHealthSolutions.ViewModels
 
         private void EditTestOrder(object parameter)
         {
-            bool? dialogResult = new AddEditTestOrder(SelectedTestOrder, _visit).ShowDialog();
+            bool? dialogResult = new AddEditTestOrderWindow(SelectedTestOrder, _visit).ShowDialog();
             if (dialogResult == true)
             {
                 TestOrders = new ObservableCollection<TestOrder>(TestOrderDal.GetTestOrdersFromVisit((int)_visit.VisitId));
@@ -486,7 +486,7 @@ namespace J_JHealthSolutions.ViewModels
 
         private void AddTestOrder(object parameter)
         {
-            bool? dialogResult = new AddEditTestOrder(_visit).ShowDialog();
+            bool? dialogResult = new AddEditTestOrderWindow(_visit).ShowDialog();
             if (dialogResult == true)
             {
                 TestOrders = new ObservableCollection<TestOrder>(TestOrderDal.GetTestOrdersFromVisit((int)_visit.VisitId));

@@ -13,7 +13,13 @@ namespace J_JHealthSolutions.DAL
         /// Hashes a plain-text password using SHA256.
         /// </summary>
         /// <param name="password">The plain-text password to hash.</param>
-        /// <returns>The hashed password as a Base64-encoded string.</returns>
+        /// <returns>
+        /// The hashed password as a Base64-encoded string.
+        /// </returns>
+        /// /// <remarks>
+        /// Implementation reference: 
+        /// https://github.com/dotnet/runtime/blob/1d1bf92fcf43aa6981804dc53c5174445069c9e4/src/libraries/System.Security.Cryptography/src/System/Security/Cryptography/SHA256.cs
+        /// </remarks>
         private string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();

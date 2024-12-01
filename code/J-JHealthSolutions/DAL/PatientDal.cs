@@ -8,14 +8,14 @@ using MySql.Data.MySqlClient;
 
 namespace J_JHealthSolutions.DAL
 {
-    public class PatientDal
+    public static class PatientDal
     {
         /// <summary>
         /// Adds a new patient to the database using the InsertPatient stored procedure.
         /// </summary>
         /// <param name="patient">The Patient object to add.</param>
         /// <returns>The generated PatientId for the new patient.</returns>
-        public int AddPatient(Patient patient)
+        public static int AddPatient(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -57,7 +57,7 @@ namespace J_JHealthSolutions.DAL
         /// </summary>
         /// <param name="patient">The Patient object with updated information.</param>
         /// <returns>True if the update was successful; otherwise, false.</returns>
-        public bool UpdatePatient(Patient patient)
+        public static bool UpdatePatient(Patient patient)
         {
             if (patient.PatientId == null)
                 throw new ArgumentException("PatientId cannot be null for update operation.");
@@ -107,7 +107,7 @@ namespace J_JHealthSolutions.DAL
         /// </summary>
         /// <param name="patientId">The PatientId of the patient to delete.</param>
         /// <returns>True if the deletion was successful; otherwise, false.</returns>
-        public bool DeletePatient(int patientId)
+        public static bool DeletePatient(int patientId)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -122,7 +122,7 @@ namespace J_JHealthSolutions.DAL
         /// Retrieves all patients from the database.
         /// </summary>
         /// <returns>A list of Patient objects.</returns>
-        public List<Patient> GetPatients()
+        public static List<Patient> GetPatients()
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
@@ -156,7 +156,7 @@ namespace J_JHealthSolutions.DAL
         /// <param name="firstName">The first name to search for.</param>
         /// <param name="dob">The date of birth to search for.</param>
         /// <returns>A list of patients that match the search criteria.</returns>
-        public List<Patient> SearchPatients(string lastName, string firstName, DateTime? dob)
+        public static List<Patient> SearchPatients(string lastName, string firstName, DateTime? dob)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();

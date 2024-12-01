@@ -86,11 +86,8 @@ namespace J_JHealthSolutions.Views
         public MainWindow(User currentUser)
         {
             InitializeComponent();
-
-            //Todo verify that the user is not null and the proper user is passed
             CurrentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
 
-            // Set user information in UserInfoControl
             userInfoControl.UserId = CurrentUser.UserId.ToString();
             userInfoControl.FullName = $"{CurrentUser.Fname} {CurrentUser.Lname}";
 

@@ -11,7 +11,6 @@ namespace J_JHealthSolutions.Views
     /// </summary>
     public partial class AddEditPatientWindow : Window
     {
-        private PatientDal _patientDal = new PatientDal();
         private Patient _patient;
 
         /// <summary>
@@ -159,7 +158,7 @@ namespace J_JHealthSolutions.Views
                         Active = activeCheckBox.IsChecked ?? false
                     };
 
-                    int generatedId = _patientDal.AddPatient(newPatient);
+                    int generatedId = PatientDal.AddPatient(newPatient);
                 }
                 else
                 {
@@ -176,7 +175,7 @@ namespace J_JHealthSolutions.Views
                     _patient.Phone = phoneTextBox.Text;
                     _patient.Active = activeCheckBox.IsChecked ?? false;
 
-                    bool success = _patientDal.UpdatePatient(_patient);
+                    bool success = PatientDal.UpdatePatient(_patient);
                     if (!success)
                     {
                         ShowErrorDialog("Error", "Failed to update patient.");

@@ -12,7 +12,6 @@ namespace J_JHealthSolutions.ViewModel
 {
     public class PatientViewModel : INotifyPropertyChanged
     {
-        private readonly PatientDal _patientDal;
 
         // Event required by INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -120,7 +119,6 @@ namespace J_JHealthSolutions.ViewModel
         // Constructor
         public PatientViewModel()
         {
-            _patientDal = new PatientDal();
             ClearCommand = new RelayCommand(ExecuteClearSearch);
             AddCommand = new RelayCommand(ExecuteAddPatient);
             EditCommand = new RelayCommand(ExecuteEditPatient, CanExecuteEditOrDelete);
@@ -139,7 +137,7 @@ namespace J_JHealthSolutions.ViewModel
         {
             try
             {
-                var patientsFromDb = _patientDal.GetPatients();
+                var patientsFromDb = PatientDal.GetPatients();
                 Patients = new ObservableCollection<Patient>(patientsFromDb);
 
                 // Re-initialize the CollectionView with the new Patients collection
@@ -234,7 +232,7 @@ namespace J_JHealthSolutions.ViewModel
             {
                 try
                 {
-                    _patientDal.DeletePatient((int)SelectedPatient.PatientId);
+                    PatientDal.DeletePatient((int)SelectedPatient.PatientId);
                     Patients.Remove(SelectedPatient);
                 }
                 catch (Exception ex)

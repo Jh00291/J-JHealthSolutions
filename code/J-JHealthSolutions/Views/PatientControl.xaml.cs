@@ -10,8 +10,6 @@ namespace J_JHealthSolutions.Views
     /// </summary>
     public partial class PatientControl : UserControl
     {
-        private PatientDal _patientDal = new PatientDal();
-
         /// <summary>
         /// Initializes a new instance of the PatientControl and loads the list of patients.
         /// </summary>

@@ -17,3 +17,52 @@ BEGIN
     
     SELECT LAST_INSERT_ID();
 END
+
+
+
+
+
+
+
+
+
+CREATE DEFINER=cs3230f24a@% PROCEDURE CreateAppointment(
+    IN p_patient_id INT,
+    IN p_doctor_id INT,
+    IN p_datetime DATETIME,
+    IN p_reason VARCHAR(255),
+    IN p_status VARCHAR(50),
+    OUT p_appointment_id INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET p_appointment_id = NULL;
+    END;
+
+    START TRANSACTION;
+
+    IF (SELECT COUNT() FROM Patient WHERE patient_id = p_patient_id) = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid PatientId: No such patient exists.';
+    END IF;
+
+    -- 2. Validate that the Doctor exists
+    IF (SELECT COUNT() FROM Doctor WHERE doctor_id = p_doctor_id) = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid DoctorId: No such doctor exists.';
+    END IF;
+
+   IF (SELECT COUNT(*) FROM Appointment 
+        WHERE doctor_id = p_doctor_id 
+          AND datetime = p_datetime 
+          AND status = 'Scheduled') > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Doctor is not available at the specified datetime.';
+    END IF;
+
+    INSERT INTO Appointment (patient_id, doctor_id, datetime, reason, status)
+    VALUES (p_patient_id, p_doctor_id, p_datetime, p_reason, p_status);
+
+    SET p_appointment_id = LAST_INSERT_ID();
+
+    COMMIT;
+END

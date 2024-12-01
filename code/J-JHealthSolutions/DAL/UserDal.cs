@@ -81,6 +81,7 @@ namespace J_JHealthSolutions.DAL
 
         /// <summary>
         /// Migrates existing plaintext passwords in the database to hashed passwords.
+        /// ONLY NEED TO CALL AND RUN THIS METHOD ONCE IF ANY UPDATES ARE MADE ON THE DB SIDE
         /// </summary>
         public void MigratePasswords()
         {

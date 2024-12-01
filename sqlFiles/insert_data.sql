@@ -5,14 +5,20 @@ INSERT INTO `User` (username, `password`, `role`) VALUES
 ('admin1', 'password123', 'Administrator'),
 ('admin2', 'password2', 'Administrator'),
 ('admin3', 'password3', 'Administrator'),
+('admin4', 'password4', 'Administrator'),
+('admin5', 'password5', 'Administrator'),
 ('doc1', 'password123', 'Doctor'),
 ('doc2', 'password2', 'Doctor'),
 ('doc3', 'password3', 'Doctor'),
+('doc4', 'password4', 'Doctor'),
+('doc5', 'password5', 'Doctor'),
 ('nurse1', 'password123', 'Nurse'),
 ('nurse2', 'password2', 'Nurse'),
 ('nurse3', 'password3', 'Nurse'),
-('nurse4', 'password4', 'Nurse');
+('nurse4', 'password4', 'Nurse'),
+('nurse5', 'password5', 'Nurse');
 
+-- Insert sample data into Employee table
 -- Insert sample data into Employee table
 INSERT INTO Employee (user_id, f_name, l_name, dob, gender, address_1, city, state, zipcode, personal_phone) VALUES
 (1, 'John', 'Doe', '1980-01-15', 'M', '123 Main St', 'New York', 'NY', '10001', '6785551234'),
@@ -24,26 +30,36 @@ INSERT INTO Employee (user_id, f_name, l_name, dob, gender, address_1, city, sta
 (7, 'Sophia', 'Miller', '1993-05-15', 'F', '847 Cedar St', 'Philadelphia', 'PA', '19101', '6785559087'),
 (8, 'Liam', 'Wilson', '1989-12-01', 'M', '456 Birch St', 'Seattle', 'WA', '98101', '6785556543'),
 (9, 'Olivia', 'Garcia', '1997-09-20', 'F', '982 Aspen St', 'Miami', 'FL', '33101', '6785557890'),
-(10, 'Noah', 'Martinez', '1981-04-18', 'M', '365 Hickory St', 'Denver', 'CO', '80201', '6785553210');
+(10, 'Noah', 'Martinez', '1981-04-18', 'M', '365 Hickory St', 'Denver', 'CO', '80201', '6785553210'),
+(11, 'Lucas', 'White', '1987-03-12', 'M', '789 Oak St', 'Boston', 'MA', '02101', '6785559988'),
+(12, 'Isabella', 'Taylor', '1990-06-25', 'F', '567 Pine St', 'Austin', 'TX', '73301', '6785557766'),
+(13, 'Mia', 'Harris', '1983-12-10', 'F', '234 Cedar Dr', 'Chicago', 'IL', '60601', '6785555544'),
+(14, 'Elijah', 'Moore', '1979-08-14', 'M', '102 Walnut Ln', 'San Diego', 'CA', '92101', '6785553322'),
+(15, 'Charlotte', 'Clark', '1992-04-18', 'F', '456 Maple Blvd', 'San Francisco', 'CA', '94101', '6785551100');
 
 -- Insert sample data into Administrator tableadmin_id
 INSERT INTO Administrator (emp_id) VALUES
 (1),
 (2),
-(3);
+(3),
+(4),
+(5);
 
 -- Insert sample data into Doctor table
 INSERT INTO Doctor (emp_id) VALUES
-(4),
-(5),
-(6);
-
--- Insert sample data into Nurse table
-INSERT INTO Nurse (emp_id) VALUES
+(6),
 (7),
 (8),
 (9),
 (10);
+
+-- Insert sample data into Nurse table
+INSERT INTO Nurse (emp_id) VALUES
+(11),
+(12),
+(13),
+(14),
+(15);
 
 -- Insert sample data into Patient table
 INSERT INTO Patient (f_name, l_name, dob, gender, address_1, city, state, zipcode, phone, `active`) VALUES
@@ -83,7 +99,9 @@ INSERT INTO Visit (appointment_id, patient_id, doctor_id, nurse_id, visit_dateti
 INSERT INTO Specialty (specialty_name) VALUES
 ('Cardiology'),
 ('Pediatrics'),
-('Dermatology');
+('Dermatology'),
+('Neurology'),
+('Orthopedics');
 
 -- Insert sample data into DoctorSpecialty table
 INSERT INTO DoctorSpecialty (doctor_id, specialty_id) VALUES
@@ -92,7 +110,12 @@ INSERT INTO DoctorSpecialty (doctor_id, specialty_id) VALUES
 (2, 3),
 (2, 1),
 (3, 2),
-(3, 3);
+(3, 3),
+(4, 4),
+(4, 5),
+(5, 1),
+(5, 4),
+(5, 3);
 
 -- Insert sample data into Test table
 INSERT INTO Test (test_name, low_value, high_value, unit_of_measurement) VALUES

@@ -135,26 +135,12 @@ namespace J_JHealthSolutions.ViewModel
             get => _testPerformedDate;
             set
             {
-                if (value != null)
-                {
-                    if (value.Value.Date < TestDate.Date)
-                    {
-                        throw new ArgumentException("Test Performed Date cannot be in the past.");
-                    }
-                    if (value.Value.Date > DateTime.Today)
-                    {
-                        throw new ArgumentException("Test Performed Date cannot be in the future.");
-                    }
-                }
-
                 _testPerformedDate = value;
                 OnPropertyChanged(nameof(TestPerformedDate));
                 OnPropertyChanged(nameof(IsResultEnabled));
             }
         }
-
-        public DateTime MinTestPerformedDate => TestDate;
-        public DateTime MaxTestPerformedDate => DateTime.Today;
+        
 
         public UnitOfMeasure Unit
         {
@@ -221,24 +207,36 @@ namespace J_JHealthSolutions.ViewModel
                         if (SelectedTest == null)
                             error = "Test is required.";
                         break;
-                    case nameof(Result):
 
-                        if (IsResultEnabled && string.IsNullOrWhiteSpace(Result))
+                    case nameof(Result):
+                        if (IsResultEnabled)
                         {
-                            error = "Result is required when Test Performed Date is selected.";
-                                
-                        } else if (IsResultEnabled && !double.TryParse(Result, out _))
-                        {
-                            error = "Result must be a valid number.";
-                        } else if (!string.IsNullOrEmpty(Result) && Result.Length > 12)
-                        {
-                            error = "Result must be less than 12 digits.";
+                            if (string.IsNullOrWhiteSpace(Result))
+                            {
+                                error = "Result is required when Test Performed Date is selected.";
+                            }
+                            else if (!double.TryParse(Result, out _))
+                            {
+                                error = "Result must be a valid number.";
+                            }
+                            else if (Result.Length > 12)
+                            {
+                                error = "Result must be less than 12 digits.";
+                            }
                         }
                         break;
+
                     case nameof(Abnormal):
                         if (IsAbnormalVisible && string.IsNullOrEmpty(Abnormal))
                         {
                             error = "Please select if the result is abnormal.";
+                        }
+                        break;
+
+                    case nameof(TestPerformedDate):
+                        if (TestPerformedDate.HasValue && TestPerformedDate.Value < TestDate)
+                        {
+                            error = "Performed Date cannot be before Order Date.";
                         }
                         break;
                 }
@@ -271,6 +269,7 @@ namespace J_JHealthSolutions.ViewModel
 
             return false; 
         }
+
 
         private bool AddTestOrder()
         {
@@ -379,8 +378,14 @@ namespace J_JHealthSolutions.ViewModel
             {
                 result &= ValidateResult();
                 result &= ValidateAbnormal();
+                result &= ValidateTestPerformedDate();
             }
             return !result;
+        }
+
+        private bool ValidateTestPerformedDate()
+        {
+            return !TestPerformedDate.HasValue || TestPerformedDate.Value >= TestDate;
         }
 
         private bool ValidateSelectedTest()

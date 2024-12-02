@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:J_JHealthSolutions.Views"
         xmlns:model="clr-namespace:J_JHealthSolutions.Model"
         xmlns:viewmodel="clr-namespace:J_JHealthSolutions.ViewModel"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
         MinWidth="750" MinHeight="400"
@@ -117,15 +118,22 @@
         <Label Grid.Row="2" Grid.Column="0" Content="Test Ordered By:" VerticalAlignment="Center" Margin="5"/>
         <TextBox x:Name="testOrderedByTextBox" Grid.Row="2" Grid.Column="1" Margin="5" IsEnabled="False" Text="{Binding TestOrderedBy}"/>
 
-        <!-- Test Performed DatePicker -->
+        <!-- Test Performed DatePicker with Time -->
         <Label Content="Performed Date:" Grid.Row="3" Grid.Column="0" Margin="5" VerticalAlignment="Center"/>
-        <DatePicker Grid.Row="3" Grid.Column="1" Margin="5"
-                    SelectedDate="{Binding TestPerformedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    DisplayDateStart="{Binding MinTestPerformedDate, Mode=OneWay}"
-                    DisplayDateEnd="{Binding MaxTestPerformedDate, Mode=OneWay}"
-                    FirstDayOfWeek="Monday"/>
+        <xctk:DateTimePicker Grid.Row="3" Grid.Column="1" Margin="5"
+                             Value="{Binding TestPerformedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+                             Minimum="{Binding TestDate}"
+                             Format="Custom"
+                             FormatString="MM/dd/yyyy HH:mm"
+                             TimePickerVisibility="Visible"
+                             ShowButtonSpinner="True"/>
+        <TextBlock Foreground="Red" FontSize="12" 
+                   Text="{Binding ElementName=TestPerformedDatePicker, Path=(Validation.Errors)[0].ErrorContent}"
+                   Grid.Row="3" Grid.Column="1" VerticalAlignment="Bottom" Margin="5,35,5,0"/>
 
-        <!-- Result -->
+
+
+<!-- Result -->
         <Label Grid.Row="4" Grid.Column="0" Content="Result:" VerticalAlignment="Center" Margin="5"/>
 
         <!-- Grid for Result and Unit Of Measurement -->

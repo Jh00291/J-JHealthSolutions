@@ -106,9 +106,9 @@
                             <DataGridTextColumn Header="Doctor Name" Binding="{Binding DoctorName}" />
                             <DataGridTextColumn Header="Nurse Name" Binding="{Binding NurseName}" />
                             <DataGridTextColumn Header="Tests Ordered" Binding="{Binding TestsOrdered}" />
-                            <DataGridTextColumn Header="Test Perform Date" Binding="{Binding TestPerformDate, StringFormat={}{0:MM/dd/yyyy}}" />
-                            <DataGridTextColumn Header="Abnormality" Binding="{Binding TestResultAbnormality}" />
+                            <DataGridTextColumn Header="Abnormality" Binding="{Binding HasAbnormalTests}" />
                             <DataGridTextColumn Header="Diagnosis" Binding="{Binding Diagnosis}" />
+                            <DataGridTextColumn Header="Visit Status" Binding="{Binding Status}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

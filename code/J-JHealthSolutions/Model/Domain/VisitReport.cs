@@ -14,8 +14,9 @@ namespace J_JHealthSolutions.Model.Domain
         public string DoctorName { get; set; }
         public string NurseName { get; set; }
         public string TestsOrdered { get; set; }
-        public DateTime? TestPerformDate { get; set; }
-        public string TestResultAbnormality { get; set; }
+        public string HasAbnormalTests { get; set; }
         public string Diagnosis { get; set; }
+        public string PatientLastName { get; set; }
+        public string Status { get; set; }
     }
 }

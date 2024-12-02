@@ -326,11 +326,12 @@ public static class VisitDal
     }
 
     /// <summary>
-    ///     Retrieves visit reports within a specified date range.
+    ///     Retrieves visit reports within a specified date range, including a concatenated string of tests ordered
+    ///     and an indicator if any tests are abnormal.
     /// </summary>
     /// <param name="startDate">The start date of the range.</param>
     /// <param name="endDate">The end date of the range.</param>
-    /// <returns>A list of VisitReport objects.</returns>
+    /// <returns>A list of VisitReport objects with concatenated test names and abnormal test indicator.</returns>
     public static List<VisitReport> GetVisitReports(DateTime startDate, DateTime endDate)
     {
         using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -343,11 +344,14 @@ public static class VisitDal
                     CONCAT(p.f_name, ' ', p.l_name) AS PatientName,
                     CONCAT(docEmp.f_name, ' ', docEmp.l_name) AS DoctorName,
                     CONCAT(nurseEmp.f_name, ' ', nurseEmp.l_name) AS NurseName,
-                    t.test_name AS TestOrdered,
-                    o.performed_datetime AS TestPerformDate,
-                    o.abnormal AS TestResultAbnormality,
+                    GROUP_CONCAT(DISTINCT t.test_name ORDER BY t.test_name SEPARATOR ', ') AS TestsOrdered,
+                    CASE 
+                        WHEN MAX(o.abnormal) = 1 THEN 'Yes' 
+                        ELSE 'No' 
+                    END AS HasAbnormalTests,
                     v.final_diagnosis AS Diagnosis,
-                    p.l_name AS PatientLastName
+                    p.l_name AS PatientLastName,
+                    v.visit_status AS Status
                 FROM Visit v
                 INNER JOIN Patient p ON v.patient_id = p.patient_id
                 INNER JOIN Doctor d ON v.doctor_id = d.doctor_id
@@ -356,7 +360,17 @@ public static class VisitDal
                 INNER JOIN Employee nurseEmp ON n.emp_id = nurseEmp.employee_id
                 LEFT JOIN TestOrder o ON v.visit_id = o.visit_id
                 LEFT JOIN Test t ON o.test_code = t.test_code
-                WHERE v.visit_datetime BETWEEN @StartDate AND @EndDate AND visit_status = 'Completed'
+                WHERE v.visit_datetime BETWEEN @StartDate AND @EndDate
+                GROUP BY 
+                    v.visit_id, 
+                    v.visit_datetime,
+                    p.patient_id,
+                    CONCAT(p.f_name, ' ', p.l_name),
+                    CONCAT(docEmp.f_name, ' ', docEmp.l_name),
+                    CONCAT(nurseEmp.f_name, ' ', nurseEmp.l_name),
+                    v.final_diagnosis,
+                    p.l_name,
+                    v.visit_status
                 ORDER BY v.visit_datetime, p.l_name;
             ";
 

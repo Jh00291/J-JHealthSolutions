@@ -1,17 +1,13 @@
 ﻿using J_JHealthSolutions.DAL;
 using J_JHealthSolutions.Model;
 using J_JHealthSolutions.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using System.Windows.Data;
 using J_JHealthSolutions.Model.Domain;
+using J_JHealthSolutions.Model.Other;
 
 namespace J_JHealthSolutions.ViewModel
 {
@@ -208,7 +204,7 @@ namespace J_JHealthSolutions.ViewModel
         /// </summary>
         private bool CanExecuteEdit(object parameter)
         {
-            return SelectedAppointment != null;
+            return SelectedAppointment != null && SelectedAppointment.Status != Status.Completed;
         }
 
         /// <summary>

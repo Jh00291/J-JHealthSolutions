@@ -81,6 +81,7 @@ namespace J_JHealthSolutions.Views
         {
             selectedDoctor = doctorComboBox.SelectedItem as Doctor;
             this.datePicker.IsEnabled = selectedDoctor != null;
+            UpdateAvailableTimeSlots();
         }
 
         private void LoadPatients()
@@ -179,13 +180,6 @@ namespace J_JHealthSolutions.Views
             {
                 timeComboBox.Items.Clear();
             }
-        }
-
-
-        private void DoctorAutoCompleteBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            selectedDoctor = doctorComboBox.SelectedItem as Doctor;
-            this.datePicker.IsEnabled = true;
         }
 
         private void SaveAppointment_Click(object sender, RoutedEventArgs e)

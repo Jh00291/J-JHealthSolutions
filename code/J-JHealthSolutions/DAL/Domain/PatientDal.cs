@@ -203,5 +203,37 @@ namespace J_JHealthSolutions.DAL
 
             return patients;
         }
+
+        /// <summary>
+        /// Retrieves all active patients from the database (patients with active = 1).
+        /// </summary>
+        /// <returns>A list of active Patient objects.</returns>
+        public static List<Patient> GetActivePatients()
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = @"
+                SELECT
+                    patient_id AS PatientId,
+                    f_name AS FName,
+                    l_name AS LName,
+                    dob AS DOB,
+                    gender AS Gender,
+                    address_1 AS Address1,
+                    address_2 AS Address2,
+                    city AS City,
+                    state AS State,
+                    zipcode AS Zipcode,
+                    phone AS Phone,
+                    active AS Active
+                FROM Patient
+                WHERE active = 1;
+            ";
+
+            var activePatients = connection.Query<Patient>(query).ToList();
+
+            return activePatients;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace J_JHealthSolutions.Views
 {
     public partial class AddEditAppointmentWindow : Window
     {
-        private List<Patient> allPatients;
+        private List<Patient> allActivePatients;
         private IEnumerable<Doctor> allDoctors;
         private IEnumerable<Nurse> allNurses;
 
@@ -60,7 +60,7 @@ namespace J_JHealthSolutions.Views
             patientAutoCompleteBox.Text = appointment.PatientFullName;
             doctorComboBox.SelectedItem = allDoctors.FirstOrDefault(d => d.DoctorId == appointment.DoctorId);
 
-            selectedPatient = allPatients.FirstOrDefault(p => p.PatientId == appointment.PatientId);
+            selectedPatient = allActivePatients.FirstOrDefault(p => p.PatientId == appointment.PatientId);
             selectedDoctor = allDoctors.FirstOrDefault(d => d.DoctorId == appointment.DoctorId);
 
             datePicker.IsEnabled = true;
@@ -86,7 +86,7 @@ namespace J_JHealthSolutions.Views
         private void LoadPatients()
         {
             LoadAllPatients();
-            patientAutoCompleteBox.ItemsSource = allPatients;
+            patientAutoCompleteBox.ItemsSource = allActivePatients;
         }
 
         private void LoadDoctors()
@@ -104,7 +104,7 @@ namespace J_JHealthSolutions.Views
 
         private void LoadAllPatients()
         {
-            allPatients = PatientDal.GetPatients();
+            allActivePatients = PatientDal.GetActivePatients();
         }
 
         private void LoadAllDoctors()
@@ -121,7 +121,7 @@ namespace J_JHealthSolutions.Views
         private void PatientAutoCompleteBox_Populating(object sender, PopulatingEventArgs e)
         {
             var searchText = patientAutoCompleteBox.SearchText.ToLower();
-            var filteredPatients = allPatients.Where(p => p.PatientFullName.ToLower().Contains(searchText)).ToList();
+            var filteredPatients = allActivePatients.Where(p => p.PatientFullName.ToLower().Contains(searchText)).ToList();
             patientAutoCompleteBox.ItemsSource = filteredPatients;
             patientAutoCompleteBox.PopulateComplete();
         }

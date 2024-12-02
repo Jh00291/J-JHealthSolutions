@@ -64,7 +64,7 @@
         </Border>
 
         <!-- DataGrid for displaying visits -->
-        <DataGrid ItemsSource="{Binding VisitsView}"
+        <DataGrid ItemsSource="{Binding Visits}"
                   SelectedItem="{Binding SelectedVisit, Mode=TwoWay}"
                   AutoGenerateColumns="False"
                   SelectionMode="Single"

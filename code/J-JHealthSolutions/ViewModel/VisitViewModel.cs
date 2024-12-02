@@ -2,22 +2,17 @@
 using J_JHealthSolutions.Model;
 using J_JHealthSolutions.Model.Domain;
 using J_JHealthSolutions.Views;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace J_JHealthSolutions.ViewModel
 {
     public class VisitViewModel : INotifyPropertyChanged
     {
-
-        // Event required by INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // Collection for DataGrid
         private ObservableCollection<Visit> _visits;
         public ObservableCollection<Visit> Visits
         {
@@ -32,22 +27,6 @@ namespace J_JHealthSolutions.ViewModel
             }
         }
 
-        // ICollectionView for filtering
-        private ICollectionView _visitsView;
-        public ICollectionView VisitsView
-        {
-            get => _visitsView;
-            private set
-            {
-                if (_visitsView != value)
-                {
-                    _visitsView = value;
-                    OnPropertyChanged(nameof(VisitsView));
-                }
-            }
-        }
-
-        // Selected Visit
         private Visit _selectedVisit;
         public Visit SelectedVisit
         {
@@ -58,13 +37,11 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _selectedVisit = value;
                     OnPropertyChanged(nameof(SelectedVisit));
-                    // Notify that EditCommand and CheckUpCommand's CanExecute might have changed
                     ((RelayCommand)EditCommand).RaiseCanExecuteChanged();
                 }
             }
         }
 
-        // Properties for Search Fields
         private string _searchPatientName;
         public string SearchPatientName
         {
@@ -75,7 +52,7 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _searchPatientName = value;
                     OnPropertyChanged(nameof(SearchPatientName));
-                    VisitsView.Refresh();
+                    LoadVisits();
                 }
             }
         }
@@ -90,12 +67,11 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _searchDOB = value;
                     OnPropertyChanged(nameof(SearchDOB));
-                    VisitsView.Refresh();
+                    LoadVisits();
                 }
             }
         }
 
-        // New Search Properties
         private string _searchDoctorName;
         public string SearchDoctorName
         {
@@ -106,7 +82,7 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _searchDoctorName = value;
                     OnPropertyChanged(nameof(SearchDoctorName));
-                    VisitsView.Refresh();
+                    LoadVisits();
                 }
             }
         }
@@ -121,80 +97,45 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _searchVisitDate = value;
                     OnPropertyChanged(nameof(SearchVisitDate));
-                    VisitsView.Refresh();
+                    LoadVisits();
                 }
             }
         }
 
-        // Commands
         public ICommand ClearCommand { get; }
         public ICommand EditCommand { get; }
-        public ICommand CheckUpCommand { get; }
 
-        // Constructor
         public VisitViewModel()
         {
             ClearCommand = new RelayCommand(ExecuteClearSearch);
             EditCommand = new RelayCommand(ExecuteEdit, CanExecuteEditOrCheckUp);
             LoadVisits();
-
-            // Initialize the CollectionView for filtering
-            VisitsView = CollectionViewSource.GetDefaultView(Visits);
-            VisitsView.Filter = FilterVisits;
         }
 
         /// <summary>
-        /// Loads visits from the database and populates the Visits collection.
+        /// Loads visits from the database based on current search criteria and populates the Visits collection.
         /// </summary>
         private void LoadVisits()
         {
             try
             {
-                var visitsFromDb = VisitDal.GetVisits();
+                var visitsFromDb = VisitDal.SearchVisitsAdvanced(SearchPatientName, SearchDOB, SearchDoctorName, SearchVisitDate);
                 var visitsWithCounts = new ObservableCollection<Visit>();
 
                 foreach (var visit in visitsFromDb)
                 {
+                    // Assuming TestOrderDal is available and properly implemented
                     visit.NumberOfTests = TestOrderDal.GetNumberOfTestsForVisit((int)visit.VisitId);
                     visit.NumberOfAbnormalTests = TestOrderDal.GetNumberOfAbnormalTestsForVisit((int)visit.VisitId);
                     visitsWithCounts.Add(visit);
                 }
 
                 Visits = visitsWithCounts;
-
-                // Re-initialize the CollectionView with the new Visits collection
-                VisitsView = CollectionViewSource.GetDefaultView(Visits);
-                VisitsView.Filter = FilterVisits;
-                OnPropertyChanged(nameof(VisitsView));
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading visits: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        /// <summary>
-        /// Filter logic based on search criteria: Patient Name, DOB, Doctor Name, and Visit Date.
-        /// </summary>
-        private bool FilterVisits(object obj)
-        {
-            if (obj is Visit visit)
-            {
-                bool matchesPatientName = string.IsNullOrWhiteSpace(SearchPatientName) ||
-                    visit.PatientFullName.IndexOf(SearchPatientName, StringComparison.OrdinalIgnoreCase) >= 0;
-
-                bool matchesDOB = !SearchDOB.HasValue ||
-                    visit.PatientDOB.Date == SearchDOB.Value.Date;
-
-                bool matchesDoctorName = string.IsNullOrWhiteSpace(SearchDoctorName) ||
-                    visit.DoctorFullName.IndexOf(SearchDoctorName, StringComparison.OrdinalIgnoreCase) >= 0;
-
-                bool matchesVisitDate = !SearchVisitDate.HasValue ||
-                    visit.VisitDateTime.Date == SearchVisitDate.Value.Date;
-
-                return matchesPatientName && matchesDOB && matchesDoctorName && matchesVisitDate;
-            }
-            return false;
         }
 
         /// <summary>

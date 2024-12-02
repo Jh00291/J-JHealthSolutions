@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Text;
 using Dapper;
 using J_JHealthSolutions.Model.Domain;
 using J_JHealthSolutions.Model.Other;
@@ -181,6 +182,99 @@ namespace J_JHealthSolutions.DAL
 
             var appointments = connection.Query<Appointment>(
                 query
+            ).AsList();
+
+            // Map the Status string to the Status enum
+            foreach (var appointment in appointments)
+            {
+                if (!Enum.TryParse<Status>(appointment.Status.ToString(), out var status))
+                {
+                    appointment.Status = Status.Scheduled;
+                }
+                else
+                {
+                    appointment.Status = status;
+                }
+            }
+
+            return appointments;
+        }
+
+        /// <summary>
+        /// Retrieves filtered appointments from the database based on provided search criteria.
+        /// </summary>
+        /// <param name="patientName">Filter by patient name (partial match).</param>
+        /// <param name="doctorName">Filter by doctor name (partial match).</param>
+        /// <param name="appointmentDate">Filter by appointment date.</param>
+        /// <param name="patientDOB">Filter by patient date of birth.</param>
+        /// <returns>A list of filtered Appointment objects.</returns>
+        public static List<Appointment> GetFilteredAppointments(
+            string patientName = null,
+            string doctorName = null,
+            DateTime? appointmentDate = null,
+            DateTime? patientDOB = null)
+        {
+            using IDbConnection connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var sqlBuilder = new StringBuilder(@"
+                SELECT 
+                    a.appointment_id AS AppointmentId,
+                    a.patient_id AS PatientId,
+                    p.f_name AS PatientFirstName,
+                    p.l_name AS PatientLastName,
+                    p.dob AS PatientDOB,
+                    a.doctor_id AS DoctorId,
+                    e.f_name AS DoctorFirstName,
+                    e.l_name AS DoctorLastName,
+                    CONCAT(ne.f_name, ' ', ne.l_name) AS NurseFullName,
+                    a.`datetime` AS DateTime,
+                    a.reason AS Reason,
+                    a.`status` AS Status
+                FROM Appointment a
+                INNER JOIN Patient p ON a.patient_id = p.patient_id
+                INNER JOIN Doctor d ON a.doctor_id = d.doctor_id
+                INNER JOIN Employee e ON d.emp_id = e.employee_id
+                LEFT JOIN Visit v ON v.appointment_id = a.appointment_id
+                LEFT JOIN Nurse n ON v.nurse_id = n.nurse_id
+                LEFT JOIN Employee ne ON n.emp_id = ne.employee_id
+                WHERE 1=1
+            ");
+
+            var parameters = new DynamicParameters();
+
+            if (!string.IsNullOrWhiteSpace(patientName))
+            {
+                sqlBuilder.Append(" AND CONCAT(p.f_name, ' ', p.l_name) LIKE @PatientName");
+                parameters.Add("PatientName", $"%{patientName}%");
+            }
+
+            if (!string.IsNullOrWhiteSpace(doctorName))
+            {
+                sqlBuilder.Append(" AND CONCAT(e.f_name, ' ', e.l_name) LIKE @DoctorName");
+                parameters.Add("DoctorName", $"%{doctorName}%");
+            }
+
+            if (appointmentDate.HasValue)
+            {
+                sqlBuilder.Append(" AND DATE(a.`datetime`) = @AppointmentDate");
+                parameters.Add("AppointmentDate", appointmentDate.Value.Date);
+            }
+
+            if (patientDOB.HasValue)
+            {
+                sqlBuilder.Append(" AND DATE(p.dob) = @PatientDOB");
+                parameters.Add("PatientDOB", patientDOB.Value.Date);
+            }
+
+            // Optionally, you can add ordering
+            sqlBuilder.Append(" ORDER BY a.`datetime` DESC;");
+
+            string finalQuery = sqlBuilder.ToString();
+
+            var appointments = connection.Query<Appointment>(
+                finalQuery,
+                parameters
             ).AsList();
 
             // Map the Status string to the Status enum

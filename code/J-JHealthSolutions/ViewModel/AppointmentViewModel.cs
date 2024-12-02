@@ -144,13 +144,19 @@ namespace J_JHealthSolutions.ViewModel
         }
 
         /// <summary>
-        /// Loads appointments from the database and populates the Appointments collection.
+        /// Loads appointments from the database based on current search criteria and populates the Appointments collection.
         /// </summary>
         public void LoadAppointments()
         {
             try
             {
-                var appointmentsFromDb = AppointmentDal.GetAppointments();
+                var appointmentsFromDb = AppointmentDal.GetFilteredAppointments(
+                    patientName: SearchPatientName,
+                    doctorName: SearchDoctorName,
+                    appointmentDate: SearchAppointmentDate,
+                    patientDOB: SearchPatientDOB
+                );
+
                 Appointments.Clear();
                 foreach (var appointment in appointmentsFromDb)
                 {

@@ -6,14 +6,12 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace J_JHealthSolutions.ViewModel
 {
     public class PatientViewModel : INotifyPropertyChanged
     {
-
         // Event required by INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -28,21 +26,6 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _patients = value;
                     OnPropertyChanged(nameof(Patients));
-                }
-            }
-        }
-
-        // ICollectionView for filtering
-        private ICollectionView _patientsView;
-        public ICollectionView PatientsView
-        {
-            get => _patientsView;
-            private set
-            {
-                if (_patientsView != value)
-                {
-                    _patientsView = value;
-                    OnPropertyChanged(nameof(PatientsView));
                 }
             }
         }
@@ -76,7 +59,7 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _searchLastName = value;
                     OnPropertyChanged(nameof(SearchLastName));
-                    PatientsView.Refresh();
+                    LoadPatients(); // Fetch filtered data from DAL
                 }
             }
         }
@@ -91,7 +74,7 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _searchFirstName = value;
                     OnPropertyChanged(nameof(SearchFirstName));
-                    PatientsView.Refresh();
+                    LoadPatients(); // Fetch filtered data from DAL
                 }
             }
         }
@@ -106,7 +89,7 @@ namespace J_JHealthSolutions.ViewModel
                 {
                     _searchDOB = value;
                     OnPropertyChanged(nameof(SearchDOB));
-                    PatientsView.Refresh();
+                    LoadPatients(); // Fetch filtered data from DAL
                 }
             }
         }
@@ -124,53 +107,23 @@ namespace J_JHealthSolutions.ViewModel
             AddCommand = new RelayCommand(ExecuteAddPatient);
             EditCommand = new RelayCommand(ExecuteEditPatient, CanExecuteEditOrDelete);
             DeleteCommand = new RelayCommand(ExecuteDeletePatient, CanExecuteEditOrDelete);
-            LoadPatients();
-
-            // Initialize the CollectionView for filtering
-            PatientsView = CollectionViewSource.GetDefaultView(Patients);
-            PatientsView.Filter = FilterPatients;
+            LoadPatients(); // Initial load
         }
 
         /// <summary>
-        /// Loads patients from the database and populates the Patients collection.
+        /// Loads patients from the DAL based on current search criteria and populates the Patients collection.
         /// </summary>
         private void LoadPatients()
         {
             try
             {
-                var patientsFromDb = PatientDal.GetPatients();
+                var patientsFromDb = PatientDal.SearchPatients(SearchLastName, SearchFirstName, SearchDOB);
                 Patients = new ObservableCollection<Patient>(patientsFromDb);
-
-                // Re-initialize the CollectionView with the new Patients collection
-                PatientsView = CollectionViewSource.GetDefaultView(Patients);
-                PatientsView.Filter = FilterPatients;
-                OnPropertyChanged(nameof(PatientsView));
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading patients: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        /// <summary>
-        /// Filter logic based on search criteria: Last Name, First Name, and DOB.
-        /// </summary>
-        private bool FilterPatients(object obj)
-        {
-            if (obj is Patient patient)
-            {
-                bool matchesLastName = string.IsNullOrWhiteSpace(SearchLastName) ||
-                    patient.LName.IndexOf(SearchLastName, StringComparison.OrdinalIgnoreCase) >= 0;
-
-                bool matchesFirstName = string.IsNullOrWhiteSpace(SearchFirstName) ||
-                    patient.FName.IndexOf(SearchFirstName, StringComparison.OrdinalIgnoreCase) >= 0;
-
-                bool matchesDOB = !SearchDOB.HasValue ||
-                    patient.DOB.Date == SearchDOB.Value.Date;
-
-                return matchesLastName && matchesFirstName && matchesDOB;
-            }
-            return false;
         }
 
         /// <summary>
@@ -199,7 +152,7 @@ namespace J_JHealthSolutions.ViewModel
             var addEditPatientWindow = new AddEditPatientWindow();
             if (addEditPatientWindow.ShowDialog() == true)
             {
-                LoadPatients();
+                LoadPatients(); // Refresh the list after adding
             }
         }
 
@@ -214,7 +167,7 @@ namespace J_JHealthSolutions.ViewModel
             var addEditPatientWindow = new AddEditPatientWindow(SelectedPatient);
             if (addEditPatientWindow.ShowDialog() == true)
             {
-                LoadPatients();
+                LoadPatients(); // Refresh the list after editing
             }
         }
 
@@ -233,8 +186,16 @@ namespace J_JHealthSolutions.ViewModel
             {
                 try
                 {
-                    PatientDal.DeletePatient((int)SelectedPatient.PatientId);
-                    Patients.Remove(SelectedPatient);
+                    bool isDeleted = PatientDal.DeletePatient((int)SelectedPatient.PatientId);
+                    if (isDeleted)
+                    {
+                        Patients.Remove(SelectedPatient);
+                        MessageBox.Show("Patient deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Patient could not be deleted. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 catch (Exception ex)
                 {

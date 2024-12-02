@@ -6,6 +6,7 @@ using System.Windows.Input;
 using J_JHealthSolutions.Model;
 using System.Windows;
 using System.ComponentModel;
+using J_JHealthSolutions.DAL.Domain;
 using J_JHealthSolutions.Model.Domain;
 
 namespace J_JHealthSolutions.ViewModel
@@ -106,6 +107,11 @@ namespace J_JHealthSolutions.ViewModel
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(SqlQuery))
+                {
+                    MessageBox.Show("Please enter a query", "Query Execution Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 DataTable results = _adminDal.ExecuteQuery(SqlQuery);
                 QueryResults = new ObservableCollection<object>(results.DefaultView.Cast<object>());
 

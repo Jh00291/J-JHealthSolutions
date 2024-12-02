@@ -6,7 +6,7 @@ using Dapper;
 using J_JHealthSolutions.Model;
 using MySql.Data.MySqlClient;
 
-namespace J_JHealthSolutions.DAL
+namespace J_JHealthSolutions.DAL.Domain
 {
     public class EmployeeDal
     {

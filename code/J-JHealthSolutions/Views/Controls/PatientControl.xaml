@@ -58,7 +58,7 @@
         </Border>
 
         <!-- DataGrid in the second row -->
-        <DataGrid ItemsSource="{Binding PatientsView}"
+        <DataGrid ItemsSource="{Binding Patients}"
                   SelectedItem="{Binding SelectedPatient, Mode=TwoWay}"
                   AutoGenerateColumns="False"
                   SelectionMode="Single"
